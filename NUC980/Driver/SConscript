@@ -1,0 +1,10 @@
+Import('rtconfig')
+from building import *
+
+cwd = GetCurrentDir()
+src = Glob('Source/*.c') + Glob('Source/*.cpp')
+cpppath = [cwd + '/Include']
+
+group = DefineGroup('Libraries', src, depend = [''], CPPPATH = cpppath)
+
+Return('group')
