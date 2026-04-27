@@ -1,0 +1,9 @@
+import os
+from building import *
+
+src = []
+cwd = GetCurrentDir()
+path = [cwd + '/Core/Include', ]
+objs = DefineGroup('CMSIS', src, depend = [''], CPPPATH = path)
+
+Return('objs')

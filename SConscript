@@ -19,4 +19,10 @@ if GetDepend(['SOC_SERIES_M032']):
 if GetDepend(['SOC_SERIES_M2354']):
     objs = objs + SConscript('M2354/SConscript')
 
+if GetDepend(['SOC_SERIES_M3331']):
+    objs = objs + SConscript('M3331/SConscript')
+    
+if GetDepend(['ARCH_ARM_CORTEX_M']):
+    objs = objs + SConscript('CMSIS/SConscript')
+
 Return('objs')
