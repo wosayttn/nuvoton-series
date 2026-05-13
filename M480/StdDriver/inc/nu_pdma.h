@@ -27,6 +27,7 @@ extern "C"
   @{
 */
 #define PDMA_CH_MAX    16UL   /*!< Specify Maximum Channels of PDMA  \hideinitializer */
+#define PDMA_CH_Msk    ((1ul<<PDMA_CH_MAX)-1)
 
 /*---------------------------------------------------------------------------------------------------------*/
 /*  Operation Mode Constant Definitions                                                                    */

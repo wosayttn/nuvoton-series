@@ -1852,8 +1852,8 @@ typedef struct
 #define CLK_CLKSEL0_CANFD3SEL_Pos        (30)                                              /*!< CLK_T::CLKSEL0: CANFD3SEL Position     */
 #define CLK_CLKSEL0_CANFD3SEL_Msk        (0x3ul << CLK_CLKSEL0_CANFD3SEL_Pos)              /*!< CLK_T::CLKSEL0: CANFD3SEL Mask         */
 
-#define CLK_CLKSEL1_WDTSEL_Pos           (0)                                               /*!< CLK_T::CLKSEL1: WDTSEL Position        */
-#define CLK_CLKSEL1_WDTSEL_Msk           (0x3ul << CLK_CLKSEL1_WDTSEL_Pos)                 /*!< CLK_T::CLKSEL1: WDTSEL Mask            */
+#define CLK_CLKSEL1_WDT0SEL_Pos          (0)                                               /*!< CLK_T::CLKSEL1: WDTSEL Position        */
+#define CLK_CLKSEL1_WDT0SEL_Msk          (0x3ul << CLK_CLKSEL1_WDT0SEL_Pos)                 /*!< CLK_T::CLKSEL1: WDTSEL Mask            */
 
 #define CLK_CLKSEL1_CLKOSEL_Pos          (4)                                               /*!< CLK_T::CLKSEL1: CLKOSEL Position       */
 #define CLK_CLKSEL1_CLKOSEL_Msk          (0x7ul << CLK_CLKSEL1_CLKOSEL_Pos)                /*!< CLK_T::CLKSEL1: CLKOSEL Mask           */

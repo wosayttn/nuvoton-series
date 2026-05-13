@@ -33,6 +33,7 @@ extern "C"
 /*  Module Reset Control Resister constant definitions.                                                    */
 /*---------------------------------------------------------------------------------------------------------*/
 #define PDMA_RST            ((0UL<<24) | SYS_IPRST0_PDMARST_Pos)        /*!< Reset PDMA \hideinitializer*/
+#define PDMA0_RST            (PDMA_RST)                                 /*!< Reset PDMA \hideinitializer*/
 #define EBI_RST             ((0UL<<24) | SYS_IPRST0_EBIRST_Pos)         /*!< Reset EBI \hideinitializer*/
 #define EMAC_RST            ((0UL<<24) | SYS_IPRST0_EMACRST_Pos)        /*!< Reset EMAC \hideinitializer */
 #define SDH0_RST            ((0UL<<24) | SYS_IPRST0_SDH0RST_Pos)        /*!< Reset SDH0 \hideinitializer */

@@ -9,6 +9,8 @@
 #ifndef __PDMA_REG_H__
 #define __PDMA_REG_H__
 
+#define PDMA_CH_MAX    8UL   /*!< Specify Maximum Channels of PDMA  \hideinitializer */
+#define PDMA_CH_Msk    ((1ul<<PDMA_CH_MAX)-1)
 /** @addtogroup REGISTER Control Register
 
   @{
@@ -632,6 +634,9 @@ typedef struct
 #define PDMA_INTSTS_ALIGNF_Pos           (2)                                               /*!< PDMA_T::INTSTS: ALIGNF Position        */
 #define PDMA_INTSTS_ALIGNF_Msk           (0x1ul << PDMA_INTSTS_ALIGNF_Pos)                 /*!< PDMA_T::INTSTS: ALIGNF Mask            */
 
+#define PDMA_INTSTS_REQTOFn_Pos          (8)                                               /*!< PDMA_T::INTSTS: REQTOFn Position       */
+#define PDMA_INTSTS_REQTOFn_Msk          (PDMA_CH_Msk << PDMA_INTSTS_REQTOFn_Pos)          /*!< PDMA_T::INTSTS: REQTOFn Mask           */
+
 #define PDMA_INTSTS_REQTOF0_Pos          (8)                                               /*!< PDMA_T::INTSTS: REQTOF0 Position       */
 #define PDMA_INTSTS_REQTOF0_Msk          (0x1ul << PDMA_INTSTS_REQTOF0_Pos)                /*!< PDMA_T::INTSTS: REQTOF0 Mask           */
 
@@ -685,6 +690,8 @@ typedef struct
 
 #define PDMA_ABTSTS_ABTIF15_Pos           (15)                                               /*!< PDMA_T::ABTSTS: ABTIF15 Position        */
 #define PDMA_ABTSTS_ABTIF15_Msk           (0x1ul << PDMA_ABTSTS_ABTIF15_Pos)                 /*!< PDMA_T::ABTSTS: ABTIF15 Mask            */
+#define PDMA_TDSTS_TDIFn_Pos             (0)                                               /*!< PDMA_T::TDSTS: TDIFn Position          */
+#define PDMA_TDSTS_TDIFn_Msk             (PDMA_CH_Msk << PDMA_TDSTS_TDIFn_Pos)             /*!< PDMA_T::TDSTS: TDIFn Mask              */
 
 #define PDMA_TDSTS_TDIF0_Pos           (0)                                               /*!< PDMA_T::TDSTS: TDIF0 Position        */
 #define PDMA_TDSTS_TDIF0_Msk           (0x1ul << PDMA_TDSTS_TDIF0_Pos)                   /*!< PDMA_T::TDSTS: TDIF0 Mask            */
@@ -734,8 +741,8 @@ typedef struct
 #define PDMA_TDSTS_TDIF15_Pos           (15)                                               /*!< PDMA_T::TDSTS: TDIF15 Position        */
 #define PDMA_TDSTS_TDIF15_Msk           (0x1ul << PDMA_TDSTS_TDIF15_Pos)                   /*!< PDMA_T::TDSTS: TDIF15 Mask            */
 
-#define PDMA_ALIGN_ALIGNn_Pos           (0)                                                /*!< PDMA_T::ALIGN: ALIGNn Position        */
-#define PDMA_ALIGN_ALIGNn_Msk           (0xfffful << PDMA_ALIGN_ALIGNn_Pos)                /*!< PDMA_T::ALIGN: ALIGNn Mask            */
+#define PDMA_ALIGN_ALIGNn_Pos            (0)                                               /*!< PDMA_T::ALIGN: ALIGNn Position         */
+#define PDMA_ALIGN_ALIGNn_Msk            (PDMA_CH_Msk << PDMA_ALIGN_ALIGNn_Pos)            /*!< PDMA_T::ALIGN: ALIGNn Mask             */
 
 #define PDMA_TACTSTS_TXACTFn_Pos         (0)                                               /*!< PDMA_T::TACTSTS: TXACTFn Position      */
 #define PDMA_TACTSTS_TXACTFn_Msk         (0xfffful << PDMA_TACTSTS_TXACTFn_Pos)            /*!< PDMA_T::TACTSTS: TXACTFn Mask          */

@@ -8,11 +8,6 @@
  *****************************************************************************/
 #ifndef __PDMA_REG_H__
 #define __PDMA_REG_H__
-
-#if defined ( __CC_ARM   )
-    #pragma anon_unions
-#endif
-
 #define PDMA_CH_MAX    16UL   /*!< Specify Maximum Channels of PDMA  \hideinitializer */
 #define PDMA_CH_Msk    ((1ul<<PDMA_CH_MAX)-1)
 
@@ -1892,8 +1887,5 @@ typedef struct
 /**@}*/ /* end of PDMA register group */
 /**@}*/ /* end of REGISTER group */
 
-#if defined ( __CC_ARM   )
-    #pragma no_anon_unions
-#endif
 
 #endif /* __PDMA_REG_H__ */

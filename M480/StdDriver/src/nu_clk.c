@@ -380,9 +380,9 @@ void CLK_SetHCLK(uint32_t u32ClkSrc, uint32_t u32ClkDiv)
   * |\ref SDH1_MODULE    |\ref CLK_CLKSEL0_SDH1SEL_PLL           |\ref CLK_CLKDIV3_SDH1(x)       |
   * |\ref SDH1_MODULE    |\ref CLK_CLKSEL0_SDH1SEL_HIRC          |\ref CLK_CLKDIV3_SDH1(x)       |
   * |\ref SDH1_MODULE    |\ref CLK_CLKSEL0_SDH1SEL_HCLK          |\ref CLK_CLKDIV3_SDH1(x)       |
-  * |\ref WDT_MODULE     |\ref CLK_CLKSEL1_WDTSEL_LXT            | x                             |
-  * |\ref WDT_MODULE     |\ref CLK_CLKSEL1_WDTSEL_LIRC           | x                             |
-  * |\ref WDT_MODULE     |\ref CLK_CLKSEL1_WDTSEL_HCLK_DIV2048   | x                             |
+  * |\ref WDT0_MODULE     |\ref CLK_CLKSEL1_WDT0SEL_LXT            | x                             |
+  * |\ref WDT0_MODULE     |\ref CLK_CLKSEL1_WDTSEL_LIRC           | x                             |
+  * |\ref WDT0_MODULE     |\ref CLK_CLKSEL1_WDTSEL_HCLK_DIV2048   | x                             |
   * |\ref TMR0_MODULE    |\ref CLK_CLKSEL1_TMR0SEL_HXT           | x                             |
   * |\ref TMR0_MODULE    |\ref CLK_CLKSEL1_TMR0SEL_LXT           | x                             |
   * |\ref TMR0_MODULE    |\ref CLK_CLKSEL1_TMR0SEL_LIRC          | x                             |
@@ -627,7 +627,7 @@ void CLK_DisableXtalRC(uint32_t u32ClkMask)
   *             - \ref FMCIDLE_MODULE
   *             - \ref USBH_MODULE
   *             - \ref SDH1_MODULE
-  *             - \ref WDT_MODULE
+  *             - \ref WDT0_MODULE
   *             - \ref RTC_MODULE
   *             - \ref TMR0_MODULE
   *             - \ref TMR1_MODULE
@@ -710,7 +710,7 @@ void CLK_EnableModuleClock(uint32_t u32ModuleIdx)
   *             - \ref FMCIDLE_MODULE
   *             - \ref USBH_MODULE
   *             - \ref SDH1_MODULE
-  *             - \ref WDT_MODULE
+  *             - \ref WDT0_MODULE
   *             - \ref RTC_MODULE
   *             - \ref TMR0_MODULE
   *             - \ref TMR1_MODULE
@@ -1238,7 +1238,7 @@ uint32_t CLK_GetPLLClockFreq(void)
   *             - \ref CCAP_MODULE
   *             - \ref SDH0_MODULE
   *             - \ref SDH1_MODULE
-  *             - \ref WDT_MODULE
+  *             - \ref WDT0_MODULE
   *             - \ref UART0_MODULE
   *             - \ref UART1_MODULE
   *             - \ref CLKO_MODULE

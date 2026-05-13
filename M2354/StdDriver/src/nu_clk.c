@@ -466,9 +466,9 @@ void CLK_SetHCLK(uint32_t u32ClkSrc, uint32_t u32ClkDiv)
   * |\ref SDH0_MODULE    |\ref CLK_CLKSEL0_SDH0SEL_PLL           |\ref CLK_CLKDIV0_SDH0(x)  |
   * |\ref SDH0_MODULE    |\ref CLK_CLKSEL0_SDH0SEL_HCLK          |\ref CLK_CLKDIV0_SDH0(x)  |
   * |\ref SDH0_MODULE    |\ref CLK_CLKSEL0_SDH0SEL_HIRC          |\ref CLK_CLKDIV0_SDH0(x)  |
-  * |\ref WDT_MODULE     |\ref CLK_CLKSEL1_WDTSEL_LXT            | x                        |
-  * |\ref WDT_MODULE     |\ref CLK_CLKSEL1_WDTSEL_HCLK_DIV2048   | x                        |
-  * |\ref WDT_MODULE     |\ref CLK_CLKSEL1_WDTSEL_LIRC           | x                        |
+  * |\ref WDT0_MODULE     |\ref CLK_CLKSEL1_WDT0SEL_LXT            | x                        |
+  * |\ref WDT0_MODULE     |\ref CLK_CLKSEL1_WDTSEL_HCLK_DIV2048   | x                        |
+  * |\ref WDT0_MODULE     |\ref CLK_CLKSEL1_WDTSEL_LIRC           | x                        |
   * |\ref WWDT_MODULE    |\ref CLK_CLKSEL1_WWDTSEL_HCLK_DIV2048  | x                        |
   * |\ref WWDT_MODULE    |\ref CLK_CLKSEL1_WWDTSEL_LIRC          | x                        |
   * |\ref LCD_MODULE     |\ref CLK_CLKSEL1_LCDSEL_LIRC           | x                        |
@@ -720,7 +720,7 @@ void CLK_DisableXtalRC(uint32_t u32ClkMask)
   *             - \ref GPF_MODULE
   *             - \ref GPG_MODULE
   *             - \ref GPH_MODULE
-  *             - \ref WDT_MODULE
+  *             - \ref WDT0_MODULE
   *             - \ref WWDT_MODULE
   *             - \ref EWDT_MODULE
   *             - \ref EWWDT_MODULE
@@ -809,7 +809,7 @@ void CLK_EnableModuleClock(uint32_t u32ModuleIdx)
   *             - \ref GPF_MODULE
   *             - \ref GPG_MODULE
   *             - \ref GPH_MODULE
-  *             - \ref WDT_MODULE
+  *             - \ref WDT0_MODULE
   *             - \ref WWDT_MODULE
   *             - \ref EWDT_MODULE
   *             - \ref EWWDT_MODULE
@@ -1269,7 +1269,7 @@ uint32_t CLK_GetPLLClockFreq(void)
   * @param[in]  u32ModuleIdx is module index.
   *             - \ref SDH0_MODULE
   *             - \ref USBH_MODULE
-  *             - \ref WDT_MODULE
+  *             - \ref WDT0_MODULE
   *             - \ref WWDT_MODULE
   *             - \ref EWDT_MODULE
   *             - \ref EWWDT_MODULE

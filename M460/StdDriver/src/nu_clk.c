@@ -491,9 +491,9 @@ void CLK_SetHCLK(uint32_t u32ClkSrc, uint32_t u32ClkDiv)
   * |\ref CANFD3_MODULE  |\ref CLK_CLKSEL0_CANFD3SEL_HCLK        |\ref CLK_CLKDIV5_CANFD3(x)     |
   * |\ref CANFD3_MODULE  |\ref CLK_CLKSEL0_CANFD3SEL_HIRC        |\ref CLK_CLKDIV5_CANFD3(x)     |
   * |\ref EMAC0_MODULE   | x                                     |\ref CLK_CLKDIV3_EMAC0(x)      |
-  * |\ref WDT_MODULE     |\ref CLK_CLKSEL1_WDTSEL_LXT            | x                             |
-  * |\ref WDT_MODULE     |\ref CLK_CLKSEL1_WDTSEL_HCLK_DIV2048   | x                             |
-  * |\ref WDT_MODULE     |\ref CLK_CLKSEL1_WDTSEL_LIRC           | x                             |
+  * |\ref WDT0_MODULE     |\ref CLK_CLKSEL1_WDT0SEL_LXT            | x                             |
+  * |\ref WDT0_MODULE     |\ref CLK_CLKSEL1_WDT0SEL_HCLK_DIV2048   | x                             |
+  * |\ref WDT0_MODULE     |\ref CLK_CLKSEL1_WDT0SEL_LIRC           | x                             |
   * |\ref CLKO_MODULE    |\ref CLK_CLKSEL1_CLKOSEL_HXT           | x                             |
   * |\ref CLKO_MODULE    |\ref CLK_CLKSEL1_CLKOSEL_LXT           | x                             |
   * |\ref CLKO_MODULE    |\ref CLK_CLKSEL1_CLKOSEL_HCLK          | x                             |
@@ -855,7 +855,7 @@ void CLK_DisableXtalRC(uint32_t u32ClkMask)
   *             - \ref CANFD1_MODULE
   *             - \ref CANFD2_MODULE
   *             - \ref CANFD3_MODULE
-  *             - \ref WDT_MODULE
+  *             - \ref WDT0_MODULE
   *             - \ref WWDT_MODULE
   *             - \ref RTC_MODULE
   *             - \ref TMR0_MODULE
@@ -974,7 +974,7 @@ void CLK_EnableModuleClock(uint32_t u32ModuleIdx)
   *             - \ref CANFD1_MODULE
   *             - \ref CANFD2_MODULE
   *             - \ref CANFD3_MODULE
-  *             - \ref WDT_MODULE
+  *             - \ref WDT0_MODULE
   *             - \ref WWDT_MODULE
   *             - \ref RTC_MODULE
   *             - \ref TMR0_MODULE
@@ -1476,7 +1476,7 @@ uint32_t CLK_GetPLLClockFreq(void)
   *             - \ref CANFD1_MODULE
   *             - \ref CANFD2_MODULE
   *             - \ref CANFD3_MODULE
-  *             - \ref WDT_MODULE
+  *             - \ref WDT0_MODULE
   *             - \ref WWDT_MODULE
   *             - \ref RTC_MODULE
   *             - \ref TMR0_MODULE
@@ -1683,7 +1683,7 @@ void CLK_DisablePLLFN(void)
 uint32_t CLK_EnablePLLFN(uint32_t u32PllClkSrc, uint32_t u32PllFreq)
 {
     uint32_t u32FIN, u32FVCO, u32FREF, u32PllClk;
-    uint32_t u32NR = 0UL, u32NF, u32NO, u32X = 0UL;
+    uint32_t u32NR = 0UL, u32NF = 0UL, u32NO = 0UL, u32X = 0UL;
     float fNX_X = 0.0, fX = 0.0;
 
     /* Disable PLLFN first to avoid unstable when setting PLLFN */
@@ -1757,15 +1757,18 @@ uint32_t CLK_EnablePLLFN(uint32_t u32PllClkSrc, uint32_t u32PllFreq)
             }
         }
 
-        /* Enable and apply new PLL setting. */
-        CLK->PLLFNCTL0 = (u32X << CLK_PLLFNCTL0_FRDIV_Pos) |
-                         (u32NO << CLK_PLLFNCTL0_OUTDIV_Pos) |
-                         ((u32NR - 1UL) << CLK_PLLFNCTL0_INDIV_Pos) |
-                         ((u32NF - 2UL) << CLK_PLLFNCTL0_FBDIV_Pos);
-        CLK->PLLFNCTL1 = u32PllClkSrc;
+        if (u32NR <= 32UL)
+        {
+            /* Enable and apply new PLL setting. */
+            CLK->PLLFNCTL0 = (u32X << CLK_PLLFNCTL0_FRDIV_Pos) |
+                             (u32NO << CLK_PLLFNCTL0_OUTDIV_Pos) |
+                             ((u32NR - 1UL) << CLK_PLLFNCTL0_INDIV_Pos) |
+                             ((u32NF - 2UL) << CLK_PLLFNCTL0_FBDIV_Pos);
+            CLK->PLLFNCTL1 = u32PllClkSrc;
 
-        /* Actual PLL output clock frequency. FOUT = (FIN/NR)*2*(NF.X)*(1/NO) */
-        u32PllClk = (uint32_t)((float)u32FIN / (((u32NO + 1UL) * u32NR) << 11) * ((u32NF << 12) + u32X));
+            /* Actual PLL output clock frequency. FOUT = (FIN/NR)*2*(NF.X)*(1/NO) */
+            u32PllClk = (uint32_t)((float)u32FIN / (((u32NO + 1UL) * u32NR) << 11) * ((u32NF << 12) + u32X));
+        }
     }
 
     if ((u32PllFreq > FREQ_500MHZ) || (u32PllFreq < FREQ_50MHZ) || (u32NR == 33))

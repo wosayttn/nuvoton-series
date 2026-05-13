@@ -69,24 +69,6 @@ void ECAP_EnableINT(ECAP_T *ecap, uint32_t u32Mask)
 {
     /* Enable input channel interrupt */
     ecap->CTL0 |= (u32Mask);
-
-    /* Enable NVIC ECAP IRQ */
-    if (ecap == (ECAP_T *)ECAP0)
-    {
-        NVIC_EnableIRQ((IRQn_Type)ECAP0_IRQn);
-    }
-    else if (ecap == (ECAP_T *)ECAP1)
-    {
-        NVIC_EnableIRQ((IRQn_Type)ECAP1_IRQn);
-    }
-    else if (ecap == (ECAP_T *)ECAP2)
-    {
-        NVIC_EnableIRQ((IRQn_Type)ECAP2_IRQn);
-    }
-    else
-    {
-        NVIC_EnableIRQ((IRQn_Type)ECAP3_IRQn);
-    }
 }
 
 /**
@@ -105,24 +87,6 @@ void ECAP_DisableINT(ECAP_T *ecap, uint32_t u32Mask)
 {
     /* Disable input channel interrupt */
     ecap->CTL0 &= ~(u32Mask);
-
-    /* Disable NVIC ECAP IRQ */
-    if (ecap == (ECAP_T *)ECAP0)
-    {
-        NVIC_DisableIRQ((IRQn_Type)ECAP0_IRQn);
-    }
-    if (ecap == (ECAP_T *)ECAP1)
-    {
-        NVIC_DisableIRQ((IRQn_Type)ECAP1_IRQn);
-    }
-    if (ecap == (ECAP_T *)ECAP2)
-    {
-        NVIC_DisableIRQ((IRQn_Type)ECAP2_IRQn);
-    }
-    else
-    {
-        NVIC_DisableIRQ((IRQn_Type)ECAP3_IRQn);
-    }
 }
 
 /*@}*/ /* end of group ECAP_EXPORTED_FUNCTIONS */

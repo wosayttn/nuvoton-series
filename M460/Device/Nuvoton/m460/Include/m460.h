@@ -87,7 +87,7 @@ typedef enum IRQn
     ISP_IRQn                      = 5,        /*!< FMC ISP Interrupt                                */
     RTC_IRQn                      = 6,        /*!< Real Time Clock Interrupt                        */
     TAMPER_IRQn                   = 7,        /*!< Tamper detection Interrupt                       */
-    WDT_IRQn                      = 8,        /*!< Watchdog timer Interrupt                         */
+    WDT0_IRQn                      = 8,        /*!< Watchdog timer Interrupt                         */
     WWDT_IRQn                     = 9,        /*!< Window Watchdog timer Interrupt                  */
     EINT0_IRQn                    = 10,       /*!< External Input 0 Interrupt                       */
     EINT1_IRQn                    = 11,       /*!< External Input 1 Interrupt                       */
@@ -143,7 +143,7 @@ typedef enum IRQn
     GPJ_IRQn                      = 61,       /*!< GPIO Port J Interrupt                            */
     SPI3_IRQn                     = 62,       /*!< SPI3 Interrupt                                   */
     SPI4_IRQn                     = 63,       /*!< SPI4 Interrupt                                   */
-    EMAC0_TXRX_IRQn               = 66,       /*!< Ethernet MAC 0 Interrupt                         */
+    EMAC0_IRQn                    = 66,       /*!< Ethernet MAC 0 Interrupt                         */
     SDH0_IRQn                     = 64,       /*!< Secure Digital Host Controller 0 Interrupt       */
     USBD20_IRQn                   = 65,       /*!< High Speed USB device Interrupt                  */
     I2S0_IRQn                     = 68,       /*!< I2S0 Interrupt                                   */
@@ -259,7 +259,6 @@ IRQn_Type;
 #include "eqei_reg.h"
 #include "ecap_reg.h"
 #include "uart_reg.h"
-#include "emac_reg.h"
 #include "sc_reg.h"
 #include "i2s_reg.h"
 #include "spi_reg.h"
@@ -300,8 +299,6 @@ IRQn_Type;
 #define SRAM_BASE            ((uint32_t)0x20000000)      /*!< SRAM Base Address       */
 #define PERIPH_BASE          ((uint32_t)0x40000000)      /*!< Peripheral Base Address */
 
-#define TCM_BASE               (PERIPH_BASE + 0xBE000)
-
 /*!< AHB peripherals */
 //HCLK
 // CPU,CRC,EBI,EMC,FMC,PDMA,SD0,SD1,CRPT,SPIM,SRAM,HSUSBD, HSUSBH, USBH
@@ -321,11 +318,11 @@ IRQn_Type;
 #define GPIO_INT_BASE          (PERIPH_BASE + 0x04450UL)
 #define GPIO_PIN_DATA_BASE     (PERIPH_BASE + 0x04800UL)
 #define SPIM_BASE              (PERIPH_BASE + 0x07000UL)
-#define PDMA0_BASE              (PERIPH_BASE + 0x08000UL)
-#define PDMA1_BASE              (PERIPH_BASE + 0x18000UL)
+#define PDMA0_BASE             (PERIPH_BASE + 0x08000UL)
+#define PDMA1_BASE             (PERIPH_BASE + 0x18000UL)
 #define USBH_BASE              (PERIPH_BASE + 0x09000UL)
 #define HSUSBH_BASE            (PERIPH_BASE + 0x1A000UL)
-#define EMAC_BASE              (PERIPH_BASE + 0x12000UL)
+#define EMAC0_BASE             (PERIPH_BASE + 0x12000UL)
 #define FMC_BASE               (PERIPH_BASE + 0x0C000UL)
 #define SDH0_BASE              (PERIPH_BASE + 0x0D000UL)
 #define SDH1_BASE              (PERIPH_BASE + 0x0E000UL)
@@ -436,7 +433,6 @@ IRQn_Type;
   @{
  */
 
-#define TCM                  ((TCM_T *)   TCM_BASE)
 #define SYS                  ((SYS_T *)   SYS_BASE)
 #define CLK                  ((CLK_T *)   CLK_BASE)
 #define NMI                  ((NMI_T *)   NMI_BASE)
@@ -465,7 +461,6 @@ IRQn_Type;
 #define PDMA1                ((PDMA_T *)  PDMA1_BASE)
 #define USBH                 ((USBH_T *)  USBH_BASE)
 #define HSUSBH               ((HSUSBH_T *)  HSUSBH_BASE)
-#define EMAC                 ((EMAC_T *)  EMAC_BASE)
 #define FMC                  ((FMC_T *)   FMC_BASE)
 #define SDH0                 ((SDH_T *)   SDH0_BASE)
 #define SDH1                 ((SDH_T *)   SDH1_BASE)

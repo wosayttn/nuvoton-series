@@ -1089,6 +1089,7 @@ typedef struct
     Constant Definitions for CAN FD Controller
 @{ */
 
+
 #define CANFD_DBTP_DSJW_Pos              (0)                                               /*!< CANFD_T::DBTP: DSJW Position           */
 #define CANFD_DBTP_DSJW_Msk              (0xful << CANFD_DBTP_DSJW_Pos)                    /*!< CANFD_T::DBTP: DSJW Mask               */
 
@@ -1680,8 +1681,8 @@ typedef struct
 #define CANFD_TXEFC_EFS_Pos              (16)                                              /*!< CANFD_T::TXEFC: EFS Position           */
 #define CANFD_TXEFC_EFS_Msk              (0x3ful << CANFD_TXEFC_EFS_Pos)                   /*!< CANFD_T::TXEFC: EFS Mask               */
 
-#define CANFD_TXEFC_EFWN_Pos             (24)                                              /*!< CANFD_T::TXEFC: EFWN Position          */
-#define CANFD_TXEFC_EFWN_Msk             (0x3ful << CANFD_TXEFC_EFWN_Pos)                  /*!< CANFD_T::TXEFC: EFWN Mask              */
+#define CANFD_TXEFC_EFWM_Pos             (24)                                              /*!< CANFD_T::TXEFC: EFWN Position          */
+#define CANFD_TXEFC_EFWM_Msk             (0x3ful << CANFD_TXEFC_EFWM_Pos)                  /*!< CANFD_T::TXEFC: EFWN Mask              */
 
 #define CANFD_TXEFS_EFFL_Pos             (0)                                               /*!< CANFD_T::TXEFS: EFFL Position          */
 #define CANFD_TXEFS_EFFL_Msk             (0x3ful << CANFD_TXEFS_EFFL_Pos)                  /*!< CANFD_T::TXEFS: EFFL Mask              */

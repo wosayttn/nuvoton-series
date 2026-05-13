@@ -113,9 +113,9 @@ extern "C"
 /*---------------------------------------------------------------------------------------------------------*/
 /*  CLKSEL1 constant definitions.                                                                          */
 /*---------------------------------------------------------------------------------------------------------*/
-#define CLK_CLKSEL1_WDTSEL_LXT           (0x1UL << CLK_CLKSEL1_WDTSEL_Pos)          /*!< Select WDT clock source from low speed crystal \hideinitializer */
-#define CLK_CLKSEL1_WDTSEL_HCLK_DIV2048  (0x2UL << CLK_CLKSEL1_WDTSEL_Pos)          /*!< Select WDT clock source from HCLK/2048 \hideinitializer */
-#define CLK_CLKSEL1_WDTSEL_LIRC          (0x3UL << CLK_CLKSEL1_WDTSEL_Pos)          /*!< Select WDT clock source from low speed oscillator \hideinitializer */
+#define CLK_CLKSEL1_WDT0SEL_LXT           (0x1UL << CLK_CLKSEL1_WDT0SEL_Pos)          /*!< Select WDT clock source from low speed crystal \hideinitializer */
+#define CLK_CLKSEL1_WDT0SEL_HCLK_DIV2048  (0x2UL << CLK_CLKSEL1_WDT0SEL_Pos)          /*!< Select WDT clock source from HCLK/2048 \hideinitializer */
+#define CLK_CLKSEL1_WDT0SEL_LIRC          (0x3UL << CLK_CLKSEL1_WDT0SEL_Pos)          /*!< Select WDT clock source from low speed oscillator \hideinitializer */
 
 #define CLK_CLKSEL1_CLKOSEL_HXT          (0x0UL << CLK_CLKSEL1_CLKOSEL_Pos)         /*!< Select CLKO clock source from HXT \hideinitializer */
 #define CLK_CLKSEL1_CLKOSEL_LXT          (0x1UL << CLK_CLKSEL1_CLKOSEL_Pos)         /*!< Select CLKO clock source from LXT \hideinitializer */
@@ -629,7 +629,7 @@ extern "C"
                         MODULE_CLKDIV_ENC(  NA)|MODULE_CLKDIV_Msk_ENC(NA)|MODULE_CLKDIV_Pos_ENC(NA))        /*!< BMC Module */
 
 /* APBCLK0 */
-#define WDT_MODULE     (MODULE_APBCLK_ENC( 1UL)|MODULE_IP_EN_Pos_ENC((uint32_t)CLK_APBCLK0_WDTCKEN_Pos)|\
+#define WDT0_MODULE    (MODULE_APBCLK_ENC( 1UL)|MODULE_IP_EN_Pos_ENC((uint32_t)CLK_APBCLK0_WDTCKEN_Pos)|\
                         MODULE_CLKSEL_ENC( 1UL)|MODULE_CLKSEL_Msk_ENC( 3UL)|MODULE_CLKSEL_Pos_ENC( 0UL)|\
                         MODULE_CLKDIV_ENC(  NA)|MODULE_CLKDIV_Msk_ENC(  NA)|MODULE_CLKDIV_Pos_ENC( NA))     /*!< WDT Module */
 

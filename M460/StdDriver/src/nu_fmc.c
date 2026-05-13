@@ -462,6 +462,46 @@ int32_t FMC_Read_64(uint32_t u32addr, uint32_t *u32data0, uint32_t *u32data1)
     return ret;
 }
 
+int32_t FMC_Read64(uint32_t u32addr, uint64_t *pu64data)
+{
+    int32_t  ret = 0;
+    int32_t i32TimeOutCnt;
+
+    uint32_t *u32data0, *u32data1;
+
+    u32data0 = (uint32_t *)pu64data;
+    u32data1 = (u32data0 + 1);
+
+    g_FMC_i32ErrCode = 0;
+    FMC->ISPCMD = FMC_ISPCMD_READ_64;
+    FMC->ISPADDR = u32addr;
+    FMC->ISPDAT = 0x0UL;
+    FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;
+
+    i32TimeOutCnt = FMC_TIMEOUT_READ;
+    while (FMC->ISPSTS & FMC_ISPSTS_ISPBUSY_Msk)
+    {
+        if (i32TimeOutCnt-- <= 0)
+        {
+            g_FMC_i32ErrCode = -1;
+            ret = -1;
+            break;
+        }
+    }
+
+    if (FMC->ISPSTS & FMC_ISPSTS_ISPFF_Msk)
+    {
+        FMC->ISPSTS |= FMC_ISPSTS_ISPFF_Msk;
+        g_FMC_i32ErrCode = -1;
+        ret = -1;
+    }
+    else
+    {
+        *u32data0 = FMC->MPDAT0;
+        *u32data1 = FMC->MPDAT1;
+    }
+    return ret;
+}
 
 /**
   * @brief    Get the base address of Data Flash if enabled.
@@ -694,6 +734,39 @@ int32_t FMC_WriteMultiple(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32Len)
     return retval;
 }
 
+int32_t FMC_Write64(uint32_t u32addr, uint64_t u64data)
+{
+    int32_t  ret = 0;
+    int32_t i32TimeOutCnt;
+    uint32_t u32data0, u32data1;
+    u32data0 = (uint32_t)(u64data & 0xFFFFFFFF);
+    u32data1 = (uint32_t)(u64data >> 32);
+
+    g_FMC_i32ErrCode = 0;
+    FMC->ISPCMD  = FMC_ISPCMD_PROGRAM_64;
+    FMC->ISPADDR = u32addr;
+    FMC->MPDAT0  = u32data0;
+    FMC->MPDAT1  = u32data1;
+    FMC->ISPTRG  = FMC_ISPTRG_ISPGO_Msk;
+
+    i32TimeOutCnt = FMC_TIMEOUT_WRITE;
+    while (FMC->ISPSTS & FMC_ISPSTS_ISPBUSY_Msk)
+    {
+        if (i32TimeOutCnt-- <= 0)
+        {
+            g_FMC_i32ErrCode = -1;
+            ret = -1;
+        }
+    }
+
+    if (FMC->ISPSTS & FMC_ISPSTS_ISPFF_Msk)
+    {
+        FMC->ISPSTS |= FMC_ISPSTS_ISPFF_Msk;
+        g_FMC_i32ErrCode = -1;
+        ret = -1;
+    }
+    return ret;
+}
 
 /**
   * @brief Program a 64-bits data to the specified OTP.

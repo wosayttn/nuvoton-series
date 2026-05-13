@@ -340,6 +340,24 @@ __STATIC_INLINE int32_t FMC_SetVectorPageAddr(uint32_t u32PageAddr)
     return 0;
 }
 
+/**
+  * @brief      Read Built-in Band-Gap conversion value
+  * @param[in]  None
+  * @return     Built-in Band-Gap conversion value
+  * @details    This function is used to read Band-Gap conversion value.
+  */
+__STATIC_INLINE uint32_t FMC_ReadBandGap(void)
+{
+    FMC->ISPCMD = FMC_ISPCMD_READ_UID;      /* Set ISP Command Code */
+    FMC->ISPADDR = 0x70u;                   /* Must keep 0x70 when read Band-Gap */
+    FMC->ISPTRG = FMC_ISPTRG_ISPGO_Msk;     /* Trigger to start ISP procedure */
+#if ISBEN
+    __ISB();
+#endif                                              /* To make sure ISP/CPU be Synchronized */
+    while (FMC->ISPTRG & FMC_ISPTRG_ISPGO_Msk) {}   /* Waiting for ISP Done */
+
+    return FMC->ISPDAT & 0xFFF;
+}
 
 /*---------------------------------------------------------------------------------------------------------*/
 /*  Functions                                                                                              */
@@ -369,6 +387,8 @@ extern int32_t  FMC_WriteConfig(uint32_t u32Config[], uint32_t u32Count);
 extern uint32_t FMC_GetChkSum(uint32_t u32addr, uint32_t u32count);
 extern uint32_t FMC_CheckAllOne(uint32_t u32addr, uint32_t u32count);
 extern int32_t  FMC_RemapBank(uint32_t u32Bank);
+extern int32_t FMC_Read64(uint32_t u32addr, uint64_t *pu64data);
+extern int32_t FMC_Write64(uint32_t u32addr, uint64_t u64data);
 
 
 /*@}*/ /* end of group FMC_EXPORTED_FUNCTIONS */

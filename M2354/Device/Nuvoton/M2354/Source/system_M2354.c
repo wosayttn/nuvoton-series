@@ -17,7 +17,6 @@
 #if defined (__ARM_FEATURE_CMSE) &&  (__ARM_FEATURE_CMSE == 3U)
 #include "nu_partition_M2354.h"
 #endif
-extern void *g_pfnVectors;                   /* see startup file */
 
 
 /*----------------------------------------------------------------------------
@@ -437,9 +436,6 @@ void SystemInit(void)
     }
 #endif
 
-#if defined (__VTOR_PRESENT) && (__VTOR_PRESENT == 1U)
-    SCB->VTOR = (uint32_t) &g_pfnVectors;
-#endif
 
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3)
     TZ_SAU_Setup();

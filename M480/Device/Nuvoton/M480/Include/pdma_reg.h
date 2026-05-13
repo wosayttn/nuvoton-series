@@ -677,6 +677,9 @@ typedef struct
 #define PDMA_INTSTS_ALIGNF_Pos           (2)                                               /*!< PDMA_T::INTSTS: ALIGNF Position        */
 #define PDMA_INTSTS_ALIGNF_Msk           (0x1ul << PDMA_INTSTS_ALIGNF_Pos)                 /*!< PDMA_T::INTSTS: ALIGNF Mask            */
 
+#define PDMA_INTSTS_REQTOFn_Pos          (8)                                               /*!< PDMA_T::INTSTS: REQTOFn Position       */
+#define PDMA_INTSTS_REQTOFn_Msk          (PDMA_CH_Msk << PDMA_INTSTS_REQTOFn_Pos)          /*!< PDMA_T::INTSTS: REQTOFn Mask           */
+
 #define PDMA_INTSTS_REQTOF0_Pos          (8)                                               /*!< PDMA_T::INTSTS: REQTOF0 Position       */
 #define PDMA_INTSTS_REQTOF0_Msk          (0x1ul << PDMA_INTSTS_REQTOF0_Pos)                /*!< PDMA_T::INTSTS: REQTOF0 Mask           */
 

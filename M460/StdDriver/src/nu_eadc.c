@@ -38,7 +38,7 @@ int32_t g_EADC_i32ErrCode = 0;   /*!< EADC global error code */
 void EADC_Open(EADC_T *eadc, uint32_t u32InputMode)
 {
     uint32_t u32Delay = SystemCoreClock >> 4;
-    uint32_t u32ClkSel0Backup, u32EadcDivBackup, u32PclkDivBackup, u32RegLockBackup = 0;
+    uint32_t u32ClkSel0Backup, u32EadcDivBackup, u32PclkDivBackup;
 
     g_EADC_i32ErrCode = 0;
 
@@ -63,11 +63,6 @@ void EADC_Open(EADC_T *eadc, uint32_t u32InputMode)
         /* Registers backup */
         u32ClkSel0Backup = CLK->CLKSEL0;
         u32PclkDivBackup = CLK->PCLKDIV;
-
-        u32RegLockBackup = SYS_IsRegLocked();
-
-        /* Unlock protected registers */
-        SYS_UnlockReg();
 
         /* Set PCLK and EADC clock to the same frequency. */
         if (eadc == EADC0)
@@ -121,11 +116,6 @@ void EADC_Open(EADC_T *eadc, uint32_t u32InputMode)
         {
             CLK->CLKDIV5 = (u32EadcDivBackup & CLK_CLKDIV5_EADC2DIV_Msk);
             CLK->CLKSEL0 = (CLK->CLKSEL0 & ~CLK_CLKSEL0_EADC2SEL_Msk) | (u32ClkSel0Backup & CLK_CLKSEL0_EADC2SEL_Msk);
-        }
-        if (u32RegLockBackup)
-        {
-            /* Lock protected registers */
-            SYS_LockReg();
         }
     }
 }

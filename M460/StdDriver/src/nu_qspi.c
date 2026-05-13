@@ -264,7 +264,7 @@ void QSPI_EnableAutoSS(QSPI_T *qspi, uint32_t u32SSPinMask, uint32_t u32ActiveLe
   */
 uint32_t QSPI_SetBusClock(QSPI_T *qspi, uint32_t u32BusClock)
 {
-    uint32_t u32ClkSrc, u32HCLKFreq;
+    uint32_t u32ClkSrc = __HIRC, u32HCLKFreq;
     uint32_t u32Div, u32RetValue;
 
     /* Get system clock frequency */

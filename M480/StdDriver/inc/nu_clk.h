@@ -91,7 +91,7 @@ extern "C"
 /*---------------------------------------------------------------------------------------------------------*/
 /*  CLKSEL1 constant definitions.                                                                          */
 /*---------------------------------------------------------------------------------------------------------*/
-#define CLK_CLKSEL1_WDTSEL_LXT           (0x1UL << CLK_CLKSEL1_WDTSEL_Pos)          /*!< Select WDT clock source from low speed crystal \hideinitializer */
+#define CLK_CLKSEL1_WDT0SEL_LXT           (0x1UL << CLK_CLKSEL1_WDTSEL_Pos)          /*!< Select WDT clock source from low speed crystal \hideinitializer */
 #define CLK_CLKSEL1_WDTSEL_LIRC          (0x3UL << CLK_CLKSEL1_WDTSEL_Pos)          /*!< Select WDT clock source from low speed oscillator \hideinitializer */
 #define CLK_CLKSEL1_WDTSEL_HCLK_DIV2048  (0x2UL << CLK_CLKSEL1_WDTSEL_Pos)          /*!< Select WDT clock source from HCLK/2048 \hideinitializer */
 
@@ -375,7 +375,7 @@ extern "C"
 #define SPIM_MODULE      ((0UL<<30)|(MODULE_NoMsk<<28)|(MODULE_NoMsk<<25)|(MODULE_NoMsk<<20)|(MODULE_NoMsk<<18)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5)|(14UL<<0)) /*!< SPIM Module \hideinitializer */
 #define FMCIDLE_MODULE   ((0UL<<30)|(MODULE_NoMsk<<28)|(MODULE_NoMsk<<25)|(MODULE_NoMsk<<20)|(MODULE_NoMsk<<18)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5)|(15UL<<0)) /*!< FMCIDLE Module \hideinitializer */
 #define SDH1_MODULE      ((0UL<<30)|(0UL<<28)         |(0x3UL<<25)       |(22UL<<20)        |(2UL<<18)         |(0xFFUL<<10)      |(24UL<<5)        |(17UL<<0)) /*!< SDH1 Module \hideinitializer */
-#define WDT_MODULE       ((1UL<<30)|(1UL<<28)         |(0x3UL<<25)       |(0UL<<20)         |(MODULE_NoMsk<<18)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5)|(0UL<<0))  /*!< WDT Module \hideinitializer */
+#define WDT0_MODULE       ((1UL<<30)|(1UL<<28)         |(0x3UL<<25)       |(0UL<<20)         |(MODULE_NoMsk<<18)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5)|(0UL<<0))  /*!< WDT Module \hideinitializer */
 #define RTC_MODULE       ((1UL<<30)|(3UL<<28)         |(0x1UL<<25)       |(8UL<<20)         |(MODULE_NoMsk<<18)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5)|(1UL<<0))  /*!< RTC Module \hideinitializer */
 #define TMR0_MODULE      ((1UL<<30)|(1UL<<28)         |(0x7UL<<25)       |(8UL<<20)         |(MODULE_NoMsk<<18)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5)|(2UL<<0))  /*!< TMR0 Module \hideinitializer */
 #define TMR1_MODULE      ((1UL<<30)|(1UL<<28)         |(0x7UL<<25)       |(12UL<<20)        |(MODULE_NoMsk<<18)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5)|(3UL<<0))  /*!< TMR1 Module \hideinitializer */

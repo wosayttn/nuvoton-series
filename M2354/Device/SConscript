@@ -8,15 +8,8 @@ cwd = GetCurrentDir()
 # The set of source files associated with this SConscript file.
 src = Split("""
 Nuvoton/M2354/Source/system_M2354.c
+Nuvoton/M2354/Source/startup_M2354.c
 """)
-
-# add for startup script
-if rtconfig.PLATFORM in ['gcc']:
-    src = src + ['Nuvoton/M2354/Source/GCC/startup_M2354.S']
-elif rtconfig.PLATFORM in ['armcc', 'armclang']:
-    src = src + ['Nuvoton/M2354/Source/ARM/startup_M2354.s']
-elif rtconfig.PLATFORM in ['iccarm']:
-    src = src + ['Nuvoton/M2354/Source/IAR/startup_M2354.s']
 
 path = [cwd + '/Nuvoton/M2354/Include',]
 

@@ -119,6 +119,7 @@ typedef enum IRQn
     I2C0_IRQn                     = 38,       /*!< I2C 0 Interrupt                                  */
     I2C1_IRQn                     = 39,       /*!< I2C 1 Interrupt                                  */
     PDMA_IRQn                     = 40,       /*!< Peripheral DMA Interrupt                         */
+    PDMA0_IRQn                    = PDMA_IRQn,       /*!< Peripheral DMA Interrupt                         */
     DAC_IRQn                      = 41,       /*!< DAC Interrupt                                    */
     EADC00_IRQn                   = 42,       /*!< EADC00 Interrupt                                 */
     EADC01_IRQn                   = 43,       /*!< EADC01 Interrupt                                 */
@@ -279,10 +280,10 @@ IRQn_Type;
 #define GPIOF_BASE             (AHBPERIPH_BASE + 0x04140UL)
 #define GPIOG_BASE             (AHBPERIPH_BASE + 0x04180UL)
 #define GPIOH_BASE             (AHBPERIPH_BASE + 0x041C0UL)
-#define GPIOI_BASE             (AHBPERIPH_BASE + 0x04200UL)
 #define GPIO_DBCTL_BASE        (AHBPERIPH_BASE + 0x04440UL)
 #define GPIO_PIN_DATA_BASE     (AHBPERIPH_BASE + 0x04800UL)
 #define PDMA_BASE              (AHBPERIPH_BASE + 0x08000UL)
+#define PDMA0_BASE             (PDMA_BASE)
 #define USBH_BASE              (AHBPERIPH_BASE + 0x09000UL)
 #define HSUSBH_BASE            (AHBPERIPH_BASE + 0x1A000UL)
 #define EMAC_BASE              (AHBPERIPH_BASE + 0x0B000UL)
@@ -385,6 +386,7 @@ IRQn_Type;
 #define GPH                  ((GPIO_T *)  GPIOH_BASE)
 #define GPIO                 ((GPIO_DBCTL_T *) GPIO_DBCTL_BASE)
 #define PDMA                 ((PDMA_T *)  PDMA_BASE)
+#define PDMA0                ((PDMA_T *)  PDMA0_BASE)
 #define USBH                 ((USBH_T *)  USBH_BASE)
 #define HSUSBH               ((HSUSBH_T *)  HSUSBH_BASE)
 #define EMAC                 ((EMAC_T *)  EMAC_BASE)

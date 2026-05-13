@@ -85,7 +85,7 @@ uint32_t TPWM_ConfigOutputFreqAndDuty(TIMER_T *timer, uint32_t u32Frequency, uin
     timer->PWMCTL = (timer->PWMCTL & ~TIMER_PWMCTL_CNTTYPE_Msk) | (TPWM_UP_COUNT << TIMER_PWMCTL_CNTTYPE_Pos);
 
     /* Set PWM to auto-reload mode */
-    timer->PWMCTL = (timer->PWMCTL & ~TIMER_PWMCTL_CNTMODE_Msk) | TPWM_AUTO_RELOAD_MODE;
+    timer->PWMCTL = (timer->PWMCTL & ~TIMER_PWMCTL_CNTMODE_Msk) | (TPWM_AUTO_RELOAD_MODE << TIMER_PWMCTL_CNTMODE_Pos);
 
     /* Convert to real register value */
     TPWM_SET_PRESCALER(timer, (u32Prescaler - 1UL));

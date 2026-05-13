@@ -275,7 +275,6 @@ void SDH_Set_clock(SDH_T *sdh, uint32_t u32SDClockKhz)
         uint32_t u32Rate, u32Div1;
         static uint32_t u32SDClkSrc = 0UL;
 
-        SYS_UnlockReg();
         /* M2354 is only support SDH0 */
         u32SDClkSrc = (CLK->CLKSEL0 & CLK_CLKSEL0_SDH0SEL_Msk);
         if (u32SDClkSrc == CLK_CLKSEL0_SDH0SEL_HXT)

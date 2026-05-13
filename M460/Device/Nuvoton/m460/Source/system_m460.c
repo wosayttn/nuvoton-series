@@ -79,16 +79,11 @@ void SystemInit(void)
                    (3UL << 11 * 2));               /* set CP11 Full Access */
 #endif
 
-    /* Unlock protected registers */
-    SYS_UnlockReg();
-
     /* Set HCLK switch to be reset by HRESET reset sources */
     outpw(0x40000014, inpw(0x40000014) | BIT7);
 
     /* Set HXT crystal as INV type */
     CLK->PWRCTL &= ~CLK_PWRCTL_HXTSELTYP_Msk;
 
-    /* Lock protected registers */
-    SYS_LockReg();
 
 }
