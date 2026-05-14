@@ -1089,7 +1089,6 @@ typedef struct
     Constant Definitions for CAN FD Controller
 @{ */
 
-
 #define CANFD_DBTP_DSJW_Pos              (0)                                               /*!< CANFD_T::DBTP: DSJW Position           */
 #define CANFD_DBTP_DSJW_Msk              (0xful << CANFD_DBTP_DSJW_Pos)                    /*!< CANFD_T::DBTP: DSJW Mask               */
 

@@ -422,7 +422,7 @@ void PDMA_EnableInt(PDMA_T *pdma, uint32_t u32Ch, uint32_t u32Mask)
 
     if (u32Mask & PDMA_INT_TIMEOUT)
     {
-        pdma->TOUTEN |= (1ul << u32Ch);
+        pdma->TOUTIEN |= (1ul << u32Ch);
     }
 }
 

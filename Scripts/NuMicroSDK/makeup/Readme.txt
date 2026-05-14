@@ -1,0 +1,1 @@
+Drag formatted folder and drop it on AStyle_RTT.bat on window.

@@ -6,7 +6,7 @@
  *           bits definitions and memory mapping for NuMicro M460 MCU.
  *
  * @copyright SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2021 Nuvoton Technology Corp. All rights reserved.
+ * @copyright (C) 2022 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 /**
   \mainpage NuMicro M460 Driver Reference Guide
@@ -45,7 +45,7 @@
   *
   * <b>Copyright Notice</b>
   *
-  * Copyright (C) 2021 Nuvoton Technology Corp. All rights reserved.
+  * Copyright (C) 2022~2026 Nuvoton Technology Corp. All rights reserved.
   */
 #ifndef __M460_H__
 #define __M460_H__
@@ -149,7 +149,7 @@ typedef enum IRQn
     I2S0_IRQn                     = 68,       /*!< I2S0 Interrupt                                   */
     I2S1_IRQn                     = 69,       /*!< I2S1 Interrupt                                   */
     SPI6_IRQn                     = 70,       /*!< SPI6 Interrupt                                   */
-    CRPT_IRQn                     = 71,       /*!< CRPT Interrupt                                   */
+    CRYPTO_IRQn                     = 71,       /*!< CRYPTO Interrupt                                   */
     GPG_IRQn                      = 72,       /*!< GPIO Port G Interrupt                            */
     EINT6_IRQn                    = 73,       /*!< External Input 6 Interrupt                       */
     UART4_IRQn                    = 74,       /*!< UART4 Interrupt                                  */
@@ -301,7 +301,7 @@ IRQn_Type;
 
 /*!< AHB peripherals */
 //HCLK
-// CPU,CRC,EBI,EMC,FMC,PDMA,SD0,SD1,CRPT,SPIM,SRAM,HSUSBD, HSUSBH, USBH
+// CPU,CRC,EBI,EMC,FMC,PDMA,SD0,SD1,CRYPTO,SPIM,SRAM,HSUSBD, HSUSBH, USBH
 #define SYS_BASE               (PERIPH_BASE + 0x00000UL)
 #define CLK_BASE               (PERIPH_BASE + 0x00200UL)
 #define NMI_BASE               (PERIPH_BASE + 0x00300UL)
@@ -330,7 +330,7 @@ IRQn_Type;
 #define HSUSBD_BASE            (PERIPH_BASE + 0x19000UL)
 #define CCAP_BASE              (PERIPH_BASE + 0x30000UL)
 #define CRC_BASE               (PERIPH_BASE + 0x31000UL)
-#define CRPT_BASE              (PERIPH_BASE + 0x32000UL)
+#define CRYPTO_BASE              (PERIPH_BASE + 0x32000UL)
 #define KS_BASE                (PERIPH_BASE + 0x35000UL)
 #define TAMPER_BASE            (PERIPH_BASE + 0xE1000UL)
 #define HBI_BASE               (PERIPH_BASE + 0xCE000UL)
@@ -536,7 +536,7 @@ IRQn_Type;
 #define CANFD1               ((CANFD_T *)   CANFD1_BASE)
 #define CANFD2               ((CANFD_T *)   CANFD2_BASE)
 #define CANFD3               ((CANFD_T *)   CANFD3_BASE)
-#define CRPT                 ((CRPT_T *)  CRPT_BASE)
+#define CRYPTO                 ((CRYPTO_T *)  CRYPTO_BASE)
 #define TRNG                 ((TRNG_T *)  TRNG_BASE)
 #define SPIM                 ((volatile SPIM_T *)  SPIM_BASE)
 #define DAC0                 ((DAC_T *)   DAC0_BASE)

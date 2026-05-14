@@ -45,7 +45,7 @@ extern "C"
 #define PRNG_SEED_RELOAD        (1UL)     /*!< PRNG reload new seed                    \hideinitializer */
 
 #define PRNG_CTL_SEEDSRC_TRNG      (0UL)                       /*!< PRNG seed from TRNG                    \hideinitializer */
-#define PRNG_CTL_SEEDSRC_SEEDREG   (CRPT_PRNG_CTL_SEEDSRC_Msk) /*!< PRNG seed from PRNG seed register      \hideinitializer */
+#define PRNG_CTL_SEEDSRC_SEEDREG   (CRYPTO_PRNG_CTL_SEEDSRC_Msk) /*!< PRNG seed from PRNG seed register      \hideinitializer */
 
 
 #define AES_KEY_SIZE_128        (0UL)     /*!< AES select 128-bit key length           \hideinitializer */
@@ -76,37 +76,16 @@ extern "C"
 #define SM4_MODE_GHASH          (0x221UL)
 #define SM4_MODE_CCM            (0x222UL)
 
-
 #define AES_NO_SWAP             (0UL)     /*!< AES do not swap input and output data   \hideinitializer */
 #define AES_OUT_SWAP            (1UL)     /*!< AES swap output data                    \hideinitializer */
 #define AES_IN_SWAP             (2UL)     /*!< AES swap input data                     \hideinitializer */
 #define AES_IN_OUT_SWAP         (3UL)     /*!< AES swap both input and output data     \hideinitializer */
 
-#define DES_MODE_ECB            (0x000UL) /*!< DES select ECB mode                     \hideinitializer */
-#define DES_MODE_CBC            (0x100UL) /*!< DES select CBC mode                     \hideinitializer */
-#define DES_MODE_CFB            (0x200UL) /*!< DES select CFB mode                     \hideinitializer */
-#define DES_MODE_OFB            (0x300UL) /*!< DES select OFB mode                     \hideinitializer */
-#define DES_MODE_CTR            (0x400UL) /*!< DES select CTR mode                     \hideinitializer */
-#define TDES_MODE_ECB           (0x004UL) /*!< TDES select ECB mode                    \hideinitializer */
-#define TDES_MODE_CBC           (0x104UL) /*!< TDES select CBC mode                    \hideinitializer */
-#define TDES_MODE_CFB           (0x204UL) /*!< TDES select CFB mode                    \hideinitializer */
-#define TDES_MODE_OFB           (0x304UL) /*!< TDES select OFB mode                    \hideinitializer */
-#define TDES_MODE_CTR           (0x404UL) /*!< TDES select CTR mode                    \hideinitializer */
-
-#define TDES_NO_SWAP            (0UL)     /*!< TDES do not swap data                       \hideinitializer */
-#define TDES_WHL_SWAP           (1UL)     /*!< TDES swap high-low word                     \hideinitializer */
-#define TDES_OUT_SWAP           (2UL)     /*!< TDES swap output data                       \hideinitializer */
-#define TDES_OUT_WHL_SWAP       (3UL)     /*!< TDES swap output data and high-low word     \hideinitializer */
-#define TDES_IN_SWAP            (4UL)     /*!< TDES swap input data                        \hideinitializer */
-#define TDES_IN_WHL_SWAP        (5UL)     /*!< TDES swap input data and high-low word      \hideinitializer */
-#define TDES_IN_OUT_SWAP        (6UL)     /*!< TDES swap both input and output data        \hideinitializer */
-#define TDES_IN_OUT_WHL_SWAP    (7UL)     /*!< TDES swap input, output and high-low word   \hideinitializer */
-
-#define SHA_MODE_SHA1           (0UL)     /*!< SHA select SHA-1 160-bit                \hideinitializer */
-#define SHA_MODE_SHA224         (5UL)     /*!< SHA select SHA-224 224-bit              \hideinitializer */
-#define SHA_MODE_SHA256         (4UL)     /*!< SHA select SHA-256 256-bit              \hideinitializer */
-#define SHA_MODE_SHA384         (7UL)     /*!< SHA select SHA-384 384-bit              \hideinitializer */
-#define SHA_MODE_SHA512         (6UL)     /*!< SHA select SHA-512 512-bit              \hideinitializer */
+#define SHA_MODE_SHA1           (0x0UL)    /*!< SHA select SHA-1 160-bit                \hideinitializer */
+#define SHA_MODE_SHA224         (0x5UL)    /*!< SHA select SHA-224 224-bit              \hideinitializer */
+#define SHA_MODE_SHA256         (0x4UL)    /*!< SHA select SHA-256 256-bit              \hideinitializer */
+#define SHA_MODE_SHA384         (0x7UL)    /*!< SHA select SHA-384 384-bit              \hideinitializer */
+#define SHA_MODE_SHA512         (0x6UL)    /*!< SHA select SHA-512 512-bit              \hideinitializer */
 
 #define HMAC_MODE_SHA1          (8UL)     /*!< HMAC select SHA-1 160-bit                \hideinitializer */
 #define HMAC_MODE_SHA224        (13UL)    /*!< HMAC select SHA-224 224-bit              \hideinitializer */
@@ -166,8 +145,8 @@ typedef enum
     CURVE_KO_224,                       /*!< ECC 224-bits "Koblitz" curve   \hideinitializer */
     CURVE_KO_256,                       /*!< ECC 256-bits "Koblitz" curve   \hideinitializer */
     CURVE_BP_256,                       /*!< ECC Brainpool 256-bits curve   \hideinitializer */
-    CURVE_BP_384,                       /*!< ECC Brainpool 256-bits curve   \hideinitializer */
-    CURVE_BP_512,                       /*!< ECC Brainpool 256-bits curve   \hideinitializer */
+    CURVE_BP_384,                       /*!< ECC Brainpool 384-bits curve   \hideinitializer */
+    CURVE_BP_512,                       /*!< ECC Brainpool 512-bits curve   \hideinitializer */
     CURVE_25519,                        /*!< ECC curve-25519          \hideinitializer */
     CURVE_SM2_256,                      /*!< SM2                      \hideinitializer */
     CURVE_UNDEF = -0x7fffffff,                        /*!< Invalid curve            \hideinitializer */
@@ -203,6 +182,9 @@ typedef struct
     uint32_t au32RsaN[128]; /* The base of modulus operation word. */
     uint32_t au32RsaM[128]; /* The base of exponentiation words. */
     uint32_t au32RsaE[128]; /* The exponent of exponentiation words. */
+    uint32_t au32RsaP[128]; /* The Factor of Modulus Operation. */
+    uint32_t au32RsaQ[128]; /* The Factor of Modulus Operation. */
+    uint32_t au32RsaTmpE[128 + 4]; /* The Temporary Buffer for SCAP      */
 } RSA_BUF_NORMAL_T;
 
 /* RSA working buffer for CRT ( + CRT bypass) mode */
@@ -220,37 +202,8 @@ typedef struct
     uint32_t au32RsaTmpDq[128]; /* The Temporary Value(Dq) of RSA CRT. */
     uint32_t au32RsaTmpRp[128]; /* The Temporary Value(Rp) of RSA CRT. */
     uint32_t au32RsaTmpRq[128]; /* The Temporary Value(Rq) of RSA CRT. */
+    uint32_t au32RsaTmpE[128 + 4]; /* The Temporary Buffer for SCAP      */
 } RSA_BUF_CRT_T;
-
-/* RSA working buffer for SCAP mode */
-typedef struct
-{
-    uint32_t au32RsaOutput[128]; /* The RSA answer. */
-    uint32_t au32RsaN[128]; /* The base of modulus operation word. */
-    uint32_t au32RsaM[128]; /* The base of exponentiation words. */
-    uint32_t au32RsaE[128]; /* The exponent of exponentiation words. */
-    uint32_t au32RsaP[128]; /* The Factor of Modulus Operation. */
-    uint32_t au32RsaQ[128]; /* The Factor of Modulus Operation. */
-    uint32_t au32RsaTmpBlindKey[128]; /* The Temporary Value(blind key) of RSA SCAP. */
-} RSA_BUF_SCAP_T;
-
-/* RSA working buffer for CRT ( + CRT bypass ) + SCAP mode */
-typedef struct
-{
-    uint32_t au32RsaOutput[128]; /* The RSA answer. */
-    uint32_t au32RsaN[128]; /* The base of modulus operation word. */
-    uint32_t au32RsaM[128]; /* The base of exponentiation words. */
-    uint32_t au32RsaE[128]; /* The exponent of exponentiation words. */
-    uint32_t au32RsaP[128]; /* The Factor of Modulus Operation. */
-    uint32_t au32RsaQ[128]; /* The Factor of Modulus Operation. */
-    uint32_t au32RsaTmpCp[128]; /* The Temporary Value(Cp) of RSA CRT. */
-    uint32_t au32RsaTmpCq[128]; /* The Temporary Value(Cq) of RSA CRT. */
-    uint32_t au32RsaTmpDp[128]; /* The Temporary Value(Dp) of RSA CRT. */
-    uint32_t au32RsaTmpDq[128]; /* The Temporary Value(Dq) of RSA CRT. */
-    uint32_t au32RsaTmpRp[128]; /* The Temporary Value(Rp) of RSA CRT. */
-    uint32_t au32RsaTmpRq[128]; /* The Temporary Value(Rq) of RSA CRT. */
-    uint32_t au32RsaTmpBlindKey[128]; /* The Temporary Value(blind key) of RSA SCAP. */
-} RSA_BUF_CRT_SCAP_T;
 
 /* RSA working buffer for using key store */
 typedef struct
@@ -258,6 +211,7 @@ typedef struct
     uint32_t au32RsaOutput[128]; /* The RSA answer. */
     uint32_t au32RsaN[128]; /* The base of modulus operation word. */
     uint32_t au32RsaM[128]; /* The base of exponentiation words. */
+    uint32_t au32RsaTmpE[128 + 4]; /* The Temporary Buffer for SCAP      */
 } RSA_BUF_KS_T;
 
 /**@}*/ /* end of group CRYPTO_EXPORTED_CONSTANTS */
@@ -273,229 +227,179 @@ typedef struct
 
 /**
   * @brief This macro enables PRNG interrupt.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define PRNG_ENABLE_INT(crpt)       ((crpt)->INTEN |= CRPT_INTEN_PRNGIEN_Msk)
+#define PRNG_ENABLE_INT(crypto)       ((crypto)->INTEN |= CRYPTO_INTEN_PRNGIEN_Msk)
 
 /**
   * @brief This macro disables PRNG interrupt.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define PRNG_DISABLE_INT(crpt)      ((crpt)->INTEN &= ~CRPT_INTEN_PRNGIEN_Msk)
+#define PRNG_DISABLE_INT(crypto)      ((crypto)->INTEN &= ~CRYPTO_INTEN_PRNGIEN_Msk)
 
 /**
   * @brief This macro gets PRNG interrupt flag.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return PRNG interrupt flag.
   * \hideinitializer
   */
-#define PRNG_GET_INT_FLAG(crpt)     ((crpt)->INTSTS & CRPT_INTSTS_PRNGIF_Msk)
+#define PRNG_GET_INT_FLAG(crypto)     ((crypto)->INTSTS & CRYPTO_INTSTS_PRNGIF_Msk)
 
 /**
   * @brief This macro clears PRNG interrupt flag.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define PRNG_CLR_INT_FLAG(crpt)     ((crpt)->INTSTS = CRPT_INTSTS_PRNGIF_Msk)
+#define PRNG_CLR_INT_FLAG(crypto)     ((crypto)->INTSTS = CRYPTO_INTSTS_PRNGIF_Msk)
 
 /**
   * @brief This macro enables AES interrupt.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define AES_ENABLE_INT(crpt)        ((crpt)->INTEN |= (CRPT_INTEN_AESIEN_Msk|CRPT_INTEN_AESEIEN_Msk))
+#define AES_ENABLE_INT(crypto)        ((crypto)->INTEN |= (CRYPTO_INTEN_AESIEN_Msk|CRYPTO_INTEN_AESEIEN_Msk))
 
 /**
   * @brief This macro disables AES interrupt.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define AES_DISABLE_INT(crpt)       ((crpt)->INTEN &= ~(CRPT_INTEN_AESIEN_Msk|CRPT_INTEN_AESEIEN_Msk))
+#define AES_DISABLE_INT(crypto)       ((crypto)->INTEN &= ~(CRYPTO_INTEN_AESIEN_Msk|CRYPTO_INTEN_AESEIEN_Msk))
 
 /**
   * @brief This macro gets AES interrupt flag.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return AES interrupt flag.
   * \hideinitializer
   */
-#define AES_GET_INT_FLAG(crpt)      ((crpt)->INTSTS & (CRPT_INTSTS_AESIF_Msk|CRPT_INTSTS_AESEIF_Msk))
+#define AES_GET_INT_FLAG(crypto)      ((crypto)->INTSTS & (CRYPTO_INTSTS_AESIF_Msk|CRYPTO_INTSTS_AESEIF_Msk))
 
 /**
   * @brief This macro clears AES interrupt flag.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define AES_CLR_INT_FLAG(crpt)      ((crpt)->INTSTS = (CRPT_INTSTS_AESIF_Msk|CRPT_INTSTS_AESEIF_Msk))
+#define AES_CLR_INT_FLAG(crypto)      ((crypto)->INTSTS = (CRYPTO_INTSTS_AESIF_Msk|CRYPTO_INTSTS_AESEIF_Msk))
 
 /**
   * @brief This macro enables AES key protection.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define AES_ENABLE_KEY_PROTECT(crpt)  ((crpt)->AES_CTL |= CRPT_AES_CTL_KEYPRT_Msk)
+#define AES_ENABLE_KEY_PROTECT(crypto)  ((crypto)->AES_CTL |= CRYPTO_AES_CTL_KEYPRT_Msk)
 
 /**
   * @brief This macro disables AES key protection.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define AES_DISABLE_KEY_PROTECT(crpt) ((crpt)->AES_CTL = ((crpt)->AES_CTL & ~CRPT_AES_CTL_KEYPRT_Msk) | (0x16UL<<CRPT_AES_CTL_KEYUNPRT_Pos)); \
-                                      ((crpt)->AES_CTL &= ~CRPT_AES_CTL_KEYPRT_Msk)
-
-/**
-  * @brief This macro enables TDES interrupt.
-  * @param crpt     Specified crypto module
-  * @return None
-  * \hideinitializer
-  */
-#define TDES_ENABLE_INT(crpt)       ((crpt)->INTEN |= (CRPT_INTEN_TDESIEN_Msk|CRPT_INTEN_TDESEIEN_Msk))
-
-/**
-  * @brief This macro disables TDES interrupt.
-  * @param crpt     Specified crypto module
-  * @return None
-  * \hideinitializer
-  */
-#define TDES_DISABLE_INT(crpt)      ((crpt)->INTEN &= ~(CRPT_INTEN_TDESIEN_Msk|CRPT_INTEN_TDESEIEN_Msk))
-
-/**
-  * @brief This macro gets TDES interrupt flag.
-  * @param crpt     Specified crypto module
-  * @return TDES interrupt flag.
-  * \hideinitializer
-  */
-#define TDES_GET_INT_FLAG(crpt)     ((crpt)->INTSTS & (CRPT_INTSTS_TDESIF_Msk|CRPT_INTSTS_TDESEIF_Msk))
-
-/**
-  * @brief This macro clears TDES interrupt flag.
-  * @param crpt     Specified crypto module
-  * @return None
-  * \hideinitializer
-  */
-#define TDES_CLR_INT_FLAG(crpt)     ((crpt)->INTSTS = (CRPT_INTSTS_TDESIF_Msk|CRPT_INTSTS_TDESEIF_Msk))
-
-/**
-  * @brief This macro enables TDES key protection.
-  * @param crpt     Specified crypto module
-  * @return None
-  * \hideinitializer
-  */
-#define TDES_ENABLE_KEY_PROTECT(crpt)  ((crpt)->TDES_CTL |= CRPT_TDES_CTL_KEYPRT_Msk)
-
-/**
-  * @brief This macro disables TDES key protection.
-  * @param crpt     Specified crypto module
-  * @return None
-  * \hideinitializer
-  */
-#define TDES_DISABLE_KEY_PROTECT(crpt) ((crpt)->TDES_CTL = ((crpt)->TDES_CTL & ~CRPT_TDES_CTL_KEYPRT_Msk) | (0x16UL<<CRPT_TDES_CTL_KEYUNPRT_Pos)); \
-                                       ((crpt)->TDES_CTL &= ~CRPT_TDES_CTL_KEYPRT_Msk)
-
+#define AES_DISABLE_KEY_PROTECT(crypto) ((crypto)->AES_CTL = ((crypto)->AES_CTL & ~CRYPTO_AES_CTL_KEYPRT_Msk) | (0x16UL<<CRYPTO_AES_CTL_KEYUNPRT_Pos)); \
+                                      ((crypto)->AES_CTL &= ~CRYPTO_AES_CTL_KEYPRT_Msk)
 /**
   * @brief This macro enables SHA interrupt.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define SHA_ENABLE_INT(crpt)        ((crpt)->INTEN |= (CRPT_INTEN_HMACIEN_Msk|CRPT_INTEN_HMACEIEN_Msk))
+#define SHA_ENABLE_INT(crypto)        ((crypto)->INTEN |= (CRYPTO_INTEN_HMACIEN_Msk|CRYPTO_INTEN_HMACEIEN_Msk))
 
 /**
   * @brief This macro disables SHA interrupt.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define SHA_DISABLE_INT(crpt)       ((crpt)->INTEN &= ~(CRPT_INTEN_HMACIEN_Msk|CRPT_INTEN_HMACEIEN_Msk))
+#define SHA_DISABLE_INT(crypto)       ((crypto)->INTEN &= ~(CRYPTO_INTEN_HMACIEN_Msk|CRYPTO_INTEN_HMACEIEN_Msk))
 
 /**
   * @brief This macro gets SHA interrupt flag.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return SHA interrupt flag.
   * \hideinitializer
   */
-#define SHA_GET_INT_FLAG(crpt)      ((crpt)->INTSTS & (CRPT_INTSTS_HMACIF_Msk|CRPT_INTSTS_HMACEIF_Msk))
+#define SHA_GET_INT_FLAG(crypto)      ((crypto)->INTSTS & (CRYPTO_INTSTS_HMACIF_Msk|CRYPTO_INTSTS_HMACEIF_Msk))
 
 /**
   * @brief This macro clears SHA interrupt flag.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define SHA_CLR_INT_FLAG(crpt)      ((crpt)->INTSTS = (CRPT_INTSTS_HMACIF_Msk|CRPT_INTSTS_HMACEIF_Msk))
+#define SHA_CLR_INT_FLAG(crypto)      ((crypto)->INTSTS = (CRYPTO_INTSTS_HMACIF_Msk|CRYPTO_INTSTS_HMACEIF_Msk))
 
 /**
   * @brief This macro enables ECC interrupt.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define ECC_ENABLE_INT(crpt)        ((crpt)->INTEN |= (CRPT_INTEN_ECCIEN_Msk|CRPT_INTEN_ECCEIEN_Msk))
+#define ECC_ENABLE_INT(crypto)        ((crypto)->INTEN |= (CRYPTO_INTEN_ECCIEN_Msk|CRYPTO_INTEN_ECCEIEN_Msk))
 
 /**
   * @brief This macro disables ECC interrupt.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define ECC_DISABLE_INT(crpt)       ((crpt)->INTEN &= ~(CRPT_INTEN_ECCIEN_Msk|CRPT_INTEN_ECCEIEN_Msk))
+#define ECC_DISABLE_INT(crypto)       ((crypto)->INTEN &= ~(CRYPTO_INTEN_ECCIEN_Msk|CRYPTO_INTEN_ECCEIEN_Msk))
 
 /**
   * @brief This macro gets ECC interrupt flag.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return ECC interrupt flag.
   * \hideinitializer
   */
-#define ECC_GET_INT_FLAG(crpt)      ((crpt)->INTSTS & (CRPT_INTSTS_ECCIF_Msk|CRPT_INTSTS_ECCEIF_Msk))
+#define ECC_GET_INT_FLAG(crypto)      ((crypto)->INTSTS & (CRYPTO_INTSTS_ECCIF_Msk|CRYPTO_INTSTS_ECCEIF_Msk))
 
 /**
   * @brief This macro clears ECC interrupt flag.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define ECC_CLR_INT_FLAG(crpt)      ((crpt)->INTSTS = (CRPT_INTSTS_ECCIF_Msk|CRPT_INTSTS_ECCEIF_Msk))
+#define ECC_CLR_INT_FLAG(crypto)      ((crypto)->INTSTS = (CRYPTO_INTSTS_ECCIF_Msk|CRYPTO_INTSTS_ECCEIF_Msk))
 
 /**
   * @brief This macro enables RSA interrupt.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define RSA_ENABLE_INT(crpt)        ((crpt)->INTEN |= (CRPT_INTEN_RSAIEN_Msk|CRPT_INTEN_RSAEIEN_Msk))
+#define RSA_ENABLE_INT(crypto)        ((crypto)->INTEN |= (CRYPTO_INTEN_RSAIEN_Msk|CRYPTO_INTEN_RSAEIEN_Msk))
 
 /**
   * @brief This macro disables RSA interrupt.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define RSA_DISABLE_INT(crpt)       ((crpt)->INTEN &= ~(CRPT_INTEN_RSAIEN_Msk|CRPT_INTEN_RSAEIEN_Msk))
+#define RSA_DISABLE_INT(crypto)       ((crypto)->INTEN &= ~(CRYPTO_INTEN_RSAIEN_Msk|CRYPTO_INTEN_RSAEIEN_Msk))
 
 /**
   * @brief This macro gets RSA interrupt flag.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return ECC interrupt flag.
   * \hideinitializer
   */
-#define RSA_GET_INT_FLAG(crpt)      ((crpt)->INTSTS & (CRPT_INTSTS_RSAIF_Msk|CRPT_INTSTS_RSAEIF_Msk))
+#define RSA_GET_INT_FLAG(crypto)      ((crypto)->INTSTS & (CRYPTO_INTSTS_RSAIF_Msk|CRYPTO_INTSTS_RSAEIF_Msk))
 
 /**
   * @brief This macro clears RSA interrupt flag.
-  * @param crpt     Specified crypto module
+  * @param crypto     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define RSA_CLR_INT_FLAG(crpt)      ((crpt)->INTSTS = (CRPT_INTSTS_RSAIF_Msk|CRPT_INTSTS_RSAEIF_Msk))
+#define RSA_CLR_INT_FLAG(crypto)      ((crypto)->INTSTS = (CRYPTO_INTSTS_RSAIF_Msk|CRYPTO_INTSTS_RSAEIF_Msk))
 
 
 /**@}*/ /* end of group CRYPTO_EXPORTED_MACROS */
@@ -510,44 +414,44 @@ typedef struct
 /*  Functions                                                                                      */
 /*---------------------------------------------------------------------------------------------------------*/
 
-void PRNG_Open(CRPT_T *crpt, uint32_t u32KeySize, uint32_t u32SeedReload, uint32_t u32Seed);
-int32_t PRNG_Start(CRPT_T *crpt);
-void PRNG_Read(CRPT_T *crpt, uint32_t u32RandKey[]);
-void AES_Open(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32EncDec, uint32_t u32OpMode, uint32_t u32KeySize, uint32_t u32SwapType);
-void AES_Start(CRPT_T *crpt, int32_t u32Channel, uint32_t u32DMAMode);
-void AES_SetKey(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32Keys[], uint32_t u32KeySize);
-void AES_SetKey_KS(CRPT_T *crpt, KS_MEM_Type mem, int32_t i32KeyIdx);
-void AES_SetInitVect(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32IV[]);
-void AES_SetDMATransfer(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr, uint32_t u32DstAddr, uint32_t u32TransCnt);
-void SHA_Open(CRPT_T *crpt, uint32_t u32OpMode, uint32_t u32SwapType, uint32_t hmac_key_len);
-void SHA_Start(CRPT_T *crpt, uint32_t u32DMAMode);
-void SHA_SetDMATransfer(CRPT_T *crpt, uint32_t u32SrcAddr, uint32_t u32TransCnt);
-void SHA_Read(CRPT_T *crpt, uint32_t u32Digest[]);
-void ECC_DriverISR(CRPT_T *crpt);
-int  ECC_IsPrivateKeyValid(CRPT_T *crpt, E_ECC_CURVE ecc_curve,  char private_k[]);
-int32_t  ECC_GenerateSecretZ(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *private_k, char public_k1[], char public_k2[], char secret_z[]);
-int32_t  ECC_GeneratePublicKey(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *private_k, char public_k1[], char public_k2[]);
-int32_t  ECC_GenerateSignature(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message, char *d, char *k, char *R, char *S);
-int32_t  ECC_VerifySignature(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message, char *public_k1, char *public_k2, char *R, char *S);
+void PRNG_Open(CRYPTO_T *crypto, uint32_t u32KeySize, uint32_t u32SeedReload, uint32_t u32Seed);
+int32_t PRNG_Start(CRYPTO_T *crypto);
+void PRNG_Read(CRYPTO_T *crypto, uint32_t u32RandKey[]);
+void AES_Open(CRYPTO_T *crypto, uint32_t u32Channel, uint32_t u32EncDec, uint32_t u32OpMode, uint32_t u32KeySize, uint32_t u32SwapType);
+void AES_Start(CRYPTO_T *crypto, int32_t u32Channel, uint32_t u32DMAMode);
+void AES_SetKey(CRYPTO_T *crypto, uint32_t u32Channel, uint32_t au32Keys[], uint32_t u32KeySize);
+void AES_SetKey_KS(CRYPTO_T *crypto, KS_MEM_Type mem, int32_t i32KeyIdx);
+void AES_SetInitVect(CRYPTO_T *crypto, uint32_t u32Channel, uint32_t au32IV[]);
+void AES_SetDMATransfer(CRYPTO_T *crypto, uint32_t u32Channel, uint32_t u32SrcAddr, uint32_t u32DstAddr, uint32_t u32TransCnt);
+void SHA_Open(CRYPTO_T *crypto, uint32_t u32OpMode, uint32_t u32SwapType, uint32_t hmac_key_len);
+void SHA_Start(CRYPTO_T *crypto, uint32_t u32DMAMode);
+void SHA_SetDMATransfer(CRYPTO_T *crypto, uint32_t u32SrcAddr, uint32_t u32TransCnt);
+void SHA_Read(CRYPTO_T *crypto, uint32_t u32Digest[]);
+void ECC_DriverISR(CRYPTO_T *crypto);
+int  ECC_IsPrivateKeyValid(CRYPTO_T *crypto, E_ECC_CURVE ecc_curve,  char private_k[]);
+int32_t  ECC_GenerateSecretZ(CRYPTO_T *crypto, E_ECC_CURVE ecc_curve, char *private_k, char public_k1[], char public_k2[], char secret_z[]);
+int32_t  ECC_GeneratePublicKey(CRYPTO_T *crypto, E_ECC_CURVE ecc_curve, char *private_k, char public_k1[], char public_k2[]);
+int32_t  ECC_GenerateSignature(CRYPTO_T *crypto, E_ECC_CURVE ecc_curve, char *message, char *d, char *k, char *R, char *S);
+int32_t  ECC_VerifySignature(CRYPTO_T *crypto, E_ECC_CURVE ecc_curve, char *message, char *public_k1, char *public_k2, char *R, char *S);
 
 
-int32_t RSA_Open(CRPT_T *crpt, uint32_t u32OpMode, uint32_t u32KeySize, void *psRSA_Buf, uint32_t u32BufSize, uint32_t u32UseKS);
-int32_t RSA_SetKey(CRPT_T *crpt, char *Key);
-int32_t RSA_SetDMATransfer(CRPT_T *crpt, char *Src, char *n, char *P, char *Q);
-void RSA_Start(CRPT_T *crpt);
-int32_t RSA_Read(CRPT_T *crpt, char *Output);
-int32_t RSA_SetKey_KS(CRPT_T *crpt, uint32_t u32KeyNum, uint32_t u32KSMemType, uint32_t u32BlindKeyNum);
-int32_t RSA_SetDMATransfer_KS(CRPT_T *crpt, char *Src, char *n, uint32_t u32PNum,
+int32_t RSA_Open(CRYPTO_T *crypto, uint32_t u32OpMode, uint32_t u32KeySize, void *psRSA_Buf, uint32_t u32BufSize, uint32_t u32UseKS);
+int32_t RSA_SetKey(CRYPTO_T *crypto, char *Key);
+int32_t RSA_SetDMATransfer(CRYPTO_T *crypto, char *Src, char *n, char *P, char *Q);
+void RSA_Start(CRYPTO_T *crypto);
+int32_t RSA_Read(CRYPTO_T *crypto, char *Output);
+int32_t RSA_SetKey_KS(CRYPTO_T *crypto, uint32_t u32KeyNum, uint32_t u32KSMemType, uint32_t u32BlindKeyNum);
+int32_t RSA_SetDMATransfer_KS(CRYPTO_T *crypto, char *Src, char *n, uint32_t u32PNum,
                               uint32_t u32QNum, uint32_t u32CpNum, uint32_t u32CqNum, uint32_t u32DpNum,
                               uint32_t u32DqNum, uint32_t u32RpNum, uint32_t u32RqNum);
-int32_t  ECC_GeneratePublicKey_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, KS_MEM_Type mem, int32_t i32KeyIdx, char public_k1[], char public_k2[], uint32_t u32ExtraOp);
-int32_t  ECC_GenerateSignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message, KS_MEM_Type mem_d, int32_t i32KeyIdx_d, KS_MEM_Type mem_k, int32_t i32KeyIdx_k, char *R, char *S);
-int32_t  ECC_VerifySignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message, KS_MEM_Type mem_pk1, int32_t i32KeyIdx_pk1, KS_MEM_Type mem_pk2, int32_t i32KeyIdx_pk2, char *R, char *S);
-int32_t  ECC_GenerateSecretZ_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, KS_MEM_Type mem, int32_t i32KeyIdx, char public_k1[], char public_k2[]);
+int32_t  ECC_GeneratePublicKey_KS(CRYPTO_T *crypto, E_ECC_CURVE ecc_curve, KS_MEM_Type mem, int32_t i32KeyIdx, char public_k1[], char public_k2[], uint32_t u32ExtraOp);
+int32_t  ECC_GenerateSignature_KS(CRYPTO_T *crypto, E_ECC_CURVE ecc_curve, char *message, KS_MEM_Type mem_d, int32_t i32KeyIdx_d, KS_MEM_Type mem_k, int32_t i32KeyIdx_k, char *R, char *S);
+int32_t  ECC_VerifySignature_KS(CRYPTO_T *crypto, E_ECC_CURVE ecc_curve, char *message, KS_MEM_Type mem_pk1, int32_t i32KeyIdx_pk1, KS_MEM_Type mem_pk2, int32_t i32KeyIdx_pk2, char *R, char *S);
+int32_t  ECC_GenerateSecretZ_KS(CRYPTO_T *crypto, E_ECC_CURVE ecc_curve, KS_MEM_Type mem, int32_t i32KeyIdx, char public_k1[], char public_k2[]);
 
-void CRPT_Reg2Hex(int32_t count, uint32_t volatile reg[], char output[]);
-void CRPT_Hex2Reg(char input[], uint32_t volatile reg[]);
-int32_t ECC_GetCurve(CRPT_T *crpt, E_ECC_CURVE ecc_curve, ECC_CURVE *curve);
+void CRYPTO_Reg2Hex(int32_t count, uint32_t volatile reg[], char output[]);
+void CRYPTO_Hex2Reg(char input[], uint32_t volatile reg[]);
+int32_t ECC_GetCurve(CRYPTO_T *crypto, E_ECC_CURVE ecc_curve, ECC_CURVE *curve);
 
 /**@}*/ /* end of group CRYPTO_EXPORTED_FUNCTIONS */
 

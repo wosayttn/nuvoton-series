@@ -100,7 +100,7 @@ void SPI1_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));     
 void SPI2_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 52: SPI2
 void USBD_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 53: USBD
 void OHCI_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 54: OHCI
-void USBOTG_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));     // 55: USBOTG
+void OTG_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));        // 55: OTG
 void BMC_Handler(void) __attribute__((weak, alias("Default_Handler")));           // 56: BMC
 void SPI5_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 57: SPI5
 void SC0_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));        // 58: SC0
@@ -110,12 +110,12 @@ void GPJ_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));      
 void SPI3_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 62: SPI3
 void SPI4_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 63: SPI4
 void SDH0_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 64: SDH0
-void USBD20_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));     // 65: HSUSBD
+void HSUSBD_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));     // 65: HSUSBD
 void EMAC0_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));      // 66: EMAC0
 void I2S0_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 68: I2S0
 void I2S1_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 69: I2S1
 void SPI6_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 70: SPI6
-void CRPT_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 71: CRPT
+void CRYPTO_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 71: CRYPTO
 void GPG_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));        // 72: GPIO Port G
 void EINT6_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));      // 73: External Input 6
 void UART4_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));      // 74: UART4
@@ -137,7 +137,7 @@ void EINT7_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));    
 void SDH1_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 90: SDH1
 void PSIO_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 91: PSIO
 void EHCI_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 92: EHCI
-void USBOTG20_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));   // 93: HSOTG
+void HSOTG_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));      // 93: HSOTG
 void ECAP2_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));      // 94: ECAP2
 void ECAP3_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));      // 95: ECAP3
 void KPI_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));        // 96: KPI
@@ -256,7 +256,7 @@ const VECTOR_TABLE_Type __VECTOR_TABLE[] __VECTOR_TABLE_ATTRIBUTE =
     SPI2_IRQHandler,                          /*   52: SPI2                                              */
     USBD_IRQHandler,                          /*   53: USBD                                              */
     OHCI_IRQHandler,                          /*   54: OHCI                                              */
-    USBOTG_IRQHandler,                        /*   55: OTG                                               */
+    OTG_IRQHandler,                           /*   55: OTG                                               */
     BMC_Handler,                              /*   56: BMC                                               */
     SPI5_IRQHandler,                          /*   57: SPI5                                              */
     SC0_IRQHandler,                           /*   58: SC0                                               */
@@ -266,13 +266,13 @@ const VECTOR_TABLE_Type __VECTOR_TABLE[] __VECTOR_TABLE_ATTRIBUTE =
     SPI3_IRQHandler,                          /*   62: SPI3                                              */
     SPI4_IRQHandler,                          /*   63: SPI4                                              */
     SDH0_IRQHandler,                          /*   64: SDH0                                              */
-    USBD20_IRQHandler,                        /*   65: HSUSBD                                            */
+    HSUSBD_IRQHandler,                        /*   65: HSUSBD                                            */
     EMAC0_IRQHandler,                         /*   66: EMAC0                                             */
     0,                                        /*   67: Reserved                                          */
     I2S0_IRQHandler,                          /*   68: I2S0                                              */
     I2S1_IRQHandler,                          /*   69: I2S1                                              */
     SPI6_IRQHandler,                          /*   70: SPI6                                              */
-    CRPT_IRQHandler,                          /*   71: CRPT                                              */
+    CRYPTO_IRQHandler,                        /*   71: CRYPTO                                            */
     GPG_IRQHandler,                           /*   72: GPG                                               */
     EINT6_IRQHandler,                         /*   73: EINT6                                             */
     UART4_IRQHandler,                         /*   74: UART4                                             */
@@ -294,7 +294,7 @@ const VECTOR_TABLE_Type __VECTOR_TABLE[] __VECTOR_TABLE_ATTRIBUTE =
     SDH1_IRQHandler,                          /*   90: SDH1                                              */
     PSIO_IRQHandler,                          /*   91: PSIO                                              */
     EHCI_IRQHandler,                          /*   92: EHCI                                              */
-    USBOTG20_IRQHandler,                      /*   93: HSOTG                                             */
+    HSOTG_IRQHandler,                         /*   93: HSOTG                                             */
     ECAP2_IRQHandler,                         /*   94: ECAP2                                             */
     ECAP3_IRQHandler,                         /*   95: ECAP3                                             */
     KPI_IRQHandler,                           /*   96: KPI                                               */
