@@ -4,7 +4,7 @@
  * @brief    Watchdog Timer(WDT) driver header file
  *
  * @copyright SPDX-License-Identifier: Apache-2.0
- * @copyright Copyright (c) 2024 Nuvoton Technology Corp. All rights reserved.
+ * @copyright Copyright (C) 2021 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __NU_WDT_H__
 #define __NU_WDT_H__
@@ -173,8 +173,6 @@ __STATIC_INLINE void WDT_DisableInt(WDT_T *wdt);
   * @return     None
   *
   * @details    This function will stop WDT counting and disable WDT module.
-  *
-  * @note       This function sets g_WDT_i32ErrCode to WDT_TIMEOUT_ERR if waiting WDT time-out.
   */
 __STATIC_INLINE void WDT_Close(WDT_T *wdt)
 {

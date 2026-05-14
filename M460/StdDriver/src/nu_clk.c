@@ -17,8 +17,6 @@
   @{
 */
 
-int32_t g_CLK_i32ErrCode = 0;    /*!< CLK global error code */
-
 /** @addtogroup CLK_EXPORTED_FUNCTIONS CLK Exported Functions
   @{
 */
@@ -598,8 +596,8 @@ void CLK_SetHCLK(uint32_t u32ClkSrc, uint32_t u32ClkDiv)
   * |\ref SC2_MODULE     |\ref CLK_CLKSEL3_SC2SEL_PCLK0          |\ref CLK_CLKDIV1_SC2(x)        |
   * |\ref SC2_MODULE     |\ref CLK_CLKSEL3_SC2SEL_HIRC           |\ref CLK_CLKDIV1_SC2(x)        |
   * |\ref KPI_MODULE     |\ref CLK_CLKSEL3_KPISEL_HXT            |\ref CLK_CLKDIV2_KPI(x)        |
-  * |\ref KPI_MODULE     |\ref CLK_CLKSEL3_KPISEL_LIRC           |\ref CLK_CLKDIV1_KPI(x)        |
-  * |\ref KPI_MODULE     |\ref CLK_CLKSEL3_KPISEL_HIRC           |\ref CLK_CLKDIV1_KPI(x)        |
+  * |\ref KPI_MODULE     |\ref CLK_CLKSEL3_KPISEL_LIRC           |\ref CLK_CLKDIV2_KPI(x)        |
+  * |\ref KPI_MODULE     |\ref CLK_CLKSEL3_KPISEL_HIRC           |\ref CLK_CLKDIV2_KPI(x)        |
   * |\ref SPI2_MODULE    |\ref CLK_CLKSEL3_SPI2SEL_HXT           | x                             |
   * |\ref SPI2_MODULE    |\ref CLK_CLKSEL3_SPI2SEL_PLL_DIV2      | x                             |
   * |\ref SPI2_MODULE    |\ref CLK_CLKSEL3_SPI2SEL_PCLK1         | x                             |
@@ -728,9 +726,6 @@ void CLK_SetModuleClock(uint32_t u32ModuleIdx, uint32_t u32ClkSrc, uint32_t u32C
             break;
         case SEN_MODULE:
             CLK->CLKDIV3 = (CLK->CLKDIV3 & (~CLK_CLKDIV3_VSENSEDIV_Msk)) | (u32ClkDiv);
-            break;
-        case EMAC0_MODULE:
-            CLK->CLKDIV3 = (CLK->CLKDIV3 & (~CLK_CLKDIV3_EMAC0DIV_Msk)) | (u32ClkDiv);
             break;
         case SDH1_MODULE:
             CLK->CLKDIV3 = (CLK->CLKDIV3 & (~CLK_CLKDIV3_SDH1DIV_Msk)) | (u32ClkDiv);
@@ -1062,7 +1057,7 @@ void CLK_DisableModuleClock(uint32_t u32ModuleIdx)
   *             - \ref CLK_PLLCTL_PLLSRC_HIRC
   * @param[in]  u32PllFreq is PLL frequency. The range of u32PllFreq is 50 MHz ~ 500 MHz.
   * @return     PLL frequency
-  * @details    This function is used to configure PLLCTL register to set specified PLL frequency. \n
+  * @details    This function is used to configure CLK_PLLCTL register to set specified PLL frequency. \n
   *             The register write-protection function should be disabled before using this function.
   */
 uint32_t CLK_EnablePLL(uint32_t u32PllClkSrc, uint32_t u32PllFreq)
@@ -1070,8 +1065,17 @@ uint32_t CLK_EnablePLL(uint32_t u32PllClkSrc, uint32_t u32PllFreq)
     uint32_t u32PllSrcClk, u32NR, u32NF, u32NO, u32PllClk;
     uint32_t u32Tmp, u32Tmp2, u32Tmp3, u32Min, u32MinNF, u32MinNR;
 
-    /* Disable PLL first to avoid unstable when setting PLL */
-    CLK->PLLCTL |= CLK_PLLCTL_PD_Msk;
+    /* Check if HCLK is PLL before configure PLL */
+    if ((CLK->CLKSEL0 & CLK_CLKSEL0_HCLKSEL_Msk) == CLK_CLKSEL0_HCLKSEL_PLL)
+    {
+        /* Return PLL frequency directly if HCLK is PLL */
+        return CLK_GetPLLClockFreq();
+    }
+    else
+    {
+        /* Disable PLL first to avoid unstable when setting PLL */
+        CLK->PLLCTL |= CLK_PLLCTL_PD_Msk;
+    }
 
     /* PLL source clock is from HXT */
     if (u32PllClkSrc == CLK_PLLCTL_PLLSRC_HXT)
@@ -1119,20 +1123,18 @@ uint32_t CLK_EnablePLL(uint32_t u32PllClkSrc, uint32_t u32PllFreq)
             u32NO = 0UL;
         }
 
-        /* u32NR start from 3 to avoid calculation overflow */
-        u32NR = 3UL;
-
         /* Find best solution */
         u32Min = (uint32_t) - 1;    /* initial u32Min to max value of uint32_t (0xFFFFFFFF) */
         u32MinNR = 0UL;
         u32MinNF = 0UL;
 
-        for (; u32NR <= 32UL; u32NR++)  /* max NR = 32 since NR = INDIV+1 and INDIV = 0~31 */
+        for (u32NR = 1UL; u32NR <= 32UL; u32NR++)  /* NR = 1~32 since NR = INDIV+1 and INDIV = 0~31 */
         {
             u32Tmp = u32PllSrcClk / u32NR;                      /* FREF = FIN/NR */
             if ((u32Tmp >= FREQ_4MHZ) && (u32Tmp <= FREQ_8MHZ)) /* Constraint 2: 4MHz < FREF < 8MHz. */
             {
-                for (u32NF = 2UL; u32NF <= 513UL; u32NF++)      /* NF = 2~513 since NF = FBDIV+2 and FBDIV = 0~511 */
+                for (u32NF = 2UL; u32NF <= 100UL; u32NF++)      /* NF = 2~513 since NF = FBDIV+2 and FBDIV = 0~511 */
+                    /* max NF = 100 to avoid calculation overflow */
                 {
                     u32Tmp2 = (u32Tmp * u32NF) << 1;                            /* FVCO = FREF*2*NF */
                     if ((u32Tmp2 >= FREQ_200MHZ) && (u32Tmp2 <= FREQ_500MHZ))   /* Constraint 3: 200MHz < FVCO < 500MHz */
@@ -1166,15 +1168,30 @@ uint32_t CLK_EnablePLL(uint32_t u32PllClkSrc, uint32_t u32PllFreq)
     }
     else
     {
-        /* Apply default PLL setting and return */
-        CLK->PLLCTL = u32PllClkSrc | CLK_PLLCTL_192MHz_HXT;
+        if (u32PllClkSrc == CLK_PLLCTL_PLLSRC_HXT)
+        {
 
-        /* Actual PLL output clock frequency */
-        u32PllClk = FREQ_192MHZ;
+            /* Apply default PLL setting and return */
+            CLK->PLLCTL = CLK_PLLCTL_192MHz_HXT;
+
+            /* Actual PLL output clock frequency */
+            u32PllClk = FREQ_192MHZ;
+        }
+        else
+        {
+            /* Apply default PLL setting and return */
+            CLK->PLLCTL = CLK_PLLCTL_192MHz_HIRC;
+
+            /* Actual PLL output clock frequency */
+            u32PllClk = FREQ_192MHZ;
+        }
     }
 
-    /* Wait for PLL clock stable */
-    CLK_WaitClockReady(CLK_STATUS_PLLSTB_Msk);
+    if (u32PllClk != 0)
+    {
+        /* Wait for PLL clock stable */
+        CLK_WaitClockReady(CLK_STATUS_PLLSTB_Msk);
+    }
 
     /* Return actual PLL output clock frequency */
     return u32PllClk;
@@ -1185,12 +1202,13 @@ uint32_t CLK_EnablePLL(uint32_t u32PllClkSrc, uint32_t u32PllFreq)
   * @brief      Disable PLL
   * @param      None
   * @return     None
-  * @details    This function set PLL in Power-down mode. \n
+  * @details    This function set PLL in Power-down mode. It is skipped if HCLK is selected as PLL. \n
   *             The register write-protection function should be disabled before using this function.
   */
 void CLK_DisablePLL(void)
 {
-    CLK->PLLCTL |= CLK_PLLCTL_PD_Msk;
+    if ((CLK->CLKSEL0 & CLK_CLKSEL0_HCLKSEL_Msk) != CLK_CLKSEL0_HCLKSEL_PLL)
+        CLK->PLLCTL |= CLK_PLLCTL_PD_Msk;
 }
 
 
@@ -1207,19 +1225,16 @@ void CLK_DisablePLL(void)
   * @retval     0  clock is not stable
   * @retval     1  clock is stable
   * @details    To wait for clock ready by specified clock source stable flag or timeout (>500ms)
-  * @note       This function sets g_CLK_i32ErrCode to CLK_TIMEOUT_ERR if clock source status is not stable.
   */
 uint32_t CLK_WaitClockReady(uint32_t u32ClkMask)
 {
     uint32_t u32TimeOutCnt = SystemCoreClock >> 1; /* 500ms time-out */
     uint32_t u32Ret = 1U;
 
-    g_CLK_i32ErrCode = 0;
     while ((CLK->STATUS & u32ClkMask) != u32ClkMask)
     {
         if (--u32TimeOutCnt == 0)
         {
-            g_CLK_i32ErrCode = CLK_TIMEOUT_ERR;
             u32Ret = 0U;
             break;
         }
@@ -1595,7 +1610,6 @@ uint32_t CLK_GetModuleClockSource(uint32_t u32ModuleIdx)
   *             - \ref SC2_MODULE
   *             - \ref PSIO_MODULE
   *             - \ref KPI_MODULE
-  *             - \ref EMAC0_MODULE
   * @return     Selected module clock divider number setting
   * @details    This function get selected module clock divider number.
   */
@@ -1633,9 +1647,6 @@ uint32_t CLK_GetModuleClockDivider(uint32_t u32ModuleIdx)
         break;
     case SEN_MODULE:
         u32DivVal = (CLK->CLKDIV3 & CLK_CLKDIV3_VSENSEDIV_Msk) >> CLK_CLKDIV3_VSENSEDIV_Pos;
-        break;
-    case EMAC0_MODULE:
-        u32DivVal = (CLK->CLKDIV3 & CLK_CLKDIV3_EMAC0DIV_Msk) >> CLK_CLKDIV3_EMAC0DIV_Pos;
         break;
     case SDH1_MODULE:
         u32DivVal = (CLK->CLKDIV3 & CLK_CLKDIV3_SDH1DIV_Msk) >> CLK_CLKDIV3_SDH1DIV_Pos;
@@ -1677,14 +1688,15 @@ void CLK_DisablePLLFN(void)
   *             - \ref CLK_PLLFNCTL1_PLLSRC_HIRC
   * @param[in]  u32PllFreq is PLLFN frequency. The range of u32PllFreq is 50 MHz ~ 500 MHz.
   * @return     PLL frequency
-  * @details    This function is used to configure PLLFNCTL0 and PLLFNCTL1 register to set specified PLLFN frequency. \n
+  * @details    This function is used to configure CLK_PLLFNCTL0 and CLK_PLLFNCTL1 register to set specified PLLFN frequency. \n
   *             The register write-protection function should be disabled before using this function.
   */
 uint32_t CLK_EnablePLLFN(uint32_t u32PllClkSrc, uint32_t u32PllFreq)
 {
-    uint32_t u32FIN, u32FVCO, u32FREF, u32PllClk;
-    uint32_t u32NR = 0UL, u32NF = 0UL, u32NO = 0UL, u32X = 0UL;
-    float fNX_X = 0.0, fX = 0.0;
+    uint32_t u32FIN, u32FVCO, u32FREF, u32PllClk = 0;
+    uint32_t u32NR = 0UL, u32NF = 0UL, u32NO;
+    uint32_t u32FVCO_NF, u32FVCO_X, u32FRDIV;
+    uint32_t u32Tmp3, u32Min, u32MinNF, u32MinNR, u32MinFRDIV, u32PllFreq_temp;
 
     /* Disable PLLFN first to avoid unstable when setting PLLFN */
     CLK->PLLFNCTL1 |= CLK_PLLFNCTL1_PD_Msk;
@@ -1711,11 +1723,11 @@ uint32_t CLK_EnablePLLFN(uint32_t u32PllClkSrc, uint32_t u32PllFreq)
         /* Wait for HIRC clock ready */
         CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
 
-        /* Select PLL source clock from HIRC */
+        /* Select PLLFN source clock from HIRC */
         u32FIN = __HIRC;
     }
 
-    /* Check PLL frequency range */
+    /* Check PLLFN frequency range */
     /* Constraint 1: 50MHz < FOUT < 500MHz */
     if ((u32PllFreq <= FREQ_500MHZ) && (u32PllFreq >= FREQ_50MHZ))
     {
@@ -1736,54 +1748,95 @@ uint32_t CLK_EnablePLLFN(uint32_t u32PllClkSrc, uint32_t u32PllFreq)
             u32FVCO = u32PllFreq;
         }
 
-        /* u32NR start from 3 to avoid calculation overflow */
-        u32NR = 3UL;
+        /* Find best solution */
+        u32Min = (uint32_t) - 1;    /* initial u32Min to max value of uint32_t (0xFFFFFFFF) */
+        u32MinNR = 0UL;
+        u32MinNF = 0UL;
+        u32MinFRDIV = 0UL;
 
-        for (; u32NR <= 32UL; u32NR++)  /* max NR = 32 since NR = INDIV+1 and INDIV = 0~31 */
+        for (u32NR = 1UL; u32NR <= 32UL; u32NR++)  /* NR = 1~32 since NR = INDIV+1 and INDIV = 0~31 */
         {
             u32FREF = u32FIN / u32NR;                               /* FREF = FIN/NR */
 
             if ((u32FREF >= FREQ_1MHZ) && (u32FREF <= FREQ_8MHZ))   /* Constraint 2: 1MHz <= FREF <= 8MHz. */
             {
-                fNX_X = (float)((u32FVCO * u32NR) >> 1) / u32FIN;
-                u32NF = (uint32_t)fNX_X;
-
-                if ((u32NF >= 12) && (u32NF <= 255))   /* Constraint 4: 12<= NF <= 255. */
+                /* FVCO = FREF * 2 * (NF.x) */
+                u32NF = (u32FVCO >> 1) / u32FREF;                   /* NF.x = FVCO * (1/FREF) * (1/2) */
+                if ((u32NF >= 12) && (u32NF <= 255))                /* NF = 12~255 */
                 {
-                    fX = fNX_X - u32NF;
-                    u32X = (uint32_t)(fX * 4096);
-                    break;
+                    u32FVCO_NF = (u32FREF * u32NF) << 1;            /* FVCO_NF = FREF * 2 * (NF) */
+                    u32FVCO_X = u32FVCO - u32FVCO_NF;               /* FVCO_X = FVCO - FVCO_NF */
+
+                    /* FVCO_X = FREF * 2 * (x) */
+                    /* x = FVCO_X * (1/FREF) * (1/2) */
+                    u32FRDIV = (u32FVCO_X << 9) / (u32FREF >> 2);   /* FRDIV = 4096 * x */
+
+                    u32PllFreq_temp = ((((u32FIN / u32NR) << 1) * u32NF) / (u32NO + 1)) + ((((u32FIN / u32NR) * u32FRDIV) >> 11) / (u32NO + 1));
+
+                    u32Tmp3 = (u32PllFreq_temp > u32PllFreq) ? u32PllFreq_temp - u32PllFreq : u32PllFreq - u32PllFreq_temp;
+
+                    if (u32Tmp3 < u32Min)
+                    {
+                        u32Min = u32Tmp3;
+                        u32MinNR = u32NR;
+                        u32MinNF = u32NF;
+                        u32MinFRDIV = u32FRDIV;
+                        u32PllClk = u32PllFreq_temp;
+
+                        /* Break when get good results */
+                        if (u32Min == 0UL)
+                        {
+                            break;
+                        }
+                    }
                 }
             }
         }
+    }
 
-        if (u32NR <= 32UL)
+    if ((u32PllFreq > FREQ_500MHZ) || (u32PllFreq < FREQ_50MHZ) || (u32Min == (uint32_t) - 1))
+    {
+        if (u32PllClkSrc == CLK_PLLFNCTL1_PLLSRC_HXT)
         {
-            /* Enable and apply new PLL setting. */
-            CLK->PLLFNCTL0 = (u32X << CLK_PLLFNCTL0_FRDIV_Pos) |
-                             (u32NO << CLK_PLLFNCTL0_OUTDIV_Pos) |
-                             ((u32NR - 1UL) << CLK_PLLFNCTL0_INDIV_Pos) |
-                             ((u32NF - 2UL) << CLK_PLLFNCTL0_FBDIV_Pos);
-            CLK->PLLFNCTL1 = u32PllClkSrc;
+#if (__HXT == 12000000)
+            /* Apply default PLLFN setting and return */
+            CLK->PLLFNCTL0 = CLK_PLLCTL_192MHz_HXT;
+            CLK->PLLFNCTL1 = CLK_PLLFNCTL1_PLLSRC_HXT;
 
-            /* Actual PLL output clock frequency. FOUT = (FIN/NR)*2*(NF.X)*(1/NO) */
-            u32PllClk = (uint32_t)((float)u32FIN / (((u32NO + 1UL) * u32NR) << 11) * ((u32NF << 12) + u32X));
+            /* Actual PLLFN output clock frequency */
+            u32PllClk = FREQ_192MHZ;
+#else
+            /* No default PLL setting */
+            u32PllClk = 0;
+#endif
+        }
+        else
+        {
+            /* Apply default PLLFN setting and return */
+            CLK->PLLFNCTL0 = CLK_PLLFNCTL0_192MHz_HIRC;
+            CLK->PLLFNCTL1 = CLK_PLLFNCTL1_PLLSRC_HIRC;
+
+            /* Actual PLL output clock frequency */
+            u32PllClk = FREQ_192MHZ;
         }
     }
-
-    if ((u32PllFreq > FREQ_500MHZ) || (u32PllFreq < FREQ_50MHZ) || (u32NR == 33))
+    else
     {
-        /* Apply default PLL setting and return */
-        CLK->PLLCTL = u32PllClkSrc | CLK_PLLCTL_192MHz_HXT;
-
-        /* Actual PLL output clock frequency */
-        u32PllClk = FREQ_192MHZ;
+        /* Enable and apply new PLLFN setting. */
+        CLK->PLLFNCTL0 = (u32MinFRDIV << CLK_PLLFNCTL0_FRDIV_Pos) |
+                         (u32NO << CLK_PLLFNCTL0_OUTDIV_Pos) |
+                         ((u32MinNR - 1UL) << CLK_PLLFNCTL0_INDIV_Pos) |
+                         ((u32MinNF - 2UL) << CLK_PLLFNCTL0_FBDIV_Pos);
+        CLK->PLLFNCTL1 = u32PllClkSrc;
     }
 
-    /* Wait for PLL clock stable */
-    CLK_WaitClockReady(CLK_STATUS_PLLFNSTB_Msk);
+    if (u32PllClk != 0)
+    {
+        /* Wait for PLLFN clock stable */
+        CLK_WaitClockReady(CLK_STATUS_PLLFNSTB_Msk);
+    }
 
-    /* Return actual PLL output clock frequency */
+    /* Return actual PLLFN output clock frequency */
     return u32PllClk;
 }
 
@@ -1791,13 +1844,13 @@ uint32_t CLK_EnablePLLFN(uint32_t u32PllClkSrc, uint32_t u32PllFreq)
 /**
   * @brief      Get PLLFN clock frequency
   * @param      None
-  * @return     PLL frequency
+  * @return     PLLFN frequency
   * @details    This function get PLLFN frequency. The frequency unit is Hz.
   */
 uint32_t CLK_GetPLLFNClockFreq(void)
 {
     uint32_t u32PllFreq = 0UL, u32PllReg0, u32PllReg1;
-    uint32_t u32FIN, u32NF, u32NR, u32NO, u32X;
+    uint32_t u32FIN, u32NF, u32NR, u32NO, u32FRDIV;
     uint8_t au8NoTbl[4] = {1U, 2U, 2U, 4U};
 
     /* Get PLLFN configuration */
@@ -1831,9 +1884,9 @@ uint32_t CLK_GetPLLFNClockFreq(void)
             u32NO = au8NoTbl[((u32PllReg0 & CLK_PLLFNCTL0_OUTDIV_Msk) >> CLK_PLLFNCTL0_OUTDIV_Pos)];
             u32NF = ((u32PllReg0 & CLK_PLLFNCTL0_FBDIV_Msk) >> CLK_PLLFNCTL0_FBDIV_Pos) + 2UL;
             u32NR = ((u32PllReg0 & CLK_PLLFNCTL0_INDIV_Msk) >> CLK_PLLFNCTL0_INDIV_Pos) + 1UL;
-            u32X  = ((u32PllReg0 & CLK_PLLFNCTL0_FRDIV_Msk) >> CLK_PLLFNCTL0_FRDIV_Pos);
+            u32FRDIV = ((u32PllReg0 & CLK_PLLFNCTL0_FRDIV_Msk) >> CLK_PLLFNCTL0_FRDIV_Pos);
 
-            u32PllFreq = (uint32_t)((float)u32FIN / ((u32NO * u32NR) << 11) * (((u32NF << 12) + u32X)));
+            u32PllFreq = ((((u32FIN / u32NR) << 1) * u32NF) / (u32NO)) + ((((u32FIN / u32NR) * u32FRDIV) >> 11) / (u32NO));
         }
     }
 

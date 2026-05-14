@@ -60,14 +60,13 @@ int32_t WDT_Open(WDT_T *wdt,
 
     (wdt)->ALTCTL = u32ResetDelay;
 
-    (wdt)->CTL &= ~(WDT_CTL_RSTEN_Msk | WDT_CTL_WKEN_Msk | WDT_CTL_TOUTSEL_Msk);
-    (wdt)->CTL |= u32TimeoutInterval | WDT_CTL_WDTEN_Msk |
-                  (u32EnableReset << WDT_CTL_RSTEN_Pos) |
-                  (u32EnableWakeup << WDT_CTL_WKEN_Pos);
+    (wdt)->CTL = u32TimeoutInterval | WDT_CTL_WDTEN_Msk |
+               (u32EnableReset << WDT_CTL_RSTEN_Pos) |
+               (u32EnableWakeup << WDT_CTL_WKEN_Pos);
 
     while (((wdt)->CTL & WDT_CTL_SYNC_Msk) == WDT_CTL_SYNC_Msk) /* Wait enable WDTEN bit completed, it needs 2 * WDT_CLK. */
     {
-        if(--u32TimeOutCnt == 0) return WDT_ERR_TIMEOUT;
+        if (--u32TimeOutCnt == 0) return WDT_ERR_TIMEOUT;
     }
 
     return WDT_OK;

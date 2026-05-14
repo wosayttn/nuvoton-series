@@ -20,7 +20,7 @@
 
 /*---------------------- Enhanced Analog to Digital Converter -------------------------*/
 /**
-    @addtogroup EADC Enhanced Analog to Digital Converter(EADC)
+    @addtogroup EADC Enhanced Analog to Digital Converter (EADC)
     Memory Mapped Structure for EADC Controller
 @{ */
 

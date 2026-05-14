@@ -19,7 +19,7 @@
 
 /*---------------------- Key Store -------------------------*/
 /**
-    @addtogroup KS Key Store(KS)
+    @addtogroup KS Key Store (KS)
     Memory Mapped Structure for KS Controller
 @{ */
 

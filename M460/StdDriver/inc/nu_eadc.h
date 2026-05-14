@@ -97,14 +97,14 @@ extern "C"
 #define EADC_MCTL1_ACU_128                  (0x7UL<<EADC_MCTL1_ACU_Pos)   /*!< Accumulated 128 times \hideinitializer */
 #define EADC_MCTL1_ACU_256                  (0x8UL<<EADC_MCTL1_ACU_Pos)   /*!< Accumulated 256 times \hideinitializer */
 
-/*--------------------------------------------------------------------------------------------------*/
-/* Define Error Code                                                                                */
-/*--------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------------------*/
+/* EADC Define Error Code                                                                                  */
+/*---------------------------------------------------------------------------------------------------------*/
 #define EADC_TIMEOUT_ERR                    (-1)    /*!< EADC operation abort due to timeout error \hideinitializer */
+#define EADC_CAL_ERR                        (-2)    /*!< EADC do calibration error \hideinitializer */
+#define EADC_CLKDIV_ERR                     (-3)    /*!< EADC clock frequency is faster than PCLK error \hideinitializer */
 
 /*@}*/ /* end of group EADC_EXPORTED_CONSTANTS */
-
-extern int32_t g_EADC_i32ErrCode;
 
 /** @addtogroup EADC_EXPORTED_FUNCTIONS EADC Exported Functions
   @{
@@ -709,7 +709,7 @@ extern int32_t g_EADC_i32ErrCode;
 /*---------------------------------------------------------------------------------------------------------*/
 /* Define EADC functions prototype                                                                         */
 /*---------------------------------------------------------------------------------------------------------*/
-void EADC_Open(EADC_T *eadc, uint32_t u32InputMode);
+int32_t EADC_Open(EADC_T *eadc, uint32_t u32InputMode);
 void EADC_Close(EADC_T *eadc);
 void EADC_ConfigSampleModule(EADC_T *eadc, uint32_t u32ModuleNum, uint32_t u32TriggerSrc, uint32_t u32Channel);
 void EADC_SetTriggerDelayTime(EADC_T *eadc, uint32_t u32ModuleNum, uint32_t u32TriggerDelayTime, uint32_t u32DelayClockDivider);

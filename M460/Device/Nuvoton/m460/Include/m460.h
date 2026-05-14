@@ -6,7 +6,7 @@
  *           bits definitions and memory mapping for NuMicro M460 MCU.
  *
  * @copyright SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2021 Nuvoton Technology Corp. All rights reserved.
+ * @copyright (C) 2022 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 /**
   \mainpage NuMicro M460 Driver Reference Guide
@@ -45,7 +45,7 @@
   *
   * <b>Copyright Notice</b>
   *
-  * Copyright (C) 2021 Nuvoton Technology Corp. All rights reserved.
+  * Copyright (C) 2022~2026 Nuvoton Technology Corp. All rights reserved.
   */
 #ifndef __M460_H__
 #define __M460_H__

@@ -19,7 +19,7 @@
 */
 
 /**
-    @addtogroup BMC Controller
+    @addtogroup BMC Biphase Mark Coding Controller (BMC)
     Memory Mapped Structure for BMC Controller
 @{ */
 

@@ -20,7 +20,7 @@
 
 /*---------------------- Timer Controller -------------------------*/
 /**
-    @addtogroup TIMER Timer Controller(TIMER)
+    @addtogroup TIMER Timer Controller (TIMER)
     Memory Mapped Structure for CRC Controller
   @{
 */

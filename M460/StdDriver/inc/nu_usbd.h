@@ -9,8 +9,6 @@
 #ifndef __NU_USBD_H__
 #define __NU_USBD_H__
 
-//#define SUPPORT_LPM     // define to support LPM
-
 #ifdef __cplusplus
 extern "C"
 {
@@ -315,7 +313,7 @@ extern const S_USBD_INFO_T gsInfo;
   *
   * @return   None
   *
-  * @details  Set DRVSE0 bit of USB_DRVSE0 register to enable software-disconnect function. Force USB PHY transceiver to drive SE0 to bus.
+  * @details  Set SE0 bit of USB_SE0 register to enable software-disconnect function. Force USB PHY transceiver to drive SE0 to bus.
   * \hideinitializer
   */
 #define USBD_SET_SE0()              ((uint32_t)(USBD->SE0 |= USBD_DRVSE0))
@@ -327,10 +325,34 @@ extern const S_USBD_INFO_T gsInfo;
   *
   * @return   None
   *
-  * @details  Clear DRVSE0 bit of USB_DRVSE0 register to disable software-disconnect function.
+  * @details  Clear SE0 bit of USB_SE0 register to disable software-disconnect function.
   * \hideinitializer
   */
 #define USBD_CLR_SE0()              ((uint32_t)(USBD->SE0 &= ~USBD_DRVSE0))
+
+/**
+  * @brief    Disconnect from the USB host using software settings
+  *
+  * @param    None
+  *
+  * @return   None
+  *
+  * @details  Set USB_SE0 register to enable SE0 to disconnect USBD from the USB host.
+  * \hideinitializer
+  */
+#define USBD_SwDisconnect()         ((uint32_t)(USBD->SE0 |= USBD_DRVSE0))
+
+/**
+  * @brief    Reconnect to the USB host using software settings
+  *
+  * @param    None
+  *
+  * @return   None
+  *
+  * @details  Clear USB_SE0 register to disable SE0 to reconnect USBD to the USB host.
+  * \hideinitializer
+  */
+#define USBD_SwReconnect()          ((uint32_t)(USBD->SE0 &= ~USBD_DRVSE0))
 
 /**
   * @brief       Set USB device address
@@ -441,18 +463,16 @@ extern const S_USBD_INFO_T gsInfo;
   *
   * @param    None
   *
-  * @return   The value of USB_ATTR[13:12] and USB_ATTR[3:0].
+  * @return   The value of USB_ATTR[3:0].
   *           Bit 0  indicates USB bus reset status.
   *           Bit 1  indicates USB bus suspend status.
   *           Bit 2  indicates USB bus resume status.
   *           Bit 3  indicates USB bus time-out status.
-  *           Bit 12 indicates USB bus LPM L1 suspend status.
-  *           Bit 13 indicates USB bus LPM L1 resume status.
   *
-  * @details  Return USB_ATTR[13:12] and USB_ATTR[3:0] for USB bus events.
+  * @details  Return USB_ATTR[3:0] for USB bus events.
   * \hideinitializer
   */
-#define USBD_GET_BUS_STATE()        ((uint32_t)(USBD->ATTR & 0x300f))
+#define USBD_GET_BUS_STATE()        ((uint32_t)(USBD->ATTR & 0xf))
 
 /**
   * @brief    Check cable connection state
