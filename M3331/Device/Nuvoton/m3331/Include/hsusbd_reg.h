@@ -260,7 +260,7 @@ typedef struct
      * |[7:4]   |EPNUM     |Endpoint Number
      * |        |          |This field selects the number of the endpoint. Valid numbers 1 to 15.
      * |        |          |Note: Do not support two endpoints have same endpoint number.
-     * @var HSUSBD_EP_T::EPBUFST
+     * @var HSUSBD_EP_T::EPBUFSTART
      * Offset: 0x20  Endpoint n RAM Start Address Register
      * ---------------------------------------------------------------------------------------------------
      * |Bits    |Field     |Descriptions
@@ -805,7 +805,7 @@ typedef struct
      * |[15:8]  |SETUP7    |Setup Byte 7[15:8]
      * |        |          |This register provides byte 7 of the last setup packet received
      * |        |          |For a Standard Device Request, the most significant byte of the wLength field is returned.
-     * @var HSUSBD_T::CEPBUFST
+     * @var HSUSBD_T::CEPBUFSTART
      * Offset: 0x54  Control Endpoint RAM Start Address Register
      * ---------------------------------------------------------------------------------------------------
      * |Bits    |Field     |Descriptions
@@ -1381,8 +1381,8 @@ typedef struct
 #define HSUSBD_EPCFG_EPNUM_Pos           (4)                                               /*!< HSUSBD_T::EPCFG: EPNUM Position        */
 #define HSUSBD_EPCFG_EPNUM_Msk           (0xful << HSUSBD_EPCFG_EPNUM_Pos)                 /*!< HSUSBD_T::EPCFG: EPNUM Mask            */
 
-#define HSUSBD_EPBUFST_SADDR_Pos         (0)                                               /*!< HSUSBD_T::EPBUFST: SADDR Position      */
-#define HSUSBD_EPBUFST_SADDR_Msk         (0x1ffful << HSUSBD_EPBUFST_SADDR_Pos)            /*!< HSUSBD_T::EPBUFST: SADDR Mask          */
+#define HSUSBD_EPBUFST_SADDR_Pos         (0)                                               /*!< HSUSBD_T::EPBUFSTART: SADDR Position      */
+#define HSUSBD_EPBUFST_SADDR_Msk         (0x1ffful << HSUSBD_EPBUFST_SADDR_Pos)            /*!< HSUSBD_T::EPBUFSTART: SADDR Mask          */
 
 #define HSUSBD_EPBUFEND_EADDR_Pos        (0)                                               /*!< HSUSBD_T::EPBUFEND: EADDR Position     */
 #define HSUSBD_EPBUFEND_EADDR_Msk        (0x1ffful << HSUSBD_EPBUFEND_EADDR_Pos)           /*!< HSUSBD_T::EPBUFEND: EADDR Mask         */

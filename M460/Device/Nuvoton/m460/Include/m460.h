@@ -145,7 +145,7 @@ typedef enum IRQn
     SPI4_IRQn                     = 63,       /*!< SPI4 Interrupt                                   */
     EMAC0_IRQn                    = 66,       /*!< Ethernet MAC 0 Interrupt                         */
     SDH0_IRQn                     = 64,       /*!< Secure Digital Host Controller 0 Interrupt       */
-    USBD20_IRQn                   = 65,       /*!< High Speed USB device Interrupt                  */
+    HSUSBD_IRQn                   = 65,       /*!< High Speed USB device Interrupt                  */
     I2S0_IRQn                     = 68,       /*!< I2S0 Interrupt                                   */
     I2S1_IRQn                     = 69,       /*!< I2S1 Interrupt                                   */
     SPI6_IRQn                     = 70,       /*!< SPI6 Interrupt                                   */
@@ -171,7 +171,7 @@ typedef enum IRQn
     SDH1_IRQn                     = 90,       /*!< Secure Digital Host Controller 1 Interrupt       */
     PSIO_IRQn                     = 91,       /*!< PSIO Interrupt                                   */
     HSUSBH_IRQn                   = 92,       /*!< High speed USB host Interrupt                    */
-    USBOTG20_IRQn                 = 93,       /*!< High speed USB OTG Interrupt                     */
+    HSOTG_IRQn                    = 93,       /*!< High speed USB OTG Interrupt                     */
     ECAP2_IRQn                    = 94,       /*!< ECAP2 Interrupt                                  */
     ECAP3_IRQn                    = 95,       /*!< ECAP3 Interrupt                                  */
     KPI_IRQn                      = 96,       /*!< Keypad Interface Interrupt                       */
