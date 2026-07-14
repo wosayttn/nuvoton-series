@@ -94,7 +94,7 @@ void UART2_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));    
 void UART3_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));      // 49: UART3
 void SPI1_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 51: SPI1
 void SPI2_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 52: SPI2
-void HSUSBH_OHCI_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 54: HSUSBH_OHCI
+void OHCI_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 54: HSUSBH_OHCI
 void ETI_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));        // 56: ETI
 void CRC_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));        // 57: CRC0
 void NS_ISP_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));     // 59: NS ISP
@@ -116,7 +116,7 @@ void ECAP0_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));    
 void GPH_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));        // 88: GPIO Port H
 void EINT7_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));      // 89: External Input 7
 void WWDT1_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));      // 91: WWDT1
-void HSUSBH_EHCI_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 92: HSUSBH_EHCI
+void EHCI_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 92: HSUSBH_EHCI
 void HSOTG_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));      // 93: HSOTG
 void NS_RAMPE_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));   // 96: NS RAMPE
 void PDMA1_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));      // 98: PDMA1
@@ -224,7 +224,7 @@ const VECTOR_TABLE_Type __VECTOR_TABLE[] __VECTOR_TABLE_ATTRIBUTE =
     SPI1_IRQHandler,                          /*    51: SPI1                                             */
     SPI2_IRQHandler,                          /*    52: SPI2                                             */
     0,                                        /*    53: Reserved                                         */
-    HSUSBH_OHCI_IRQHandler,                   /*    54: HSUSBH_OHCI                                      */
+    OHCI_IRQHandler,                          /*    54: HSUSBH_OHCI                                      */
     0,                                        /*    55: Reserved                                         */
     ETI_IRQHandler,                           /*    56: ETI                                              */
     CRC_IRQHandler,                           /*    57: CRC0                                             */
@@ -262,7 +262,7 @@ const VECTOR_TABLE_Type __VECTOR_TABLE[] __VECTOR_TABLE_ATTRIBUTE =
     EINT7_IRQHandler,                         /*    89: External Input 7                                 */
     0,                                        /*    90: Reserved                                         */
     WWDT1_IRQHandler,                         /*    91: WWDT1                                            */
-    HSUSBH_EHCI_IRQHandler,                   /*    92: HSUSBH_EHCI                                      */
+    EHCI_IRQHandler,                     /*    92: HSUSBH_EHCI                                      */
     HSOTG_IRQHandler,                         /*    93: HSOTG                                            */
     0,                                        /*    94: Reserved                                         */
     0,                                        /*    95: Reserved                                         */
