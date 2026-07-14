@@ -260,7 +260,7 @@ typedef struct
      * |[7:4]   |EPNUM     |Endpoint Number
      * |        |          |This field selects the number of the endpoint. Valid numbers 1 to 15.
      * |        |          |Note: Do not support two endpoints have same endpoint number.
-     * @var HSUSBD_EP_T::EPBUFST
+     * @var HSUSBD_EP_T::EPBUFSTART
      * Offset: 0x20  Endpoint n RAM Start Address Register
      * ---------------------------------------------------------------------------------------------------
      * |Bits    |Field     |Descriptions
@@ -290,7 +290,7 @@ typedef struct
     __IO uint32_t EPMPS;                /*!< [0x0014] Endpoint n Maximum Packet Size Register                          */
     __IO uint32_t EPTXCNT;              /*!< [0x0018] Endpoint n Transfer Count Register                               */
     __IO uint32_t EPCFG;                /*!< [0x001c] Endpoint n Configuration Register                                */
-    __IO uint32_t EPBUFST;              /*!< [0x0020] Endpoint n RAM Start Address Register                            */
+    __IO uint32_t EPBUFSTART;              /*!< [0x0020] Endpoint n RAM Start Address Register                            */
     __IO uint32_t EPBUFEND;             /*!< [0x0024] Endpoint n RAM End Address Register                              */
 
 } HSUSBD_EP_T;
@@ -793,7 +793,7 @@ typedef struct
      * |[15:8]  |SETUP7    |Setup Byte 7[15:8]
      * |        |          |This register provides byte 7 of the last setup packet received
      * |        |          |For a Standard Device Request, the most significant byte of the wLength field is returned.
-     * @var HSUSBD_T::CEPBUFST
+     * @var HSUSBD_T::CEPBUFSTART
      * Offset: 0x54  Control Endpoint RAM Start Address Register
      * ---------------------------------------------------------------------------------------------------
      * |Bits    |Field     |Descriptions
@@ -897,7 +897,7 @@ typedef struct
     __I  uint32_t SETUP3_2;              /*!< [0x0048] Setup3 & Setup2 Bytes                                            */
     __I  uint32_t SETUP5_4;              /*!< [0x004c] Setup5 & Setup4 Bytes                                            */
     __I  uint32_t SETUP7_6;              /*!< [0x0050] Setup7 & Setup6 Bytes                                            */
-    __IO uint32_t CEPBUFST;              /*!< [0x0054] Control Endpoint RAM Start Address Register                      */
+    __IO uint32_t CEPBUFSTART;              /*!< [0x0054] Control Endpoint RAM Start Address Register                      */
     __IO uint32_t CEPBUFEND;             /*!< [0x0058] Control Endpoint RAM End Address Register                        */
     __IO uint32_t DMACTL;                /*!< [0x005c] DMA Control Status Register                                      */
     __IO uint32_t DMACNT;                /*!< [0x0060] DMA Count Register                                               */
@@ -1204,8 +1204,8 @@ typedef struct
 #define HSUSBD_SETUP7_6_SETUP7_Pos       (8)                                               /*!< HSUSBD_T::SETUP7_6: SETUP7 Position    */
 #define HSUSBD_SETUP7_6_SETUP7_Msk       (0xfful << HSUSBD_SETUP7_6_SETUP7_Pos)            /*!< HSUSBD_T::SETUP7_6: SETUP7 Mask        */
 
-#define HSUSBD_CEPBUFST_SADDR_Pos        (0)                                               /*!< HSUSBD_T::CEPBUFST: SADDR Position     */
-#define HSUSBD_CEPBUFST_SADDR_Msk        (0xffful << HSUSBD_CEPBUFST_SADDR_Pos)            /*!< HSUSBD_T::CEPBUFST: SADDR Mask         */
+#define HSUSBD_CEPBUFST_SADDR_Pos        (0)                                               /*!< HSUSBD_T::CEPBUFSTART: SADDR Position     */
+#define HSUSBD_CEPBUFST_SADDR_Msk        (0xffful << HSUSBD_CEPBUFST_SADDR_Pos)            /*!< HSUSBD_T::CEPBUFSTART: SADDR Mask         */
 
 #define HSUSBD_CEPBUFEND_EADDR_Pos       (0)                                               /*!< HSUSBD_T::CEPBUFEND: EADDR Position    */
 #define HSUSBD_CEPBUFEND_EADDR_Msk       (0xffful << HSUSBD_CEPBUFEND_EADDR_Pos)           /*!< HSUSBD_T::CEPBUFEND: EADDR Mask        */
@@ -1357,8 +1357,8 @@ typedef struct
 #define HSUSBD_EPCFG_EPNUM_Pos           (4)                                               /*!< HSUSBD_T::EPCFG: EPNUM Position        */
 #define HSUSBD_EPCFG_EPNUM_Msk           (0xful << HSUSBD_EPCFG_EPNUM_Pos)                 /*!< HSUSBD_T::EPCFG: EPNUM Mask            */
 
-#define HSUSBD_EPBUFST_SADDR_Pos         (0)                                               /*!< HSUSBD_T::EPBUFST: SADDR Position      */
-#define HSUSBD_EPBUFST_SADDR_Msk         (0xffful << HSUSBD_EPBUFST_SADDR_Pos)             /*!< HSUSBD_T::EPBUFST: SADDR Mask          */
+#define HSUSBD_EPBUFST_SADDR_Pos         (0)                                               /*!< HSUSBD_T::EPBUFSTART: SADDR Position      */
+#define HSUSBD_EPBUFST_SADDR_Msk         (0xffful << HSUSBD_EPBUFST_SADDR_Pos)             /*!< HSUSBD_T::EPBUFSTART: SADDR Mask          */
 
 #define HSUSBD_EPBUFEND_EADDR_Pos        (0)                                               /*!< HSUSBD_T::EPBUFEND: EADDR Position     */
 #define HSUSBD_EPBUFEND_EADDR_Msk        (0xffful << HSUSBD_EPBUFEND_EADDR_Pos)            /*!< HSUSBD_T::EPBUFEND: EADDR Mask         */

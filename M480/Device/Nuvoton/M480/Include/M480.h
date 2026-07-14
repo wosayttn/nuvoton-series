@@ -143,7 +143,7 @@ typedef enum IRQn
     EMAC_TX_IRQn                  = 66,       /*!< Ethernet MAC TX Interrupt                        */
     EMAC_RX_IRQn                  = 67,       /*!< Ethernet MAC RX Interrupt                        */
     SDH0_IRQn                     = 64,       /*!< Secure Digital Host Controller 0 Interrupt       */
-    USBD20_IRQn                   = 65,       /*!< High Speed USB device Interrupt                  */
+    HSUSBD_IRQn                   = 65,       /*!< High Speed USB device Interrupt                  */
     I2S0_IRQn                     = 68,       /*!< I2S0 Interrupt                                   */
     OPA_IRQn                      = 70,       /*!< OPA Interrupt                                    */
     CRPT_IRQn                     = 71,       /*!< CRPT Interrupt                                   */
@@ -166,7 +166,7 @@ typedef enum IRQn
     EINT7_IRQn                    = 89,       /*!< External Input 7 Interrupt                       */
     SDH1_IRQn                     = 90,       /*!< Secure Digital Host Controller 1 Interrupt       */
     HSUSBH_IRQn                   = 92,       /*!< High speed USB host Interrupt                    */
-    USBOTG20_IRQn                 = 93,       /*!< High speed USB OTG Interrupt                     */
+    HSOTG_IRQn                 = 93,       /*!< High speed USB OTG Interrupt                     */
     TRNG_IRQn                     = 101,      /*!< TRNG Interrupt                                   */
     UART6_IRQn                    = 102,      /*!< UART6 Interrupt                                  */
     UART7_IRQn                    = 103,      /*!< UART7 Interrupt                                  */

@@ -106,7 +106,7 @@ void SC1_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void SC2_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void SPI3_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void SDH0_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
-void USBD20_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
+void HSUSBD_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void EMAC_TX_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void EMAC_RX_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void I2S0_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
@@ -131,7 +131,7 @@ void GPH_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void EINT7_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void SDH1_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void EHCI_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
-void USBOTG20_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
+void HSOTG_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void TRNG_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void UART6_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void UART7_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
@@ -234,7 +234,7 @@ const VECTOR_TABLE_Type __VECTOR_TABLE[] __VECTOR_TABLE_ATTRIBUTE =
     SPI3_IRQHandler,                          /*   62: SPI3                                              */
     Default_Handler,                          /*   63: Reserved                                          */
     SDH0_IRQHandler,                          /*   64: SDH0                                              */
-    USBD20_IRQHandler,                        /*   65: USBD20                                            */
+    HSUSBD_IRQHandler,                        /*   65: USBD20                                            */
     EMAC_TX_IRQHandler,                       /*   66: EMAC_TX                                           */
     EMAC_RX_IRQHandler,                       /*   67: EMAC_RX                                           */
     I2S0_IRQHandler,                          /*   68: I2S0                                              */
@@ -262,7 +262,7 @@ const VECTOR_TABLE_Type __VECTOR_TABLE[] __VECTOR_TABLE_ATTRIBUTE =
     SDH1_IRQHandler,                          /*   90: SDH1                                              */
     Default_Handler,                          /*   91: Reserved                                          */
     EHCI_IRQHandler,                          /*   92: EHCI                                              */
-    USBOTG20_IRQHandler,                      /*   93: USBOTG20                                          */
+    HSOTG_IRQHandler,                      /*   93: HSOTG                                          */
     Default_Handler,                          /*   94: Reserved                                          */
     Default_Handler,                          /*   95: Reserved                                          */
     Default_Handler,                          /*   96: Reserved                                          */

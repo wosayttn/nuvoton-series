@@ -226,12 +226,12 @@ __STATIC_INLINE void HSUSBD_SetEpBufAddr(uint32_t u32Ep, uint32_t u32Base, uint3
 {
     if (u32Ep == CEP)
     {
-        HSUSBD->CEPBUFST = u32Base;
+        HSUSBD->CEPBUFSTART = u32Base;
         HSUSBD->CEPBUFEND   = u32Base + u32Len - 1ul;
     }
     else
     {
-        HSUSBD->EP[u32Ep].EPBUFST = u32Base;
+        HSUSBD->EP[u32Ep].EPBUFSTART = u32Base;
         HSUSBD->EP[u32Ep].EPBUFEND = u32Base + u32Len - 1ul;
     }
 }
