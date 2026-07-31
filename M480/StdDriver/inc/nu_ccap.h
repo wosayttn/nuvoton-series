@@ -88,10 +88,11 @@ extern "C"
 #define CCAP_INVALID_BUF               ((int32_t)(0xFFFFFFFF-2))
 #define CCAP_INVALID_PIPE              ((int32_t)(0xFFFFFFFF-3))
 
+#define CCAP_TIMEOUT_ERR    (-1)    /*!< CCAP operation abort due to timeout error \hideinitializer */
 
 /*@}*/ /* end of group NUC472_442_CCAP_EXPORTED_CONSTANTS */
 
-
+extern int32_t g_CCAP_i32ErrCode;
 
 /** @addtogroup CCAP_EXPORTED_FUNCTIONS CCAP Exported Functions
   @{
@@ -134,15 +135,15 @@ extern "C"
 #define CCAP_GET_INT_STS() (CCAP->INT)
 
 void CCAP_Open(uint32_t u32InFormat, uint32_t u32OutFormet);
-void CCAP_SetCroppingWindow(uint32_t u32VStart,uint32_t u32HStart, uint32_t u32Height, uint32_t u32Width);
-void CCAP_SetPacketBuf(uint32_t  u32Address );
+void CCAP_SetCroppingWindow(uint32_t u32VStart, uint32_t u32HStart, uint32_t u32Height, uint32_t u32Width);
+void CCAP_SetPacketBuf(uint32_t  u32Address);
 void CCAP_Close(void);
 void CCAP_EnableInt(uint32_t u32IntMask);
 void CCAP_DisableInt(uint32_t u32IntMask);
 void CCAP_Start(void);
 void CCAP_Stop(uint32_t u32FrameComplete);
 void CCAP_SetPacketScaling(uint32_t u32VNumerator, uint32_t u32VDenominator, uint32_t u32HNumerator, uint32_t u32HDenominator);
-void CCAP_SetPacketStride(uint32_t u32Stride );
+void CCAP_SetPacketStride(uint32_t u32Stride);
 void CCAP_EnableMono(uint32_t u32Interface);
 void CCAP_DisableMono(void);
 void CCAP_EnableLumaYOne(uint32_t u32th);

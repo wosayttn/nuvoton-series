@@ -16,6 +16,7 @@
   @{
 */
 
+int32_t g_CCAP_i32ErrCode = 0;       /*!< CCAP global error code */
 
 /** @addtogroup CCAP_EXPORTED_FUNCTIONS CCAP Exported Functions
   @{
@@ -76,13 +77,13 @@ void CCAP_Open(uint32_t u32InFormat, uint32_t u32OutFormet)
  *
  * @details   Set Cropping Window Starting Address Register
  */
-void CCAP_SetCroppingWindow(uint32_t u32VStart,uint32_t u32HStart, uint32_t u32Height, uint32_t u32Width)
+void CCAP_SetCroppingWindow(uint32_t u32VStart, uint32_t u32HStart, uint32_t u32Height, uint32_t u32Width)
 {
     CCAP->CWSP = (CCAP->CWSP & ~(CCAP_CWSP_CWSADDRV_Msk | CCAP_CWSP_CWSADDRH_Msk))
                  | (((u32VStart << 16) | u32HStart));
 
     CCAP->CWS = (CCAP->CWS & ~(CCAP_CWS_CWH_Msk | CCAP_CWS_CWW_Msk))
-                | ((u32Height << 16)| u32Width);
+                | ((u32Height << 16) | u32Width);
 }
 
 
@@ -95,7 +96,7 @@ void CCAP_SetCroppingWindow(uint32_t u32VStart,uint32_t u32HStart, uint32_t u32H
  *
  * @details   Set System Memory Packet Base Address Register
  */
-void CCAP_SetPacketBuf(uint32_t  u32Address )
+void CCAP_SetPacketBuf(uint32_t  u32Address)
 {
     CCAP->PKTBA0 = u32Address;
     CCAP->CTL |= CCAP_CTL_UPDATE_Msk;
@@ -128,7 +129,7 @@ void CCAP_Close(void)
  */
 void CCAP_EnableInt(uint32_t u32IntMask)
 {
-    CCAP->INT = (CCAP->INT & ~(CCAP_INT_VIEN_Msk | CCAP_INT_MEIEN_Msk | CCAP_INT_ADDRMIEN_Msk ) )
+    CCAP->INT = (CCAP->INT & ~(CCAP_INT_VIEN_Msk | CCAP_INT_MEIEN_Msk | CCAP_INT_ADDRMIEN_Msk))
                 | u32IntMask;
 }
 
@@ -149,7 +150,7 @@ void CCAP_EnableInt(uint32_t u32IntMask)
  */
 void CCAP_DisableInt(uint32_t u32IntMask)
 {
-    CCAP->INT = (CCAP->INT & ~(u32IntMask) ) ;
+    CCAP->INT = (CCAP->INT & ~(u32IntMask)) ;
 }
 
 
@@ -164,7 +165,7 @@ void CCAP_DisableInt(uint32_t u32IntMask)
  */
 void CCAP_EnableMono(uint32_t u32Interface)
 {
-    CCAP->CTL = (CCAP->CTL & ~CCAP_CTL_MY8_MY4) | CCAP_CTL_MONO_Msk |u32Interface;
+    CCAP->CTL = (CCAP->CTL & ~CCAP_CTL_MY8_MY8) | CCAP_CTL_MONO_Msk | u32Interface;
 }
 
 /**
@@ -175,7 +176,7 @@ void CCAP_EnableMono(uint32_t u32Interface)
  */
 void CCAP_DisableMono(void)
 {
-    CCAP->CTL |= CCAP_CTL_MONO_Msk;
+    CCAP->CTL &= ~CCAP_CTL_MONO_Msk;
 }
 
 /**
@@ -221,16 +222,29 @@ void CCAP_Start(void)
  *             FALSE: Stop Capture module now
  * @return    None
  *
- * @details   if u32FrameComplete is set to TRUE then get a new frame and disable CCAP module
+ * @details   if u32FrameComplete is set to TRUE then get a new frame and disable CCAP module.
+ * @note      This function sets g_CCAP_i32ErrCode to CCAP_TIMEOUT_ERR if the CCAP_IS_STOPPED()
+ *            longer than expected.
  */
 void CCAP_Stop(uint32_t u32FrameComplete)
 {
-    if(u32FrameComplete==FALSE)
+    uint32_t u32Delay = SystemCoreClock * 2;  /* 2 second */
+
+    g_CCAP_i32ErrCode = 0;
+    if (u32FrameComplete == FALSE)
         CCAP->CTL &= ~CCAP_CTL_CCAPEN;
     else
     {
         CCAP->CTL |= CCAP_CTL_SHUTTER_Msk;
-        while(CCAP_IS_STOPPED());
+        while (!CCAP_IS_STOPPED())
+        {
+            u32Delay--;
+            if (u32Delay == 0)
+            {
+                g_CCAP_i32ErrCode = CCAP_TIMEOUT_ERR;
+                break;
+            }
+        }
     }
 }
 
@@ -253,21 +267,21 @@ void CCAP_SetPacketScaling(uint32_t u32VNumerator, uint32_t u32VDenominator, uin
     uint32_t u32NumeratorL, u32NumeratorH;
     uint32_t u32DenominatorL, u32DenominatorH;
 
-    u32NumeratorL = u32VNumerator&0xFF;
-    u32NumeratorH=u32VNumerator>>8;
-    u32DenominatorL = u32VDenominator&0xFF;
-    u32DenominatorH = u32VDenominator>>8;
+    u32NumeratorL = u32VNumerator & 0xFF;
+    u32NumeratorH = u32VNumerator >> 8;
+    u32DenominatorL = u32VDenominator & 0xFF;
+    u32DenominatorH = u32VDenominator >> 8;
     CCAP->PKTSL = (CCAP->PKTSL & ~(CCAP_PKTSL_PKTSVNL_Msk | CCAP_PKTSL_PKTSVML_Msk))
-                  | ((u32NumeratorL << 24)| (u32DenominatorL << 16));
+                  | ((u32NumeratorL << 24) | (u32DenominatorL << 16));
     CCAP->PKTSM = (CCAP->PKTSM & ~(CCAP_PKTSM_PKTSVNH_Msk | CCAP_PKTSM_PKTSVMH_Msk))
                   | ((u32NumeratorH << 24) | (u32DenominatorH << 16));
 
-    u32NumeratorL = u32HNumerator&0xFF;
-    u32NumeratorH=u32HNumerator>>8;
-    u32DenominatorL = u32HDenominator&0xFF;
-    u32DenominatorH = u32HDenominator>>8;
+    u32NumeratorL = u32HNumerator & 0xFF;
+    u32NumeratorH = u32HNumerator >> 8;
+    u32DenominatorL = u32HDenominator & 0xFF;
+    u32DenominatorH = u32HDenominator >> 8;
     CCAP->PKTSL = (CCAP->PKTSL & ~(CCAP_PKTSL_PKTSHNL_Msk | CCAP_PKTSL_PKTSHML_Msk))
-                  | ((u32NumeratorL << 8)| u32DenominatorL);
+                  | ((u32NumeratorL << 8) | u32DenominatorL);
     CCAP->PKTSM = (CCAP->PKTSM & ~(CCAP_PKTSM_PKTSHNH_Msk | CCAP_PKTSM_PKTSHMH_Msk))
                   | ((u32NumeratorH << 8) | u32DenominatorH);
 }
@@ -281,7 +295,7 @@ void CCAP_SetPacketScaling(uint32_t u32VNumerator, uint32_t u32VDenominator, uin
  *
  * @details   Set Packet Frame Output Pixel Stride Width
  */
-void CCAP_SetPacketStride(uint32_t u32Stride )
+void CCAP_SetPacketStride(uint32_t u32Stride)
 {
     CCAP->STRIDE = (CCAP->STRIDE & ~CCAP_STRIDE_PKTSTRIDE_Msk) | u32Stride;
 }

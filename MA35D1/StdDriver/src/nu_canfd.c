@@ -588,10 +588,6 @@ static uint32_t CANFD_CalculateTimingValues(CANFD_T *psCanfd, uint32_t u32Nomina
 void CANFD_Open(CANFD_T *psCanfd, CANFD_FD_T *psCanfdStr)
 {
     uint32_t u32SrcCLK;
-    uint32_t u32RegLockLevel = SYS_IsRegLocked();
-
-    if (u32RegLockLevel)
-        SYS_UnlockReg();
 
     if (psCanfd == (CANFD_T *)CANFD0)
     {
@@ -647,9 +643,6 @@ void CANFD_Open(CANFD_T *psCanfd, CANFD_FD_T *psCanfdStr)
     }
     else
     {
-        if (u32RegLockLevel)
-            SYS_LockReg();
-
         return;
     }
 
@@ -679,9 +672,6 @@ void CANFD_Open(CANFD_T *psCanfd, CANFD_FD_T *psCanfdStr)
     {
         CANFD_SetTimingConfig(psCanfd, &psCanfdStr->sBtConfig.sConfigBitTing);
     }
-
-    if (u32RegLockLevel)
-        SYS_LockReg();
 
     /* Configures the Standard ID Filter element */
     if (psCanfdStr->sElemSize.u32SIDFC != 0)

@@ -64,7 +64,7 @@ extern "C"
 /*  Functions                                                                                      */
 /*---------------------------------------------------------------------------------------------------------*/
 
-void TRNG_Open(void);
+int32_t TRNG_Open(void);
 int32_t TRNG_GenWord(uint32_t *u32RndNum);
 int32_t TRNG_GenBignum(uint8_t u8BigNum[], int32_t i32Len);
 int32_t TRNG_GenBignumHex(char cBigNumHex[], int32_t i32Len);

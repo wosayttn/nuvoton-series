@@ -159,9 +159,9 @@ __STATIC_INLINE int32_t OPA_Calibration(OPA_T *opa,
     (opa)->CALCTL = (((opa)->CALCTL) & ~(OPA_CALCTL_CALCLK0_Msk << (u32OpaNum << 1)));
     (opa)->CALCTL = (((opa)->CALCTL) & ~(OPA_CALCTL_CALRVS0_Msk << (u32OpaNum))) | (((u32RefVol) << OPA_CALCTL_CALRVS0_Pos) << (u32OpaNum));
     (opa)->CALCTL |= (OPA_CALCTL_CALTRG0_Msk << (u32OpaNum));
-    while((opa)->CALCTL & (OPA_CALCTL_CALTRG0_Msk << (u32OpaNum))) {}
+    while ((opa)->CALCTL & (OPA_CALCTL_CALTRG0_Msk << (u32OpaNum))) {}
 
-    u32CALResult = ((opa)->CALST >> ((u32OpaNum)*4U)) & (OPA_CALST_CALNS0_Msk|OPA_CALST_CALPS0_Msk);
+    u32CALResult = ((opa)->CALST >> ((u32OpaNum) * 4U)) & (OPA_CALST_CALNS0_Msk | OPA_CALST_CALPS0_Msk);
     if (u32CALResult == 0U)
     {
         i32Ret = 0L;
@@ -174,7 +174,7 @@ __STATIC_INLINE int32_t OPA_Calibration(OPA_T *opa,
     {
         i32Ret = -1L;
     }
-    else if (u32CALResult == (OPA_CALST_CALNS0_Msk|OPA_CALST_CALPS0_Msk))
+    else if (u32CALResult == (OPA_CALST_CALNS0_Msk | OPA_CALST_CALPS0_Msk))
     {
         i32Ret = -3L;
     }

@@ -6,7 +6,7 @@
  *           bits definitions and memory mapping for NuMicro M480 MCU.
  *
  * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2017-2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright (C) 2022-2024 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 /**
   \mainpage NuMicro M480 Driver Reference Guide
@@ -45,7 +45,7 @@
   *
   * <b>Copyright Notice</b>
   *
-  * Copyright (C) 2017-2020 Nuvoton Technology Corp. All rights reserved.
+  * Copyright (C) 2022-2024 Nuvoton Technology Corp. All rights reserved.
   */
 #ifndef __M480_H__
 #define __M480_H__
@@ -86,7 +86,7 @@ typedef enum IRQn
     CKFAIL_IRQn                   = 4,        /*!< Clock failed Interrupt                           */
     RTC_IRQn                      = 6,        /*!< Real Time Clock Interrupt                        */
     TAMPER_IRQn                   = 7,        /*!< Tamper detection Interrupt                       */
-    WDT_IRQn                      = 8,        /*!< Watchdog timer Interrupt                         */
+    WDT0_IRQn                     = 8,        /*!< Watchdog timer Interrupt                         */
     WWDT_IRQn                     = 9,        /*!< Window Watchdog timer Interrupt                  */
     EINT0_IRQn                    = 10,       /*!< External Input 0 Interrupt                       */
     EINT1_IRQn                    = 11,       /*!< External Input 1 Interrupt                       */
@@ -140,8 +140,8 @@ typedef enum IRQn
     SC1_IRQn                      = 59,       /*!< Smart Card 1 Interrupt                           */
     SC2_IRQn                      = 60,       /*!< Smart Card 2 Interrupt                           */
     SPI3_IRQn                     = 62,       /*!< SPI3 Interrupt                                   */
-    EMAC_TX_IRQn                  = 66,       /*!< Ethernet MAC TX Interrupt                        */
-    EMAC_RX_IRQn                  = 67,       /*!< Ethernet MAC RX Interrupt                        */
+    EMAC0_TX_IRQn                  = 66,       /*!< Ethernet MAC TX Interrupt                        */
+    EMAC0_RX_IRQn                  = 67,       /*!< Ethernet MAC RX Interrupt                        */
     SDH0_IRQn                     = 64,       /*!< Secure Digital Host Controller 0 Interrupt       */
     HSUSBD_IRQn                   = 65,       /*!< High Speed USB device Interrupt                  */
     I2S0_IRQn                     = 68,       /*!< I2S0 Interrupt                                   */
@@ -286,7 +286,7 @@ IRQn_Type;
 #define PDMA0_BASE             (PDMA_BASE)
 #define USBH_BASE              (AHBPERIPH_BASE + 0x09000UL)
 #define HSUSBH_BASE            (AHBPERIPH_BASE + 0x1A000UL)
-#define EMAC_BASE              (AHBPERIPH_BASE + 0x0B000UL)
+#define EMAC0_BASE             (AHBPERIPH_BASE + 0x0B000UL)
 #define FMC_BASE               (AHBPERIPH_BASE + 0x0C000UL)
 #define SDH0_BASE              (AHBPERIPH_BASE + 0x0D000UL)
 #define SDH1_BASE              (AHBPERIPH_BASE + 0x0E000UL)
@@ -389,7 +389,7 @@ IRQn_Type;
 #define PDMA0                ((PDMA_T *)  PDMA0_BASE)
 #define USBH                 ((USBH_T *)  USBH_BASE)
 #define HSUSBH               ((HSUSBH_T *)  HSUSBH_BASE)
-#define EMAC                 ((EMAC_T *)  EMAC_BASE)
+#define EMAC0                ((EMAC_T *)  EMAC0_BASE)
 #define FMC                  ((FMC_T *)   FMC_BASE)
 #define SDH0                 ((SDH_T *)   SDH0_BASE)
 #define SDH1                 ((SDH_T *)   SDH1_BASE)
@@ -466,9 +466,10 @@ IRQn_Type;
   @{
  */
 
-typedef volatile unsigned char  vu8;        ///< Define 8-bit unsigned volatile data type
-typedef volatile unsigned short vu16;       ///< Define 16-bit unsigned volatile data type
-typedef volatile unsigned long  vu32;       ///< Define 32-bit unsigned volatile data type
+typedef volatile uint8_t  vu8;        ///< Define 8-bit unsigned volatile data type
+typedef volatile uint16_t vu16;       ///< Define 16-bit unsigned volatile data type
+typedef volatile uint32_t vu32;       ///< Define 32-bit unsigned volatile data type
+typedef volatile uint64_t vu64;       ///< Define 64-bit unsigned volatile data type
 
 /**
   * @brief Get a 8-bit unsigned value from specified address

@@ -126,9 +126,9 @@ extern "C"
   */
 __STATIC_INLINE void I2S_ENABLE_TX_ZCD(I2S_T *i2s, uint32_t u32ChMask)
 {
-    if((u32ChMask > 0U) && (u32ChMask < 9U))
+    if ((u32ChMask > 0U) && (u32ChMask < 9U))
     {
-        i2s->CTL1 |= ((uint32_t)1U << (u32ChMask-1U));
+        i2s->CTL1 |= ((uint32_t)1U << (u32ChMask - 1U));
     }
 }
 
@@ -141,9 +141,9 @@ __STATIC_INLINE void I2S_ENABLE_TX_ZCD(I2S_T *i2s, uint32_t u32ChMask)
   */
 __STATIC_INLINE void I2S_DISABLE_TX_ZCD(I2S_T *i2s, uint32_t u32ChMask)
 {
-    if((u32ChMask > 0U) && (u32ChMask < 9U))
+    if ((u32ChMask > 0U) && (u32ChMask < 9U))
     {
-        i2s->CTL1 &= ~((uint32_t)1U << (u32ChMask-1U));
+        i2s->CTL1 &= ~((uint32_t)1U << (u32ChMask - 1U));
     }
 }
 
@@ -318,7 +318,7 @@ __STATIC_INLINE void I2S_SET_MONO_RX_CHANNEL(I2S_T *i2s, uint32_t u32Ch)
   * @return FIFO level
   * \hideinitializer
   */
-#define I2S_GET_TX_FIFO_LEVEL(i2s) ( (((i2s)->STATUS1 & I2S_STATUS1_TXCNT_Msk) >> I2S_STATUS1_TXCNT_Pos) & 0xF )
+#define I2S_GET_TX_FIFO_LEVEL(i2s) ( (((i2s)->STATUS1 & I2S_STATUS1_TXCNT_Msk) >> I2S_STATUS1_TXCNT_Pos) & 0x1F )
 
 /**
   * @brief  Get receive FIFO level
@@ -326,7 +326,7 @@ __STATIC_INLINE void I2S_SET_MONO_RX_CHANNEL(I2S_T *i2s, uint32_t u32Ch)
   * @return FIFO level
   * \hideinitializer
   */
-#define I2S_GET_RX_FIFO_LEVEL(i2s) ( (((i2s)->STATUS1 & I2S_STATUS1_RXCNT_Msk) >> I2S_STATUS1_RXCNT_Pos) & 0xF )
+#define I2S_GET_RX_FIFO_LEVEL(i2s) ( (((i2s)->STATUS1 & I2S_STATUS1_RXCNT_Msk) >> I2S_STATUS1_RXCNT_Pos) & 0x1F )
 
 void I2S_Close(I2S_T *i2s);
 void I2S_EnableInt(I2S_T *i2s, uint32_t u32Mask);

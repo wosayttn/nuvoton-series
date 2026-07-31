@@ -11,6 +11,7 @@
 
 #include "NuMicro.h"
 
+#define TIMEOUT_TRNG        SystemCoreClock     /* 1 second time-out */
 
 /** @addtogroup Standard_Driver Standard Driver
   @{
@@ -28,19 +29,28 @@
 
 /**
   * @brief Initialize TRNG hardware.
-  * @return None
+  * @return  TRNG H/W enable success or failed.
+  * @retval  0   Success
+  * @retval  -1  Time-out. TRNG hardware may not be enabled.
   */
-void TRNG_Open(void)
+int32_t TRNG_Open(void)
 {
+    int32_t   tout = TIMEOUT_TRNG;
+
     SYS->IPRST1 |= SYS_IPRST1_TRNGRST_Msk;
     SYS->IPRST1 ^= SYS_IPRST1_TRNGRST_Msk;
-
-    TRNG->CTL |= TRNG_CTL_TRNGEN_Msk;
 
     TRNG->ACT |= TRNG_ACT_ACT_Msk;
 
     /* Waiting for ready */
-    while ((TRNG->CTL & TRNG_CTL_READY_Msk) == 0);
+    while ((tout-- > 0) && !(TRNG->CTL & TRNG_CTL_READY_Msk))
+    {
+    }
+    if (tout <= 0)
+        return -1;
+
+    TRNG->CTL |= TRNG_CTL_TRNGEN_Msk;
+    return 0;
 }
 
 
@@ -73,7 +83,7 @@ int32_t TRNG_GenWord(uint32_t *u32RndNum)
         if (timeout == 0)
             return -1;
 
-        *u32RndNum |= ((TRNG->DATA & 0xff) << i*8);
+        *u32RndNum |= ((TRNG->DATA & 0xff) << i * 8);
 
     }
     return 0;
@@ -94,7 +104,7 @@ int32_t TRNG_GenBignum(uint8_t u8BigNum[], int32_t i32Len)
 
     u32Reg = TRNG->CTL;
 
-    for (i = 0; i < i32Len/8; i++)
+    for (i = 0; i < i32Len / 8; i++)
     {
         TRNG->CTL = TRNG_CTL_TRNGEN_Msk | u32Reg;
 
@@ -129,7 +139,7 @@ int32_t TRNG_GenBignumHex(char cBigNumHex[], int32_t i32Len)
 
     u32Reg = TRNG->CTL;
     idx = 0;
-    for (i = 0; i < i32Len/8; i++)
+    for (i = 0; i < i32Len / 8; i++)
     {
         TRNG->CTL = TRNG_CTL_TRNGEN_Msk | u32Reg;
 

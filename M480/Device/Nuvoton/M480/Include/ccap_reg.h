@@ -10,7 +10,7 @@
 #define __CCAP_REG_H__
 
 #if defined ( __CC_ARM   )
-#pragma anon_unions
+    #pragma anon_unions
 #endif
 
 /**
@@ -24,7 +24,8 @@
 @{ */
 
 
-typedef struct {
+typedef struct
+{
 
 
     /**
@@ -490,7 +491,7 @@ typedef struct {
 /**@}*/ /* end of REGISTER group */
 
 #if defined ( __CC_ARM   )
-#pragma no_anon_unions
+    #pragma no_anon_unions
 #endif
 
 #endif /* __CCAP_REG_H__ */
