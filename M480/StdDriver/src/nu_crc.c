@@ -66,7 +66,7 @@ uint32_t CRC_GetChecksum(void)
 {
     uint32_t ret;
 
-    switch(CRC->CTL & CRC_CTL_CRCMODE_Msk)
+    switch (CRC->CTL & CRC_CTL_CRCMODE_Msk)
     {
     case CRC_CCITT:
     case CRC_16:

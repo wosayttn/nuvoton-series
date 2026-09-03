@@ -1,7 +1,7 @@
 /**************************************************************************//**
  * @file     nu_emac.h
  * @version  V1.00
- * @brief    M480 EMAC driver header file
+ * @brief    EMAC driver header file
  *
  * SPDX-License-Identifier: Apache-2.0
  * @copyright (C) 2016-2020 Nuvoton Technology Corp. All rights reserved.
@@ -29,10 +29,10 @@ extern "C"
 */
 
 #define EMAC_PHY_ADDR      1UL    /*!<  PHY address, this address is board dependent \hideinitializer */
-#define EMAC_RX_DESC_SIZE  4UL    /*!<  Number of Rx Descriptors, should be 2 at least \hideinitializer */
-#define EMAC_TX_DESC_SIZE  4UL    /*!<  Number of Tx Descriptors, should be 2 at least \hideinitializer */
+#define EMAC_RX_DESC_SIZE  8UL    /*!<  Number of Rx Descriptors, should be 2 at least \hideinitializer */
+#define EMAC_TX_DESC_SIZE  8UL    /*!<  Number of Tx Descriptors, should be 2 at least \hideinitializer */
 #define EMAC_CAMENTRY_NB   16UL   /*!<  Number of CAM \hideinitializer */
-#define EMAC_MAX_PKT_SIZE  1524UL /*!<  Number of HDR + EXTRA + VLAN_TAG + PAYLOAD + CRC \hideinitializer */
+#define EMAC_MAX_PKT_SIZE  1536UL /*!<  Number of HDR + EXTRA + VLAN_TAG + PAYLOAD + CRC \hideinitializer */
 
 #define EMAC_LINK_DOWN    0UL    /*!<  Ethernet link is down \hideinitializer */
 #define EMAC_LINK_100F    1UL    /*!<  Ethernet link is 100Mbps full duplex \hideinitializer */
@@ -42,6 +42,43 @@ extern "C"
 
 /*@}*/ /* end of group EMAC_EXPORTED_CONSTANTS */
 
+
+/** Tx/Rx buffer descriptor structure */
+typedef struct
+{
+    uint32_t u32Status1;   /*!<  Status word 1 */
+    uint32_t u32Data;      /*!<  Pointer to data buffer */
+    uint32_t u32Status2;   /*!<  Status word 2 */
+    uint32_t u32Next;      /*!<  Pointer to next descriptor */
+    uint32_t u32Backup1;   /*!<  For backup descriptor fields over written by time stamp */
+    uint32_t u32Backup2;   /*!<  For backup descriptor fields over written by time stamp */
+    uint32_t u32Reserved1; /*!<  For Reserved */
+    uint32_t u32Reserved2; /*!<  For Reserved */
+} EMAC_DESCRIPTOR_T;
+
+/** Tx/Rx buffer structure */
+typedef struct
+{
+    uint8_t au8Buf[EMAC_MAX_PKT_SIZE];
+} EMAC_FRAME_T;
+
+typedef struct
+{
+    EMAC_T  *psEmac;
+
+    uint32_t u32TxDescSize;
+    uint32_t u32RxDescSize;
+
+    EMAC_DESCRIPTOR_T *psRXDescs;
+    EMAC_FRAME_T *psRXFrames;
+    EMAC_DESCRIPTOR_T *psTXDescs;
+    EMAC_FRAME_T *psTXFrames;
+
+    EMAC_DESCRIPTOR_T *psCurrentTxDesc;
+    EMAC_DESCRIPTOR_T *psNextTxDesc;
+    EMAC_DESCRIPTOR_T *psCurrentRxDesc;
+
+} EMAC_MEMMGR_T;
 
 /** @addtogroup EMAC_EXPORTED_FUNCTIONS EMAC Exported Functions
   @{
@@ -54,118 +91,118 @@ extern "C"
   * @return None
   * \hideinitializer
   */
-#define EMAC_ENABLE_TX() (EMAC->CTL |= EMAC_CTL_TXON_Msk)
+#define EMAC_ENABLE_TX(emac) ((emac)->CTL |= EMAC_CTL_TXON_Msk)
 
 
 /**
   * @brief  Enable EMAC Rx function
-  * @param  None
+  * @param  The pointer of the specified EMAC module
   * @return None
   * \hideinitializer
   */
-#define EMAC_ENABLE_RX() do{EMAC->CTL |= EMAC_CTL_RXON_Msk; EMAC->RXST = 0;}while(0)
+#define EMAC_ENABLE_RX(emac) do{(emac)->CTL |= EMAC_CTL_RXON_Msk; (emac)->RXST = 0;}while(0)
 
 /**
   * @brief  Disable EMAC Tx function
-  * @param  None
+  * @param  The pointer of the specified EMAC module
   * @return None
   * \hideinitializer
   */
-#define EMAC_DISABLE_TX() (EMAC->CTL &= ~EMAC_CTL_TXON_Msk)
+#define EMAC_DISABLE_TX(emac) ((emac)->CTL &= ~EMAC_CTL_TXON_Msk)
 
 
 /**
   * @brief  Disable EMAC Rx function
-  * @param  None
+  * @param  The pointer of the specified EMAC module
   * @return None
   * \hideinitializer
   */
-#define EMAC_DISABLE_RX() (EMAC->CTL &= ~EMAC_CTL_RXON_Msk)
+#define EMAC_DISABLE_RX(emac) ((emac)->CTL &= ~EMAC_CTL_RXON_Msk)
 
 /**
   * @brief  Enable EMAC Magic Packet Wakeup function
-  * @param  None
+  * @param  The pointer of the specified EMAC module
   * @return None
   * \hideinitializer
   */
-#define EMAC_ENABLE_MAGIC_PKT_WAKEUP() (EMAC->CTL |= EMAC_CTL_WOLEN_Msk)
+#define EMAC_ENABLE_MAGIC_PKT_WAKEUP(emac) ((emac)->CTL |= EMAC_CTL_WOLEN_Msk)
 
 /**
   * @brief  Disable EMAC Magic Packet Wakeup function
-  * @param  None
+  * @param  The pointer of the specified EMAC module
   * @return None
   * \hideinitializer
   */
-#define EMAC_DISABLE_MAGIC_PKT_WAKEUP() (EMAC->CTL &= ~EMAC_CTL_WOLEN_Msk)
+#define EMAC_DISABLE_MAGIC_PKT_WAKEUP(emac) ((emac)->CTL &= ~EMAC_CTL_WOLEN_Msk)
 
 /**
   * @brief  Enable EMAC to receive broadcast packets
-  * @param  None
+  * @param  The pointer of the specified EMAC module
   * @return None
   * \hideinitializer
   */
-#define EMAC_ENABLE_RECV_BCASTPKT() (EMAC->CAMCTL |= EMAC_CAMCTL_ABP_Msk)
+#define EMAC_ENABLE_RECV_BCASTPKT(emac) ((emac)->CAMCTL |= EMAC_CAMCTL_ABP_Msk)
 
 /**
   * @brief  Disable EMAC to receive broadcast packets
-  * @param  None
+  * @param  The pointer of the specified EMAC module
   * @return None
   * \hideinitializer
   */
-#define EMAC_DISABLE_RECV_BCASTPKT() (EMAC->CAMCTL &= ~EMAC_CAMCTL_ABP_Msk)
+#define EMAC_DISABLE_RECV_BCASTPKT(emac) ((emac)->CAMCTL &= ~EMAC_CAMCTL_ABP_Msk)
 
 /**
   * @brief  Enable EMAC to receive multicast packets
-  * @param  None
+  * @param  The pointer of the specified EMAC module
   * @return None
   * \hideinitializer
   */
-#define EMAC_ENABLE_RECV_MCASTPKT() (EMAC->CAMCTL |= EMAC_CAMCTL_AMP_Msk)
+#define EMAC_ENABLE_RECV_MCASTPKT(emac) ((emac)->CAMCTL |= EMAC_CAMCTL_AMP_Msk)
 
 /**
   * @brief  Disable EMAC Magic Packet Wakeup function
-  * @param  None
+  * @param  The pointer of the specified EMAC module
   * @return None
   * \hideinitializer
   */
-#define EMAC_DISABLE_RECV_MCASTPKT() (EMAC->CAMCTL &= ~EMAC_CAMCTL_AMP_Msk)
+#define EMAC_DISABLE_RECV_MCASTPKT(emac) ((emac)->CAMCTL &= ~EMAC_CAMCTL_AMP_Msk)
 
 /**
   * @brief  Check if EMAC time stamp alarm interrupt occurred or not
-  * @param  None
+  * @param  The pointer of the specified EMAC module
   * @return If time stamp alarm interrupt occurred or not
   * @retval 0 Alarm interrupt does not occur
   * @retval 1 Alarm interrupt occurred
   * \hideinitializer
   */
-#define EMAC_GET_ALARM_FLAG() (EMAC->INTSTS & EMAC_INTSTS_TSALMIF_Msk ? 1 : 0)
+#define EMAC_GET_ALARM_FLAG(emac) ((emac)->INTSTS & EMAC_INTSTS_TSALMIF_Msk ? 1 : 0)
 
 /**
   * @brief  Clear EMAC time stamp alarm interrupt flag
-  * @param  None
+  * @param  The pointer of the specified EMAC module
   * @return None
   * \hideinitializer
   */
-#define EMAC_CLR_ALARM_FLAG() (EMAC->INTSTS = EMAC_INTSTS_TSALMIF_Msk)
+#define EMAC_CLR_ALARM_FLAG(emac) ((emac)->INTSTS = EMAC_INTSTS_TSALMIF_Msk)
 
 /**
   * @brief  Trigger EMAC Rx function
-  * @param  None
+  * @param  The pointer of the specified EMAC module
   * @return None
   */
-#define EMAC_TRIGGER_RX() do{EMAC->RXST = 0UL;}while(0)
+#define EMAC_TRIGGER_RX(emac) do{(emac)->RXST = 0UL;}while(0)
 
 /**
   * @brief  Trigger EMAC Tx function
-  * @param  None
+  * @param  The pointer of the specified EMAC module
   * @return None
   */
-#define EMAC_TRIGGER_TX() do{EMAC->TXST = 0UL;}while(0)
+#define EMAC_TRIGGER_TX(emac) do{(emac)->TXST = 0UL;}while(0)
 
 /**
  *    @brief        Enable specified EMAC interrupt
  *
- *    @param[in]    emac        The pointer of the specified EMAC module
+ *    @param[in]    EMAC        The pointer of the specified EMAC module
  *    @param[in]    u32eIntSel  Interrupt type select
  *                              - \ref EMAC_INTEN_RXIEN_Msk    : Receive
  *                              - \ref EMAC_INTEN_CRCEIEN_Msk  : CRC Error
@@ -197,7 +234,7 @@ extern "C"
  *    @details      This macro enable specified EMAC interrupt.
  *    \hideinitializer
  */
-#define EMAC_ENABLE_INT(emac, u32eIntSel)    ((emac)->INTEN |= (u32eIntSel))
+#define EMAC_ENABLE_INT(EMAC, u32eIntSel)    ((emac)->INTEN |= (u32eIntSel))
 
 /**
  *    @brief        Disable specified EMAC interrupt
@@ -234,7 +271,7 @@ extern "C"
  *    @details      This macro disable specified EMAC interrupt.
  *    \hideinitializer
  */
-#define EMAC_DISABLE_INT(emac, u32eIntSel)    ((emac)->INTEN &= ~ (u32eIntSel))
+#define EMAC_DISABLE_INT(EMAC, u32eIntSel)    ((emac)->INTEN &= ~ (u32eIntSel))
 
 /**
  *    @brief        Get specified interrupt flag/status
@@ -271,7 +308,7 @@ extern "C"
  *    @details      This macro get specified interrupt flag or interrupt indicator status.
  *    \hideinitializer
  */
-#define EMAC_GET_INT_FLAG(emac, u32eIntTypeFlag)    (((emac)->INTSTS & (u32eIntTypeFlag))?1:0)
+#define EMAC_GET_INT_FLAG(EMAC, u32eIntTypeFlag)    (((emac)->INTSTS & (u32eIntTypeFlag))?1:0)
 
 /**
  *    @brief        Clear specified interrupt flag/status
@@ -309,38 +346,42 @@ extern "C"
  *    @details      This macro clear specified interrupt flag or interrupt indicator status.
  *    \hideinitializer
  */
-#define EMAC_CLEAR_INT_FLAG(emac, u32eIntTypeFlag)    ((emac)->INTSTS |= (u32eIntTypeFlag))
+#define EMAC_CLEAR_INT_FLAG(EMAC, u32eIntTypeFlag)    ((emac)->INTSTS |= (u32eIntTypeFlag))
+#define EMAC_CLEAR_ALL_INT_FLAG(emac)                 ((emac)->INTSTS |= (emac)->INTSTS)
 
-void EMAC_Open(uint8_t *pu8MacAddr);
-void EMAC_Close(void);
-void EMAC_SetMacAddr(uint8_t *pu8MacAddr);
-void EMAC_EnableCamEntry(uint32_t u32Entry, uint8_t pu8MacAddr[]);
-void EMAC_DisableCamEntry(uint32_t u32Entry);
 
-uint32_t EMAC_RecvPkt(uint8_t *pu8Data, uint32_t *pu32Size);
-uint32_t EMAC_RecvPktTS(uint8_t *pu8Data, uint32_t *pu32Size, uint32_t *pu32Sec, uint32_t *pu32Nsec);
-void EMAC_RecvPktDone(void);
+void EMAC_Open(EMAC_MEMMGR_T *psMemMgr, uint8_t *pu8MacAddr);
+void EMAC_Close(EMAC_T *emac);
+void EMAC_SetMacAddr(EMAC_T *emac, uint8_t *pu8MacAddr);
+void EMAC_EnableCamEntry(EMAC_T *emac, uint32_t u32Entry, uint8_t pu8MacAddr[]);
+void EMAC_DisableCamEntry(EMAC_T *emac, uint32_t u32Entry);
 
-uint32_t EMAC_SendPkt(uint8_t *pu8Data, uint32_t u32Size);
-uint32_t EMAC_SendPktDone(void);
-uint32_t EMAC_SendPktDoneTS(uint32_t *pu32Sec, uint32_t *pu32Nsec);
+uint32_t EMAC_RecvPkt(EMAC_MEMMGR_T *psMemMgr, uint8_t *pu8Data, uint32_t *pu32Size);
+uint32_t EMAC_RecvPktTS(EMAC_MEMMGR_T *psMemMgr, uint8_t *pu8Data, uint32_t *pu32Size, uint32_t *pu32Sec, uint32_t *pu32Nsec);
+void EMAC_RecvPktDone(EMAC_MEMMGR_T *psMemMgr);
 
-void EMAC_EnableTS(uint32_t u32Sec, uint32_t u32Nsec);
-void EMAC_DisableTS(void);
-void EMAC_GetTime(uint32_t *pu32Sec, uint32_t *pu32Nsec);
-void EMAC_SetTime(uint32_t u32Sec, uint32_t u32Nsec);
-void EMAC_UpdateTime(uint32_t u32Neg, uint32_t u32Sec, uint32_t u32Nsec);
-void EMAC_EnableAlarm(uint32_t u32Sec, uint32_t u32Nsec);
-void EMAC_DisableAlarm(void);
+uint32_t EMAC_SendPkt(EMAC_MEMMGR_T *psMemMgr, uint8_t *pu8Data, uint32_t u32Size);
+uint32_t EMAC_SendPktDone(EMAC_MEMMGR_T *psMemMgr);
+uint32_t EMAC_SendPktDoneTS(EMAC_MEMMGR_T *psMemMgr, uint32_t *pu32Sec, uint32_t *pu32Nsec);
 
-uint32_t EMAC_CheckLinkStatus(void);
+void EMAC_EnableTS(EMAC_T *emac, uint32_t u32Sec, uint32_t u32Nsec);
+void EMAC_DisableTS(EMAC_T *emac);
+void EMAC_GetTime(EMAC_T *emac, uint32_t *pu32Sec, uint32_t *pu32Nsec);
+void EMAC_SetTime(EMAC_T *emac, uint32_t u32Sec, uint32_t u32Nsec);
+void EMAC_UpdateTime(EMAC_T *emac, uint32_t u32Neg, uint32_t u32Sec, uint32_t u32Nsec);
+void EMAC_EnableAlarm(EMAC_T *emac, uint32_t u32Sec, uint32_t u32Nsec);
+void EMAC_DisableAlarm(EMAC_T *emac);
 
-void EMAC_PhyInit(void);
-int32_t EMAC_FillCamEntry(uint8_t pu8MacAddr[]);
-uint8_t *EMAC_ClaimFreeTXBuf(void);
-uint32_t EMAC_GetAvailRXBufSize(uint8_t** ppuDataBuf);
-uint32_t EMAC_SendPktWoCopy(uint32_t u32Size);
-void EMAC_RecvPktDoneWoRxTrigger(void);
+uint32_t EMAC_CheckLinkStatus(EMAC_T *emac);
+
+void EMAC_Reset(EMAC_T *emac);
+void EMAC_PhyInit(EMAC_T *emac);
+int32_t EMAC_FillCamEntry(EMAC_T *emac, uint8_t pu8MacAddr[]);
+uint8_t *EMAC_ClaimFreeTXBuf(EMAC_MEMMGR_T *psMemMgr);
+uint32_t EMAC_GetAvailRXBufSize(EMAC_MEMMGR_T *psMemMgr, uint8_t **ppuDataBuf);
+uint32_t EMAC_SendPktWoCopy(EMAC_MEMMGR_T *psMemMgr, uint32_t u32Size);
+EMAC_DESCRIPTOR_T *EMAC_RecvPktDoneWoRxTrigger(EMAC_MEMMGR_T *psMemMgr);
+void EMAC_RxTrigger(EMAC_MEMMGR_T *psMemMgr, EMAC_DESCRIPTOR_T *rx_desc);
 
 /*@}*/ /* end of group EMAC_EXPORTED_FUNCTIONS */
 
@@ -353,5 +394,3 @@ void EMAC_RecvPktDoneWoRxTrigger(void);
 #endif
 
 #endif /* __NU_EMAC_H__ */
-
-/*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/

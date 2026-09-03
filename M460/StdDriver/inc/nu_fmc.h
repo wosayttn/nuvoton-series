@@ -348,32 +348,32 @@ __STATIC_INLINE uint32_t FMC_ReadBandGap(void)
 /*  Functions                                                                                              */
 /*---------------------------------------------------------------------------------------------------------*/
 
-extern void     FMC_Close(void);
-extern int32_t  FMC_ConfigXOM(uint32_t xom_num, uint32_t xom_base, uint8_t xom_page);
-extern int32_t  FMC_Erase(uint32_t u32PageAddr);
-extern int32_t  FMC_Erase_Bank(uint32_t u32BankAddr);
-extern int32_t  FMC_EraseXOM(uint32_t xom_num);
-extern int32_t  FMC_GetXOMState(uint32_t xom_num);
-extern int32_t  FMC_GetBootSource(void);
-extern void     FMC_Open(void);
-extern uint32_t FMC_Read(uint32_t u32Addr);
-extern int32_t  FMC_Read_64(uint32_t u32addr, uint32_t *u32data0, uint32_t *u32data1);
-extern uint32_t FMC_ReadDataFlashBaseAddr(void);
-extern void     FMC_SetBootSource(int32_t i32BootSrc);
-extern int32_t  FMC_Write(uint32_t u32Addr, uint32_t u32Data);
-extern int32_t  FMC_Write8Bytes(uint32_t u32addr, uint32_t u32data0, uint32_t u32data1);
-extern int32_t  FMC_WriteMultiple(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32Len);
-extern int32_t  FMC_WriteOTP(uint32_t otp_num, uint32_t low_word, uint32_t high_word);
-extern int32_t  FMC_ReadOTP(uint32_t otp_num, uint32_t *low_word, uint32_t *high_word);
-extern int32_t  FMC_LockOTP(uint32_t otp_num);
-extern int32_t  FMC_IsOTPLocked(uint32_t otp_num);
-extern int32_t  FMC_ReadConfig(uint32_t u32Config[], uint32_t u32Count);
-extern int32_t  FMC_WriteConfig(uint32_t u32Config[], uint32_t u32Count);
-extern uint32_t FMC_GetChkSum(uint32_t u32addr, uint32_t u32count);
-extern uint32_t FMC_CheckAllOne(uint32_t u32addr, uint32_t u32count);
-extern int32_t  FMC_RemapBank(uint32_t u32Bank);
-extern int32_t FMC_Read64(uint32_t u32addr, uint64_t *pu64data);
-extern int32_t FMC_Write64(uint32_t u32addr, uint64_t u64data);
+void     FMC_Close(void);
+int32_t  FMC_ConfigXOM(uint32_t xom_num, uint32_t xom_base, uint8_t xom_page);
+int32_t  FMC_Erase(uint32_t u32PageAddr);
+int32_t  FMC_Erase_Bank(uint32_t u32BankAddr);
+int32_t  FMC_EraseXOM(uint32_t xom_num);
+int32_t  FMC_GetXOMState(uint32_t xom_num);
+int32_t  FMC_GetBootSource(void);
+void     FMC_Open(void);
+uint32_t FMC_Read(uint32_t u32Addr);
+int32_t  FMC_Read_64(uint32_t u32addr, uint32_t *u32data0, uint32_t *u32data1);
+uint32_t FMC_ReadDataFlashBaseAddr(void);
+void     FMC_SetBootSource(int32_t i32BootSrc);
+int32_t  FMC_Write(uint32_t u32Addr, uint32_t u32Data);
+int32_t  FMC_Write8Bytes(uint32_t u32addr, uint32_t u32data0, uint32_t u32data1);
+int32_t  FMC_WriteMultiple(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32Len);
+int32_t  FMC_WriteOTP(uint32_t otp_num, uint32_t low_word, uint32_t high_word);
+int32_t  FMC_ReadOTP(uint32_t otp_num, uint32_t *low_word, uint32_t *high_word);
+int32_t  FMC_LockOTP(uint32_t otp_num);
+int32_t  FMC_IsOTPLocked(uint32_t otp_num);
+int32_t  FMC_ReadConfig(uint32_t u32Config[], uint32_t u32Count);
+int32_t  FMC_WriteConfig(uint32_t u32Config[], uint32_t u32Count);
+uint32_t FMC_GetChkSum(uint32_t u32addr, uint32_t u32count);
+uint32_t FMC_CheckAllOne(uint32_t u32addr, uint32_t u32count);
+int32_t  FMC_RemapBank(uint32_t u32Bank);
+int32_t FMC_Read64(uint32_t u32addr, uint64_t *pu64data);
+int32_t FMC_Write64(uint32_t u32addr, uint64_t u64data);
 
 
 /*@}*/ /* end of group FMC_EXPORTED_FUNCTIONS */

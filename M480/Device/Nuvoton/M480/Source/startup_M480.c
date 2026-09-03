@@ -84,7 +84,7 @@ void UART0_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void UART1_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void I2C0_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void I2C1_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
-void PDMA_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
+void PDMA0_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void DAC_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void EADC00_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void EADC01_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
@@ -107,8 +107,8 @@ void SC2_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void SPI3_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void SDH0_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void HSUSBD_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
-void EMAC_TX_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
-void EMAC_RX_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
+void EMAC0_TX_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
+void EMAC0_RX_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void I2S0_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void OPA0_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
 void CRYPTO_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));
@@ -209,7 +209,7 @@ const VECTOR_TABLE_Type __VECTOR_TABLE[] __VECTOR_TABLE_ATTRIBUTE =
     UART1_IRQHandler,                         /*   37: UART1                                             */
     I2C0_IRQHandler,                          /*   38: I2C0                                              */
     I2C1_IRQHandler,                          /*   39: I2C1                                              */
-    PDMA_IRQHandler,                          /*   40: Peripheral DMA                                    */
+    PDMA0_IRQHandler,                         /*   40: Peripheral DMA                                    */
     DAC_IRQHandler,                           /*   41: DAC                                               */
     EADC00_IRQHandler,                        /*   42: EADC0 interrupt source 0                          */
     EADC01_IRQHandler,                        /*   43: EADC0 interrupt source 1                          */
@@ -235,8 +235,8 @@ const VECTOR_TABLE_Type __VECTOR_TABLE[] __VECTOR_TABLE_ATTRIBUTE =
     Default_Handler,                          /*   63: Reserved                                          */
     SDH0_IRQHandler,                          /*   64: SDH0                                              */
     HSUSBD_IRQHandler,                        /*   65: USBD20                                            */
-    EMAC_TX_IRQHandler,                       /*   66: EMAC_TX                                           */
-    EMAC_RX_IRQHandler,                       /*   67: EMAC_RX                                           */
+    EMAC0_TX_IRQHandler,                      /*   66: EMAC0_TX                                           */
+    EMAC0_RX_IRQHandler,                      /*   67: EMAC0_RX                                           */
     I2S0_IRQHandler,                          /*   68: I2S0                                              */
     Default_Handler,                          /*   69: Reserved                                          */
     OPA0_IRQHandler,                          /*   70: OPA0                                              */
@@ -301,7 +301,7 @@ __NO_RETURN void Reset_Handler(void)
     CLK->AHBCLK |= CLK_AHBCLK_SPIMCKEN_Msk;  //Enable SPIM Clock.
     SPIM_DISABLE_CACHE();
     SPIM_ENABLE_CCM();
-#endif	
+#endif
 
     SystemInit();
 

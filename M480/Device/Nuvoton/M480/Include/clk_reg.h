@@ -10,7 +10,7 @@
 #define __CLK_REG_H__
 
 #if defined ( __CC_ARM   )
-#pragma anon_unions
+    #pragma anon_unions
 #endif
 
 /**
@@ -1288,8 +1288,8 @@ typedef struct
 #define CLK_CLKSEL0_SDH1SEL_Pos          (22)                                              /*!< CLK_T::CLKSEL0: SDH1SEL Position       */
 #define CLK_CLKSEL0_SDH1SEL_Msk          (0x3ul << CLK_CLKSEL0_SDH1SEL_Pos)                /*!< CLK_T::CLKSEL0: SDH1SEL Mask           */
 
-#define CLK_CLKSEL1_WDTSEL_Pos           (0)                                               /*!< CLK_T::CLKSEL1: WDTSEL Position        */
-#define CLK_CLKSEL1_WDTSEL_Msk           (0x3ul << CLK_CLKSEL1_WDTSEL_Pos)                 /*!< CLK_T::CLKSEL1: WDTSEL Mask            */
+#define CLK_CLKSEL1_WDT0SEL_Pos          (0)                                               /*!< CLK_T::CLKSEL1: WDT0SEL Position       */
+#define CLK_CLKSEL1_WDT0SEL_Msk          (0x3ul << CLK_CLKSEL1_WDT0SEL_Pos)                /*!< CLK_T::CLKSEL1: WDT0SEL Mask           */
 
 #define CLK_CLKSEL1_TMR0SEL_Pos          (8)                                               /*!< CLK_T::CLKSEL1: TMR0SEL Position       */
 #define CLK_CLKSEL1_TMR0SEL_Msk          (0x7ul << CLK_CLKSEL1_TMR0SEL_Pos)                /*!< CLK_T::CLKSEL1: TMR0SEL Mask           */
@@ -1692,7 +1692,7 @@ typedef struct
 /**@}*/ /* end of REGISTER group */
 
 #if defined ( __CC_ARM   )
-#pragma no_anon_unions
+    #pragma no_anon_unions
 #endif
 
 #endif /* __CLK_REG_H__ */

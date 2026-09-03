@@ -44,6 +44,12 @@ extern "C"
 #define    CAN_REMOTE_FRAME    0ul    /*!< CAN frame select remote frame \hideinitializer */
 #define    CAN_DATA_FRAME    1ul      /*!< CAN frame select data frame \hideinitializer */
 
+/*---------------------------------------------------------------------------------------------------------*/
+/* Mask Bit Definitions                                                                 */
+/*---------------------------------------------------------------------------------------------------------*/
+#define CAN_MASK_MSG_DIR    (0x1ul << 30) /*!< CAN mask direction bit \hideinitializer */
+#define CAN_MASK_EXT_ID_BIT (0x1ul << 31) /*!< CAN mask extended id bit \hideinitializer */
+
 /*@}*/ /* end of group CAN_EXPORTED_CONSTANTS */
 
 
@@ -82,6 +88,28 @@ typedef struct
 /** @addtogroup CAN_EXPORTED_FUNCTIONS CAN Exported Functions
   @{
 */
+
+/**
+ * @brief Specifies the standard identifier mask used for acceptance filtering
+ *
+ * @param[in] mask_bit The standard id mask bits.
+ *
+ * @return Mask ID bit.
+ *
+ *  \hideinitializer
+ */
+#define CAN_STD_ID_MASK(mask_bit) (mask_bit << 18)
+
+/**
+ * @brief Specifies the extended identifier mask used for acceptance filtering
+ *
+ * @param[in] mask_bit The extended id mask bits.
+ *
+ * @return Mask ID bit.
+ *
+*  \hideinitializer
+ */
+#define CAN_EXT_ID_MASK(mask_bit) (mask_bit)
 
 /**
  * @brief Get interrupt status.
@@ -157,15 +185,15 @@ void CAN_Close(CAN_T *tCAN);
 void CAN_CLR_INT_PENDING_BIT(CAN_T *tCAN, uint8_t u32MsgNum);
 void CAN_EnableInt(CAN_T *tCAN, uint32_t u32Mask);
 void CAN_DisableInt(CAN_T *tCAN, uint32_t u32Mask);
-int32_t CAN_Transmit(CAN_T *tCAN, uint32_t u32MsgNum, STR_CANMSG_T* pCanMsg);
-int32_t CAN_Receive(CAN_T *tCAN, uint32_t u32MsgNum, STR_CANMSG_T* pCanMsg);
+int32_t CAN_Transmit(CAN_T *tCAN, uint32_t u32MsgNum, STR_CANMSG_T *pCanMsg);
+int32_t CAN_Receive(CAN_T *tCAN, uint32_t u32MsgNum, STR_CANMSG_T *pCanMsg);
 int32_t CAN_SetMultiRxMsg(CAN_T *tCAN, uint32_t u32MsgNum, uint32_t u32MsgCount, uint32_t u32IDType, uint32_t u32ID);
 int32_t CAN_SetRxMsg(CAN_T *tCAN, uint32_t u32MsgNum, uint32_t u32IDType, uint32_t u32ID);
 int32_t CAN_SetRxMsgAndMsk(CAN_T *tCAN, uint32_t u32MsgNum, uint32_t u32IDType, uint32_t u32ID, uint32_t u32IDMask);
-int32_t CAN_SetTxMsg(CAN_T *tCAN, uint32_t u32MsgNum, STR_CANMSG_T* pCanMsg);
+int32_t CAN_SetTxMsg(CAN_T *tCAN, uint32_t u32MsgNum, STR_CANMSG_T *pCanMsg);
 int32_t CAN_TriggerTxMsg(CAN_T  *tCAN, uint32_t u32MsgNum);
-int32_t CAN_BasicSendMsg(CAN_T *tCAN, STR_CANMSG_T* pCanMsg);
-int32_t CAN_BasicReceiveMsg(CAN_T *tCAN, STR_CANMSG_T* pCanMsg);
+int32_t CAN_BasicSendMsg(CAN_T *tCAN, STR_CANMSG_T *pCanMsg);
+int32_t CAN_BasicReceiveMsg(CAN_T *tCAN, STR_CANMSG_T *pCanMsg);
 void CAN_EnterInitMode(CAN_T *tCAN, uint8_t u8Mask);
 void CAN_EnterTestMode(CAN_T *tCAN, uint8_t u8TestMask);
 void CAN_LeaveTestMode(CAN_T *tCAN);
@@ -175,7 +203,7 @@ void CAN_LeaveInitMode(CAN_T *tCAN);
 int32_t CAN_SetRxMsgObjAndMsk(CAN_T *tCAN, uint8_t u8MsgObj, uint8_t u8idType, uint32_t u32id, uint32_t u32idmask, uint8_t u8singleOrFifoLast);
 int32_t CAN_SetRxMsgObj(CAN_T *tCAN, uint8_t u8MsgObj, uint8_t u8idType, uint32_t u32id, uint8_t u8singleOrFifoLast);
 void CAN_WaitMsg(CAN_T *tCAN);
-int32_t CAN_ReadMsgObj(CAN_T *tCAN, uint8_t u8MsgObj, uint8_t u8Release, STR_CANMSG_T* pCanMsg);
+int32_t CAN_ReadMsgObj(CAN_T *tCAN, uint8_t u8MsgObj, uint8_t u8Release, STR_CANMSG_T *pCanMsg);
 
 /*@}*/ /* end of group CAN_EXPORTED_FUNCTIONS */
 

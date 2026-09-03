@@ -4,11 +4,12 @@
  * @brief    M480 Smartcard UART mode (SCUART) driver source file
  *
  * SPDX-License-Identifier: Apache-2.0
- * @copyright (C) 2016-2020 Nuvoton Technology Corp. All rights reserved.
+ * @copyright (C) 2016-2021 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include "NuMicro.h"
 
 static uint32_t SCUART_GetClock(SC_T *sc);
+
 
 /** @addtogroup Standard_Driver Standard Driver
   @{
@@ -18,6 +19,7 @@ static uint32_t SCUART_GetClock(SC_T *sc);
   @{
 */
 
+int32_t g_SCUART_i32ErrCode = 0;       /*!< SCUART global error code */
 
 /** @addtogroup SCUART_EXPORTED_FUNCTIONS SCUART Exported Functions
   @{
@@ -28,7 +30,7 @@ static uint32_t SCUART_GetClock(SC_T *sc);
   * @param sc The base address of smartcard module.
   * @return None
   */
-void SCUART_Close(SC_T* sc)
+void SCUART_Close(SC_T *sc)
 {
     sc->INTEN = 0UL;
     sc->UARTCTL = 0UL;
@@ -45,11 +47,11 @@ static uint32_t SCUART_GetClock(SC_T *sc)
 {
     uint32_t u32ClkSrc, u32Num, u32Clk;
 
-    if(sc == SC0)
+    if (sc == SC0)
     {
         u32Num = 0UL;
     }
-    else if(sc == SC1)
+    else if (sc == SC1)
     {
         u32Num = 1UL;
     }
@@ -61,17 +63,17 @@ static uint32_t SCUART_GetClock(SC_T *sc)
     u32ClkSrc = (CLK->CLKSEL3 >> (2UL * u32Num)) & CLK_CLKSEL3_SC0SEL_Msk;
 
     /* Get smartcard module clock */
-    if(u32ClkSrc == 0UL)
+    if (u32ClkSrc == 0UL)
     {
         u32Clk = __HXT;
     }
-    else if(u32ClkSrc == 1UL)
+    else if (u32ClkSrc == 1UL)
     {
         u32Clk = CLK_GetPLLClockFreq();
     }
-    else if(u32ClkSrc == 2UL)
+    else if (u32ClkSrc == 2UL)
     {
-        if(u32Num == 1UL)
+        if (u32Num == 1UL)
         {
             u32Clk = CLK_GetPCLK1Freq();
         }
@@ -106,7 +108,7 @@ static uint32_t SCUART_GetClock(SC_T *sc)
   *          (clock source / baudrate) must be larger or equal to 5 and smaller or equal to
   *          4096. Otherwise this function cannot configure SCUART to work with target baudrate.
   */
-uint32_t SCUART_Open(SC_T* sc, uint32_t u32baudrate)
+uint32_t SCUART_Open(SC_T *sc, uint32_t u32baudrate)
 {
     uint32_t u32Clk = SCUART_GetClock(sc), u32Div;
 
@@ -119,7 +121,7 @@ uint32_t SCUART_Open(SC_T* sc, uint32_t u32baudrate)
     sc->UARTCTL = SCUART_CHAR_LEN_8 | SCUART_PARITY_NONE | SC_UARTCTL_UARTEN_Msk;
     sc->ETUCTL = u32Div;
 
-    return(u32Clk / (u32Div + 1UL));
+    return (u32Clk / (u32Div + 1UL));
 }
 
 /**
@@ -130,13 +132,13 @@ uint32_t SCUART_Open(SC_T* sc, uint32_t u32baudrate)
   * @return Actual character number reads to buffer
   * @note This function does not block and return immediately if there's no data available
   */
-uint32_t SCUART_Read(SC_T* sc, uint8_t pu8RxBuf[], uint32_t u32ReadBytes)
+uint32_t SCUART_Read(SC_T *sc, uint8_t pu8RxBuf[], uint32_t u32ReadBytes)
 {
     uint32_t u32Count;
 
-    for(u32Count = 0UL; u32Count < u32ReadBytes; u32Count++)
+    for (u32Count = 0UL; u32Count < u32ReadBytes; u32Count++)
     {
-        if(SCUART_GET_RX_EMPTY(sc))   /* no data available */
+        if (SCUART_GET_RX_EMPTY(sc))  /* no data available */
         {
             break;
         }
@@ -169,19 +171,19 @@ uint32_t SCUART_Read(SC_T* sc, uint8_t pu8RxBuf[], uint32_t u32ReadBytes)
   *          (clock source / baudrate) must be larger or equal to 5 and smaller or equal to
   *          4096. Otherwise this function cannot configure SCUART to work with target baudrate.
   */
-uint32_t SCUART_SetLineConfig(SC_T* sc, uint32_t u32Baudrate, uint32_t u32DataWidth, uint32_t u32Parity, uint32_t  u32StopBits)
+uint32_t SCUART_SetLineConfig(SC_T *sc, uint32_t u32Baudrate, uint32_t u32DataWidth, uint32_t u32Parity, uint32_t  u32StopBits)
 {
 
     uint32_t u32Clk = SCUART_GetClock(sc), u32Div;
 
-    if(u32Baudrate == 0UL)    /* keep original baudrate setting */
+    if (u32Baudrate == 0UL)   /* keep original baudrate setting */
     {
         u32Div = sc->ETUCTL & SC_ETUCTL_ETURDIV_Msk;
     }
     else
     {
         /* Calculate divider for target baudrate */
-        u32Div = (u32Clk + (u32Baudrate >> 1) - 1UL)/ u32Baudrate - 1UL;
+        u32Div = (u32Clk + (u32Baudrate >> 1) - 1UL) / u32Baudrate - 1UL;
         sc->ETUCTL = u32Div;
     }
     /* Set stop bit */
@@ -189,7 +191,7 @@ uint32_t SCUART_SetLineConfig(SC_T* sc, uint32_t u32Baudrate, uint32_t u32DataWi
     /* Set character width and parity */
     sc->UARTCTL = u32Parity | u32DataWidth | SC_UARTCTL_UARTEN_Msk;
 
-    return(u32Clk / (u32Div + 1UL));
+    return (u32Clk / (u32Div + 1UL));
 }
 
 /**
@@ -202,9 +204,9 @@ uint32_t SCUART_SetLineConfig(SC_T* sc, uint32_t u32Baudrate, uint32_t u32DataWi
   *          new data word. Once the counter decrease to 1 and no new data is received or CPU
   *          does not read any data from FIFO, a receiver time-out interrupt will be generated.
   */
-void SCUART_SetTimeoutCnt(SC_T* sc, uint32_t u32TOC)
+void SCUART_SetTimeoutCnt(SC_T *sc, uint32_t u32TOC)
 {
-    sc->RXTOUT= u32TOC;
+    sc->RXTOUT = u32TOC;
 }
 
 
@@ -213,23 +215,34 @@ void SCUART_SetTimeoutCnt(SC_T* sc, uint32_t u32TOC)
   * @param[in] sc The base address of smartcard module.
   * @param[in] pu8TxBuf The buffer containing data to send to transmit FIFO.
   * @param[in] u32WriteBytes Number of data to send.
-  * @return None
-  * @note This function blocks until all data write into FIFO
+  * @return Actual number of data put into SCUART Tx FIFO
+  * @note This function sets g_SCUART_i32ErrCode to SCUART_TIMEOUT_ERR if the Tx FIFO
+  *       blocks longer than expected.
   */
-void SCUART_Write(SC_T* sc,uint8_t pu8TxBuf[], uint32_t u32WriteBytes)
+uint32_t SCUART_Write(SC_T *sc, uint8_t pu8TxBuf[], uint32_t u32WriteBytes)
 {
     uint32_t u32Count;
+    /* Baudrate * (start bit + 8-bit data + 1-bit parity + 2-bit stop) */
+    uint32_t u32Delay = (SystemCoreClock / SCUART_GetClock(sc)) * sc->ETUCTL * 12, i;
 
-    for(u32Count = 0UL; u32Count != u32WriteBytes; u32Count++)
+    g_SCUART_i32ErrCode = 0;
+    for (u32Count = 0UL; u32Count != u32WriteBytes; u32Count++)
     {
+        i = 0;
         /* Wait 'til FIFO not full */
-        while(SCUART_GET_TX_FULL(sc))
+        while (SCUART_GET_TX_FULL(sc))
         {
-            ;
+            /* Block longer than expected. Maybe some interrupt disable SCUART clock? */
+            if (i++ > u32Delay)
+            {
+                g_SCUART_i32ErrCode = SCUART_TIMEOUT_ERR;
+                return u32Count;
+            }
         }
         /* Write 1 byte to FIFO */
         sc->DAT = pu8TxBuf[u32Count];
     }
+    return u32Count;
 }
 
 
@@ -238,5 +251,3 @@ void SCUART_Write(SC_T* sc,uint8_t pu8TxBuf[], uint32_t u32WriteBytes)
 /*@}*/ /* end of group SCUART_Driver */
 
 /*@}*/ /* end of group Standard_Driver */
-
-/*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/

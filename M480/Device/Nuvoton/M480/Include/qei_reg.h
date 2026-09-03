@@ -10,7 +10,7 @@
 #define __QEI_REG_H__
 
 #if defined ( __CC_ARM   )
-#pragma anon_unions
+    #pragma anon_unions
 #endif
 
 /**
@@ -172,7 +172,7 @@ typedef struct
      * |        |          |Note: This bit is only cleared by writing 1 to it.
      * |[2]     |OVUNF     |QEI Counter Overflow or Underflow Flag
      * |        |          |Flag is set by hardware while CNT(QEI_CNT[31:0]) overflows from 0xFFFF_FFFF to zero in free-counting mode or from the CNTMAX (QEI_CNTMAX[31:0]) to zero in compare-counting mode
-    * |        |          |Similarly, the flag is set while QEI counter underflows from zero to 0xFFFF_FFFF or CNTMAX (QEI_CNTMAX[31:0]).
+     * |        |          |Similarly, the flag is set while QEI counter underflows from zero to 0xFFFF_FFFF or CNTMAX (QEI_CNTMAX[31:0]).
      * |        |          |0 = No overflow or underflow occurs in QEI counter.
      * |        |          |1 = QEI counter occurs counting overflow or underflow.
      * |        |          |Note: This bit is only cleared by writing 1 to it.
@@ -309,7 +309,7 @@ typedef struct
 /**@}*/ /* end of REGISTER group */
 
 #if defined ( __CC_ARM   )
-#pragma no_anon_unions
+    #pragma no_anon_unions
 #endif
 
 #endif /* __QEI_REG_H__ */

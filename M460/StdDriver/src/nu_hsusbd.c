@@ -114,16 +114,8 @@ void HSUSBD_Start(void)
  */
 void HSUSBD_SwDisconnect(void)
 {
-    uint32_t u32RegLockLevel = SYS_IsRegLocked();
-
-    if (u32RegLockLevel)
-        SYS_UnlockReg();
-
     /* Disable HSUSB PHY */
     SYS->USBPHY &= ~(SYS_USBPHY_HSUSBEN_Msk | SYS_USBPHY_HSUSBACT_Msk);
-
-    if (u32RegLockLevel)
-        SYS_LockReg();
 }
 
 /**
@@ -138,19 +130,12 @@ void HSUSBD_SwDisconnect(void)
  */
 void HSUSBD_SwReconnect(void)
 {
-    uint32_t u32RegLockLevel = SYS_IsRegLocked();
     uint32_t volatile i;
-
-    if (u32RegLockLevel)
-        SYS_UnlockReg();
 
     /* Enable HSUSB PHY */
     SYS->USBPHY = (SYS->USBPHY & ~(SYS_USBPHY_HSUSBROLE_Msk | SYS_USBPHY_HSUSBACT_Msk)) | SYS_USBPHY_HSUSBEN_Msk;
     for (i = 0; i < 0x1000; i++);  // delay > 10 us
     SYS->USBPHY |= SYS_USBPHY_HSUSBACT_Msk;
-
-    if (u32RegLockLevel)
-        SYS_LockReg();
 }
 
 /**

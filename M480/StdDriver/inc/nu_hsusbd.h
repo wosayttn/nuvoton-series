@@ -75,6 +75,14 @@ extern "C"
 #define HSUSBD_EP_CFG_DIR_OUT              ((uint32_t)0x00000000ul)      /*!<OUT endpoint  \hideinitializer */
 #define HSUSBD_EP_CFG_DIR_IN               ((uint32_t)0x00000008ul)      /*!<IN endpoint  \hideinitializer */
 
+/*---------------------------------------------------------------------------------------------------------*/
+/* HSUSBD Define Error Code                                                                                */
+/*---------------------------------------------------------------------------------------------------------*/
+#define HSUSBD_TIMEOUT                     SystemCoreClock               /*!< HSUSBD time-out counter (1 second time-out) \hideinitializer */
+#define HSUSBD_OK                          ( 0L)                         /*!< HSUSBD operation OK \hideinitializer */
+#define HSUSBD_ERR_FAIL                    (-1L)                         /*!< HSUSBD operation failed \hideinitializer */
+#define HSUSBD_ERR_TIMEOUT                 (-2L)                         /*!< HSUSBD operation abort due to timeout error \hideinitializer */
+
 
 /*@}*/ /* end of group HSUSBD_EXPORTED_CONSTANTS */
 
@@ -219,18 +227,18 @@ __STATIC_INLINE void HSUSBD_ConfigEp(uint32_t u32Ep, uint32_t u32EpNum, uint32_t
 {
     if (u32EpType == HSUSBD_EP_CFG_TYPE_BULK)
     {
-        HSUSBD->EP[u32Ep].EPRSPCTL = (HSUSBD_EP_RSPCTL_FLUSH|HSUSBD_EP_RSPCTL_MODE_AUTO);
+        HSUSBD->EP[u32Ep].EPRSPCTL = (HSUSBD_EP_RSPCTL_FLUSH | HSUSBD_EP_RSPCTL_MODE_AUTO);
     }
     else if (u32EpType == HSUSBD_EP_CFG_TYPE_INT)
     {
-        HSUSBD->EP[u32Ep].EPRSPCTL = (HSUSBD_EP_RSPCTL_FLUSH|HSUSBD_EP_RSPCTL_MODE_MANUAL);
+        HSUSBD->EP[u32Ep].EPRSPCTL = (HSUSBD_EP_RSPCTL_FLUSH | HSUSBD_EP_RSPCTL_MODE_MANUAL);
     }
     else if (u32EpType == HSUSBD_EP_CFG_TYPE_ISO)
     {
-        HSUSBD->EP[u32Ep].EPRSPCTL = (HSUSBD_EP_RSPCTL_FLUSH|HSUSBD_EP_RSPCTL_MODE_FLY);
+        HSUSBD->EP[u32Ep].EPRSPCTL = (HSUSBD_EP_RSPCTL_FLUSH | HSUSBD_EP_RSPCTL_MODE_FLY);
     }
 
-    HSUSBD->EP[u32Ep].EPCFG = (u32EpType|u32EpDir|HSUSBD_EP_CFG_VALID|(u32EpNum << 4));
+    HSUSBD->EP[u32Ep].EPCFG = (u32EpType | u32EpDir | HSUSBD_EP_CFG_VALID | (u32EpNum << 4));
 }
 
 /**
@@ -269,7 +277,7 @@ __STATIC_INLINE void HSUSBD_SetStall(uint32_t u32EpNum)
     }
     else
     {
-        for (i=0ul; i<HSUSBD_MAX_EP; i++)
+        for (i = 0ul; i < HSUSBD_MAX_EP; i++)
         {
             if (((HSUSBD->EP[i].EPCFG & 0xf0ul) >> 4) == u32EpNum)
             {
@@ -302,7 +310,7 @@ __STATIC_INLINE void HSUSBD_ClearStall(uint32_t u32EpNum)
 {
     uint32_t i;
 
-    for (i=0ul; i<HSUSBD_MAX_EP; i++)
+    for (i = 0ul; i < HSUSBD_MAX_EP; i++)
     {
         if (((HSUSBD->EP[i].EPCFG & 0xf0ul) >> 4) == u32EpNum)
         {
@@ -337,7 +345,7 @@ __STATIC_INLINE uint32_t HSUSBD_GetStall(uint32_t u32EpNum)
     uint32_t i;
     uint32_t val = 0ul;
 
-    for (i=0ul; i<HSUSBD_MAX_EP; i++)
+    for (i = 0ul; i < HSUSBD_MAX_EP; i++)
     {
         if (((HSUSBD->EP[i].EPCFG & 0xf0ul) >> 4) == u32EpNum)
         {
@@ -361,7 +369,7 @@ void HSUSBD_StandardRequest(void);
 void HSUSBD_UpdateDeviceState(void);
 void HSUSBD_PrepareCtrlIn(uint8_t pu8Buf[], uint32_t u32Size);
 void HSUSBD_CtrlIn(void);
-void HSUSBD_CtrlOut(uint8_t pu8Buf[], uint32_t u32Size);
+int32_t HSUSBD_CtrlOut(uint8_t pu8Buf[], uint32_t u32Size);
 void HSUSBD_SwReset(void);
 void HSUSBD_SetVendorRequest(HSUSBD_VENDOR_REQ pfnVendorReq);
 
