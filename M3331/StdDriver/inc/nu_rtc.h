@@ -132,36 +132,36 @@ extern int32_t g_RTC_i32ErrCode;
   * @details    According to current date, return this year is leap year or not.
   * \hideinitializer
   */
-#define RTC_IS_LEAP_YEAR()              ((RTC->LEAPYEAR & RTC_LEAPYEAR_LEAPYEAR_Msk)? 1:0)
+#define RTC_IS_LEAP_YEAR(rtc)           (((rtc)->LEAPYEAR & RTC_LEAPYEAR_LEAPYEAR_Msk)? 1:0)
 
 /**
   * @brief      Clear RTC Alarm Interrupt Flag
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @return     None
   *
   * @details    This macro is used to clear RTC alarm interrupt flag.
   * \hideinitializer
   */
-#define RTC_CLEAR_ALARM_INT_FLAG()      (RTC->INTSTS = RTC_INTSTS_ALMIF_Msk)
+#define RTC_CLEAR_ALARM_INT_FLAG(rtc)   ((rtc)->INTSTS = RTC_INTSTS_ALMIF_Msk)
 
 /**
   * @brief      Clear RTC Tick Interrupt Flag
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @return     None
   *
   * @details    This macro is used to clear RTC tick interrupt flag.
   * \hideinitializer
   */
-#define RTC_CLEAR_TICK_INT_FLAG()       (RTC->INTSTS = RTC_INTSTS_TICKIF_Msk)
+#define RTC_CLEAR_TICK_INT_FLAG(rtc)    ((rtc)->INTSTS = RTC_INTSTS_TICKIF_Msk)
 
 /**
   * @brief      Get RTC Alarm Interrupt Flag
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @retval     0   RTC alarm interrupt did not occur
   * @retval     1   RTC alarm interrupt occurred
@@ -169,12 +169,12 @@ extern int32_t g_RTC_i32ErrCode;
   * @details    This macro indicates RTC alarm interrupt occurred or not.
   * \hideinitializer
   */
-#define RTC_GET_ALARM_INT_FLAG()        ((RTC->INTSTS & RTC_INTSTS_ALMIF_Msk)? 1:0)
+#define RTC_GET_ALARM_INT_FLAG(rtc)     (((rtc)->INTSTS & RTC_INTSTS_ALMIF_Msk)? 1:0)
 
 /**
   * @brief      Get RTC Time Tick Interrupt Flag
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @retval     0   RTC time tick interrupt did not occur
   * @retval     1   RTC time tick interrupt occurred
@@ -182,19 +182,19 @@ extern int32_t g_RTC_i32ErrCode;
   * @details    This macro indicates RTC time tick interrupt occurred or not.
   * \hideinitializer
   */
-#define RTC_GET_TICK_INT_FLAG()         ((RTC->INTSTS & RTC_INTSTS_TICKIF_Msk)? 1:0)
+#define RTC_GET_TICK_INT_FLAG(rtc)      (((rtc)->INTSTS & RTC_INTSTS_TICKIF_Msk)? 1:0)
 
 /**
   * @brief      Enable RTC Tick Wake-up Function
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @return     None
   *
   * @details    This macro is used to enable RTC tick interrupt wake-up function.
   * \hideinitializer
   */
-#define RTC_ENABLE_TICK_WAKEUP()            (RTC->INTEN |= RTC_INTEN_TICKIEN_Msk);
+#define RTC_ENABLE_TICK_WAKEUP(rtc)     ((rtc)->INTEN |= RTC_INTEN_TICKIEN_Msk)
 
 /**
   * @brief      Disable RTC Tick Wake-up Function
@@ -206,7 +206,7 @@ extern int32_t g_RTC_i32ErrCode;
   * @details    This macro is used to disable RTC tick interrupt wake-up function.
   * \hideinitializer
   */
-#define RTC_DISABLE_TICK_WAKEUP(rtc)        ((rtc)->INTEN &= ~RTC_INTEN_TICKIEN_Msk);
+#define RTC_DISABLE_TICK_WAKEUP(rtc)    ((rtc)->INTEN &= ~RTC_INTEN_TICKIEN_Msk)
 
 /**
   * @brief      Get LXT Gain Mode Option

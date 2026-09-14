@@ -36,7 +36,8 @@ uint32_t BPWM_ConfigCaptureChannel(BPWM_T *bpwm, uint32_t u32ChannelNum, uint32_
 {
     uint32_t u32PWMClockSrc;
     uint32_t u32NearestUnitTimeNsec = 0U;
-    uint32_t u32Prescale = 1U, u32CNR = 0xFFFFU;
+    uint32_t u32Prescale = 1U;
+    uint32_t u32CNR = 0xFFFFU;
     uint8_t u8BreakLoop = 0U;
 
     (void)u32ChannelNum;
@@ -109,7 +110,8 @@ uint32_t BPWM_ConfigOutputChannel(BPWM_T *bpwm, uint32_t u32ChannelNum, uint32_t
 {
     uint32_t u32PWMClockSrc;
     uint32_t i;
-    uint32_t u32Prescale = 1U, u32CNR = 0xFFFFU;
+    uint32_t u32Prescale = 1U;
+    uint32_t u32CNR = 0xFFFFU;
 
     /* clock source is from PCLK */
     if(((uint32_t)bpwm == BPWM0_BASE) || ((uint32_t)bpwm == BPWM0_BASE + NS_OFFSET))

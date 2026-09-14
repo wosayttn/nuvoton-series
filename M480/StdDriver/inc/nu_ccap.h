@@ -101,16 +101,19 @@ extern int32_t g_CCAP_i32ErrCode;
 /**
  * @brief     Is CCAP module Enable
  *
+ * @param[in] ccap        The pointer of the specified CCAP module.
+ *
  * @return   FALSE(Enable) or TRUE(Disable)
  *
  * @details   Check Camera Capture Interface module Enable or Disable
  *  \hideinitializer
  */
-#define CCAP_IS_STOPPED()  ((CCAP->CTL & CCAP_CTL_CCAPEN_Msk)?0:1)
+#define CCAP_IS_STOPPED(ccap)  (((ccap)->CTL & CCAP_CTL_CCAPEN_Msk)?0:1)
 
 /**
  * @brief     Clear CCAP flag
  *
+ * @param[in] ccap        The pointer of the specified CCAP module.
  * @param[in] u32IntMask interrupt flags settings. It could be
  *                   - \ref CCAP_INT_VINTF_Msk
  *                   - \ref CCAP_INT_MEINTF_Msk
@@ -122,32 +125,34 @@ extern int32_t g_CCAP_i32ErrCode;
  * @details   Clear Image Capture Interface interrupt flag
  *  \hideinitializer
  */
-#define CCAP_CLR_INT_FLAG(u32IntMask) (CCAP->INT |=u32IntMask)
+#define CCAP_CLR_INT_FLAG(ccap, u32IntMask) ((ccap)->INT |= (u32IntMask))
 
 /**
  * @brief     Get CCAP Interrupt status
+ *
+ * @param[in] ccap        The pointer of the specified CCAP module.
  *
  * @return    TRUE(Enable) or FALSE(Disable)
  *
  * @details   Get Image Capture Interface interrupt status.
  * \hideinitializer
  */
-#define CCAP_GET_INT_STS() (CCAP->INT)
+#define CCAP_GET_INT_STS(ccap) ((ccap)->INT)
 
-void CCAP_Open(uint32_t u32InFormat, uint32_t u32OutFormet);
-void CCAP_SetCroppingWindow(uint32_t u32VStart, uint32_t u32HStart, uint32_t u32Height, uint32_t u32Width);
-void CCAP_SetPacketBuf(uint32_t  u32Address);
-void CCAP_Close(void);
-void CCAP_EnableInt(uint32_t u32IntMask);
-void CCAP_DisableInt(uint32_t u32IntMask);
-void CCAP_Start(void);
-void CCAP_Stop(uint32_t u32FrameComplete);
-void CCAP_SetPacketScaling(uint32_t u32VNumerator, uint32_t u32VDenominator, uint32_t u32HNumerator, uint32_t u32HDenominator);
-void CCAP_SetPacketStride(uint32_t u32Stride);
-void CCAP_EnableMono(uint32_t u32Interface);
-void CCAP_DisableMono(void);
-void CCAP_EnableLumaYOne(uint32_t u32th);
-void CCAP_DisableLumaYOne(void);
+void CCAP_Open(CCAP_T *ccap, uint32_t u32InFormat, uint32_t u32OutFormat);
+void CCAP_SetCroppingWindow(CCAP_T *ccap, uint32_t u32VStart, uint32_t u32HStart, uint32_t u32Height, uint32_t u32Width);
+void CCAP_SetPacketBuf(CCAP_T *ccap, uint32_t u32Address);
+void CCAP_Close(CCAP_T *ccap);
+void CCAP_EnableInt(CCAP_T *ccap, uint32_t u32IntMask);
+void CCAP_DisableInt(CCAP_T *ccap, uint32_t u32IntMask);
+void CCAP_Start(CCAP_T *ccap);
+void CCAP_Stop(CCAP_T *ccap, uint32_t u32FrameComplete);
+void CCAP_SetPacketScaling(CCAP_T *ccap, uint32_t u32VNumerator, uint32_t u32VDenominator, uint32_t u32HNumerator, uint32_t u32HDenominator);
+void CCAP_SetPacketStride(CCAP_T *ccap, uint32_t u32Stride);
+void CCAP_EnableMono(CCAP_T *ccap, uint32_t u32Interface);
+void CCAP_DisableMono(CCAP_T *ccap);
+void CCAP_EnableLumaYOne(CCAP_T *ccap, uint32_t u32th);
+void CCAP_DisableLumaYOne(CCAP_T *ccap);
 
 /*@}*/ /* end of group CCAP_EXPORTED_FUNCTIONS */
 

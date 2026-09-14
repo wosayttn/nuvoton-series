@@ -135,7 +135,7 @@ typedef struct
 /**
   * @brief      Indicate is Leap Year or not
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @retval     0   This year is not a leap year
   * @retval     1   This year is a leap year
@@ -143,36 +143,37 @@ typedef struct
   * @details    According to current date, return this year is leap year or not.
   * \hideinitializer
   */
-#define RTC_IS_LEAP_YEAR()              (RTC->LEAPYEAR & RTC_LEAPYEAR_LEAPYEAR_Msk ? 1:0)
+#define RTC_IS_LEAP_YEAR(rtc)           ((rtc)->LEAPYEAR & RTC_LEAPYEAR_LEAPYEAR_Msk ? 1:0)
 
 /**
   * @brief      Clear RTC Alarm Interrupt Flag
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @return     None
   *
   * @details    This macro is used to clear RTC alarm interrupt flag.
   * \hideinitializer
   */
-#define RTC_CLEAR_ALARM_INT_FLAG()      (RTC->INTSTS = RTC_INTSTS_ALMIF_Msk)
+#define RTC_CLEAR_ALARM_INT_FLAG(rtc)   ((rtc)->INTSTS = RTC_INTSTS_ALMIF_Msk)
 
 /**
   * @brief      Clear RTC Tick Interrupt Flag
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @return     None
   *
   * @details    This macro is used to clear RTC tick interrupt flag.
   * \hideinitializer
   */
-#define RTC_CLEAR_TICK_INT_FLAG()       (RTC->INTSTS = RTC_INTSTS_TICKIF_Msk)
+#define RTC_CLEAR_TICK_INT_FLAG(rtc)    ((rtc)->INTSTS = RTC_INTSTS_TICKIF_Msk)
 
 /**
   * @brief      Clear RTC Tamper Interrupt Flag
   *
-  * @param      u32TamperFlag   Tamper interrupt flag. It consists of:    \n
+  * @param[in]  rtc             The pointer of RTC module.
+  * @param[in]  u32TamperFlag   Tamper interrupt flag. It consists of:    \n
   *                             - \ref RTC_INTSTS_TAMP0IF_Msk    \n
   *                             - \ref RTC_INTSTS_TAMP1IF_Msk    \n
   *                             - \ref RTC_INTSTS_TAMP2IF_Msk    \n
@@ -185,12 +186,12 @@ typedef struct
   * @details    This macro is used to clear RTC snooper pin interrupt flag.
   * \hideinitializer
   */
-#define RTC_CLEAR_TAMPER_INT_FLAG(u32TamperFlag)    (RTC->INTSTS = (u32TamperFlag))
+#define RTC_CLEAR_TAMPER_INT_FLAG(rtc, u32TamperFlag)    ((rtc)->INTSTS = (u32TamperFlag))
 
 /**
   * @brief      Get RTC Alarm Interrupt Flag
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @retval     0   RTC alarm interrupt did not occur
   * @retval     1   RTC alarm interrupt occurred
@@ -198,12 +199,12 @@ typedef struct
   * @details    This macro indicates RTC alarm interrupt occurred or not.
   * \hideinitializer
   */
-#define RTC_GET_ALARM_INT_FLAG()        ((RTC->INTSTS & RTC_INTSTS_ALMIF_Msk)? 1:0)
+#define RTC_GET_ALARM_INT_FLAG(rtc)     (((rtc)->INTSTS & RTC_INTSTS_ALMIF_Msk)? 1:0)
 
 /**
   * @brief      Get RTC Time Tick Interrupt Flag
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @retval     0   RTC time tick interrupt did not occur
   * @retval     1   RTC time tick interrupt occurred
@@ -211,12 +212,12 @@ typedef struct
   * @details    This macro indicates RTC time tick interrupt occurred or not.
   * \hideinitializer
   */
-#define RTC_GET_TICK_INT_FLAG()         ((RTC->INTSTS & RTC_INTSTS_TICKIF_Msk)? 1:0)
+#define RTC_GET_TICK_INT_FLAG(rtc)      (((rtc)->INTSTS & RTC_INTSTS_TICKIF_Msk)? 1:0)
 
 /**
   * @brief      Get RTC Tamper Interrupt Flag
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @retval     0   RTC snooper pin interrupt did not occur
   * @retval     1   RTC snooper pin interrupt occurred
@@ -224,12 +225,12 @@ typedef struct
   * @details    This macro indicates RTC snooper pin interrupt occurred or not.
   * \hideinitializer
   */
-#define RTC_GET_TAMPER_INT_FLAG()      ((RTC->INTSTS & (0x3F00))? 1:0)
+#define RTC_GET_TAMPER_INT_FLAG(rtc)    (((rtc)->INTSTS & (0x3F00))? 1:0)
 
 /**
   * @brief      Get RTC TAMPER Interrupt Status
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @retval     RTC_INTSTS_TAMP0IF_Msk    Tamper 0 interrupt flag is generated
   * @retval     RTC_INTSTS_TAMP1IF_Msk    Tamper 1 interrupt flag is generated
@@ -241,11 +242,12 @@ typedef struct
   * @details    This macro indicates RTC snooper pin interrupt occurred or not.
   * \hideinitializer
   */
-#define RTC_GET_TAMPER_INT_STATUS()      ((RTC->INTSTS & (0x3F00)))
+#define RTC_GET_TAMPER_INT_STATUS(rtc)  (((rtc)->INTSTS & (0x3F00)))
 
 /**
   * @brief      Read Spare Register
   *
+  * @param[in]  rtc         The pointer of RTC module.
   * @param[in]  u32RegNum   The spare register number, 0~19.
   *
   * @return     Spare register content
@@ -255,11 +257,12 @@ typedef struct
   *             And its controlled by RTC Access Enable Register.
   * \hideinitializer
   */
-#define RTC_READ_SPARE_REGISTER(u32RegNum)                  (RTC->SPR[(u32RegNum)])
+#define RTC_READ_SPARE_REGISTER(rtc, u32RegNum)             ((rtc)->SPR[(u32RegNum)])
 
 /**
   * @brief      Write Spare Register
   *
+  * @param[in]  rtc          The pointer of RTC module.
   * @param[in]  u32RegNum    The spare register number, 0~19.
   * @param[in]  u32RegValue  The spare register value.
   *
@@ -270,7 +273,7 @@ typedef struct
   *             And its controlled by RTC Access Enable Register(RTC_RWEN).
   * \hideinitializer
   */
-#define RTC_WRITE_SPARE_REGISTER(u32RegNum, u32RegValue)    (RTC->SPR[(u32RegNum)] = (u32RegValue))
+#define RTC_WRITE_SPARE_REGISTER(rtc, u32RegNum, u32RegValue)    ((rtc)->SPR[(u32RegNum)] = (u32RegValue))
 
 /* Declare these inline functions here to avoid MISRA C 2004 rule 8.1 error */
 __STATIC_INLINE void RTC_WaitAccessEnable(void);

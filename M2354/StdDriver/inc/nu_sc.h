@@ -44,6 +44,8 @@ extern "C"
 #define SC_TMR_MODE_8                   (8UL << SC_TMRCTL0_OPMODE_Pos)      /*!<Timer Operation Mode 8, up count                                                        \hideinitializer */
 #define SC_TMR_MODE_F                   (0xFUL << SC_TMRCTL0_OPMODE_Pos)    /*!<Timer Operation Mode 15, down count, reload after detect start bit                      \hideinitializer */
 
+#define SC_TIMEOUT                      (SystemCoreClock)   /*!< SC time-out counter (1 second time-out) \hideinitializer */
+
 /**@}*/ /* end of group SC_EXPORTED_CONSTANTS */
 
 
@@ -116,7 +118,9 @@ extern "C"
   */
 #define SC_SET_VCC_PIN(sc, u32State) \
     do {\
-            while(((sc)->PINCTL & SC_PINCTL_SYNC_Msk) == SC_PINCTL_SYNC_Msk);\
+            uint32_t u32TimeOutCount = SC_TIMEOUT;\
+            while(((sc)->PINCTL & SC_PINCTL_SYNC_Msk) == SC_PINCTL_SYNC_Msk)\
+                if(--u32TimeOutCount == 0) break;\
             if(u32State)\
                 (sc)->PINCTL |= SC_PINCTL_PWREN_Msk;\
             else\
@@ -137,7 +141,9 @@ extern "C"
   */
 #define SC_SET_CLK_PIN(sc, u32OnOff)\
     do {\
-            while(((sc)->PINCTL & SC_PINCTL_SYNC_Msk) == SC_PINCTL_SYNC_Msk);\
+            uint32_t u32TimeOutCount = SC_TIMEOUT;\
+            while(((sc)->PINCTL & SC_PINCTL_SYNC_Msk) == SC_PINCTL_SYNC_Msk)\
+                if(--u32TimeOutCount == 0) break;\
             if(u32OnOff)\
                 (sc)->PINCTL |= SC_PINCTL_CLKKEEP_Msk;\
             else\
@@ -157,7 +163,9 @@ extern "C"
   */
 #define SC_SET_IO_PIN(sc, u32State)\
     do {\
-            while(((sc)->PINCTL & SC_PINCTL_SYNC_Msk) == SC_PINCTL_SYNC_Msk);\
+            uint32_t u32TimeOutCount = SC_TIMEOUT;\
+            while(((sc)->PINCTL & SC_PINCTL_SYNC_Msk) == SC_PINCTL_SYNC_Msk)\
+                if(--u32TimeOutCount == 0) break;\
             if(u32State)\
                 (sc)->PINCTL |= SC_PINCTL_SCDATA_Msk;\
             else\
@@ -177,7 +185,9 @@ extern "C"
   */
 #define SC_SET_RST_PIN(sc, u32State)\
     do {\
-            while(((sc)->PINCTL & SC_PINCTL_SYNC_Msk) == SC_PINCTL_SYNC_Msk);\
+            uint32_t u32TimeOutCount = SC_TIMEOUT;\
+            while(((sc)->PINCTL & SC_PINCTL_SYNC_Msk) == SC_PINCTL_SYNC_Msk)\
+                if(--u32TimeOutCount == 0) break;\
             if(u32State)\
                 (sc)->PINCTL |= SC_PINCTL_RSTEN_Msk;\
             else\
@@ -243,14 +253,24 @@ __STATIC_INLINE void SC_SetRxRetry(SC_T *sc, uint32_t u32Count);
   */
 __STATIC_INLINE void SC_SetTxRetry(SC_T *sc, uint32_t u32Count)
 {
-    while(((sc)->CTL & SC_CTL_SYNC_Msk) == SC_CTL_SYNC_Msk) {}
+    uint32_t u32TimeOutCount = 0;
+
+    u32TimeOutCount = SC_TIMEOUT;
+    while(((sc)->CTL & SC_CTL_SYNC_Msk) == SC_CTL_SYNC_Msk)
+    {
+        if(--u32TimeOutCount == 0) break;
+    }
 
     /* Retry count must set while enable bit disabled, so disable it first */
     (sc)->CTL &= ~(SC_CTL_TXRTY_Msk | SC_CTL_TXRTYEN_Msk);
 
     if((u32Count) != 0UL)
     {
-        while(((sc)->CTL & SC_CTL_SYNC_Msk) == SC_CTL_SYNC_Msk) {}
+        u32TimeOutCount = SC_TIMEOUT;
+        while(((sc)->CTL & SC_CTL_SYNC_Msk) == SC_CTL_SYNC_Msk)
+        {
+            if(--u32TimeOutCount == 0) break;
+        }
         (sc)->CTL |= (((u32Count) - 1UL) << SC_CTL_TXRTY_Pos) | SC_CTL_TXRTYEN_Msk;
     }
 }
@@ -267,20 +287,30 @@ __STATIC_INLINE void SC_SetTxRetry(SC_T *sc, uint32_t u32Count)
   */
 __STATIC_INLINE void SC_SetRxRetry(SC_T *sc, uint32_t u32Count)
 {
-    while(((sc)->CTL & SC_CTL_SYNC_Msk) == SC_CTL_SYNC_Msk) {}
+    uint32_t u32TimeOutCount = 0;
+
+    u32TimeOutCount = SC_TIMEOUT;
+    while(((sc)->CTL & SC_CTL_SYNC_Msk) == SC_CTL_SYNC_Msk)
+    {
+        if(--u32TimeOutCount == 0) break;
+    }
 
     /* Retry count must set while enable bit disabled, so disable it first */
     (sc)->CTL &= ~(SC_CTL_RXRTY_Msk | SC_CTL_RXRTYEN_Msk);
 
     if((u32Count) != 0UL)
     {
-        while(((sc)->CTL & SC_CTL_SYNC_Msk) == SC_CTL_SYNC_Msk) {}
+        u32TimeOutCount = SC_TIMEOUT;
+        while(((sc)->CTL & SC_CTL_SYNC_Msk) == SC_CTL_SYNC_Msk)
+        {
+            if(--u32TimeOutCount == 0) break;
+        }
         (sc)->CTL |= (((u32Count) - 1UL) << SC_CTL_RXRTY_Pos) | SC_CTL_RXRTYEN_Msk;
     }
 }
 
 
-uint32_t SC_IsCardInserted(SC_T *sc);
+uint32_t SC_IsCardInserted(const SC_T *sc);
 void SC_ClearFIFO(SC_T *sc);
 void SC_Close(SC_T *sc);
 void SC_Open(SC_T *sc, uint32_t u32CardDet, uint32_t u32PWR);
@@ -290,7 +320,7 @@ void SC_SetCharGuardTime(SC_T *sc, uint32_t u32CGT);
 void SC_StopAllTimer(SC_T *sc);
 void SC_StartTimer(SC_T *sc, uint32_t u32TimerNum, uint32_t u32Mode, uint32_t u32ETUCount);
 void SC_StopTimer(SC_T *sc, uint32_t u32TimerNum);
-uint32_t SC_GetInterfaceClock(SC_T *sc);
+uint32_t SC_GetInterfaceClock(const SC_T *sc);
 
 /**@}*/ /* end of group SC_EXPORTED_FUNCTIONS */
 

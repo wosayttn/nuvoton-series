@@ -794,6 +794,15 @@ extern "C"
 
 /* GPIO bit definitions for non-secure */
 #define GPIO_PIN_DATA_NS(port, pin)    (*((volatile uint32_t *)((GPIO_PIN_DATA_BASE+NS_OFFSET+(0x40*(port))) + ((pin)<<2))))
+
+#ifndef GPIO_PIN_DATA
+#if defined (__NONSECURE_CODE)
+#define GPIO_PIN_DATA(port, pin)    GPIO_PIN_DATA_NS(port, pin)
+#else
+#define GPIO_PIN_DATA(port, pin)    GPIO_PIN_DATA_S(port, pin)
+#endif
+#endif
+
 #define PA0_NS            GPIO_PIN_DATA_NS(0, 0 ) /*!< Specify PA.0 Pin Data Input/Output */
 #define PA1_NS            GPIO_PIN_DATA_NS(0, 1 ) /*!< Specify PA.1 Pin Data Input/Output */
 #define PA2_NS            GPIO_PIN_DATA_NS(0, 2 ) /*!< Specify PA.2 Pin Data Input/Output */

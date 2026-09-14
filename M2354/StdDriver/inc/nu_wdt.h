@@ -52,8 +52,15 @@ extern "C"
 /*---------------------------------------------------------------------------------------------------------*/
 #define WDT_RESET_COUNTER_KEYWORD   (0x00005AA5UL)    /*!< Fill this value to WDT_RSTCNT register to free reset WDT counter \hideinitializer */
 
-/**@}*/ /* end of group WDT_EXPORTED_CONSTANTS */
+/*---------------------------------------------------------------------------------------------------------*/
+/* WDT Define Error Code                                                                                   */
+/*---------------------------------------------------------------------------------------------------------*/
+#define WDT_TIMEOUT         SystemCoreClock     /*!< WDT time-out counter (1 second time-out) \hideinitializer */
+#define WDT_OK              ( 0L)               /*!< WDT operation OK \hideinitializer */
+#define WDT_FAIL            (-1L)               /*!< WDT operation failed \hideinitializer */
+#define WDT_ERR_TIMEOUT     (-2L)               /*!< WDT operation abort due to timeout error \hideinitializer */
 
+/**@}*/ /* end of group WDT_EXPORTED_CONSTANTS */
 
 /** @addtogroup WDT_EXPORTED_FUNCTIONS WDT Exported Functions
   @{
@@ -62,43 +69,43 @@ extern "C"
 /**
   * @brief      Clear WDT Reset System Flag
   *
-  * @param      None
+  * @param[in]  wdt     The pointer of the specified WDT module.
   *
   * @return     None
   *
   * @details    This macro clears WDT time-out reset system flag.
   * \hideinitializer
   */
-#define WDT_CLEAR_RESET_FLAG()          (WDT->CTL = (WDT->CTL & ~(WDT_CTL_IF_Msk | WDT_CTL_WKF_Msk)) | WDT_CTL_RSTF_Msk)
+#define WDT_CLEAR_RESET_FLAG(wdt)          ((wdt)->CTL = ((wdt)->CTL & ~(WDT_CTL_IF_Msk | WDT_CTL_WKF_Msk)) | WDT_CTL_RSTF_Msk)
 
 /**
   * @brief      Clear WDT Time-out Interrupt Flag
   *
-  * @param      None
+  * @param[in]  wdt     The pointer of the specified WDT module.
   *
   * @return     None
   *
   * @details    This macro clears WDT time-out interrupt flag.
   * \hideinitializer
   */
-#define WDT_CLEAR_TIMEOUT_INT_FLAG()    (WDT->CTL = (WDT->CTL & ~(WDT_CTL_RSTF_Msk | WDT_CTL_WKF_Msk)) | WDT_CTL_IF_Msk)
+#define WDT_CLEAR_TIMEOUT_INT_FLAG(wdt)    ((wdt)->CTL = ((wdt)->CTL & ~(WDT_CTL_RSTF_Msk | WDT_CTL_WKF_Msk)) | WDT_CTL_IF_Msk)
 
 /**
   * @brief      Clear WDT Wake-up Flag
   *
-  * @param      None
+  * @param[in]  wdt     The pointer of the specified WDT module.
   *
   * @return     None
   *
   * @details    This macro clears WDT time-out wake-up system flag.
   * \hideinitializer
   */
-#define WDT_CLEAR_TIMEOUT_WAKEUP_FLAG() (WDT->CTL = (WDT->CTL & ~(WDT_CTL_RSTF_Msk | WDT_CTL_IF_Msk)) | WDT_CTL_WKF_Msk)
+#define WDT_CLEAR_TIMEOUT_WAKEUP_FLAG(wdt) ((wdt)->CTL = ((wdt)->CTL & ~(WDT_CTL_RSTF_Msk | WDT_CTL_IF_Msk)) | WDT_CTL_WKF_Msk)
 
 /**
   * @brief      Get WDT Time-out Reset Flag
   *
-  * @param      None
+  * @param[in]  wdt     The pointer of the specified WDT module.
   *
   * @retval     0   WDT time-out reset system did not occur
   * @retval     1   WDT time-out reset system occurred
@@ -106,12 +113,12 @@ extern "C"
   * @details    This macro indicates system has been reset by WDT time-out reset or not.
   * \hideinitializer
   */
-#define WDT_GET_RESET_FLAG()            ((WDT->CTL & WDT_CTL_RSTF_Msk)? 1UL : 0UL)
+#define WDT_GET_RESET_FLAG(wdt)            (((wdt)->CTL & WDT_CTL_RSTF_Msk)? 1UL : 0UL)
 
 /**
   * @brief      Get WDT Time-out Interrupt Flag
   *
-  * @param      None
+  * @param[in]  wdt     The pointer of the specified WDT module.
   *
   * @retval     0   WDT time-out interrupt did not occur
   * @retval     1   WDT time-out interrupt occurred
@@ -119,12 +126,12 @@ extern "C"
   * @details    This macro indicates WDT time-out interrupt occurred or not.
   * \hideinitializer
   */
-#define WDT_GET_TIMEOUT_INT_FLAG()      ((WDT->CTL & WDT_CTL_IF_Msk)? 1UL : 0UL)
+#define WDT_GET_TIMEOUT_INT_FLAG(wdt)      (((wdt)->CTL & WDT_CTL_IF_Msk)? 1UL : 0UL)
 
 /**
   * @brief      Get WDT Time-out Wake-up Flag
   *
-  * @param      None
+  * @param[in]  wdt     The pointer of the specified WDT module.
   *
   * @retval     0   WDT time-out interrupt does not cause CPU wake-up
   * @retval     1   WDT time-out interrupt event cause CPU wake-up
@@ -132,12 +139,12 @@ extern "C"
   * @details    This macro indicates WDT time-out interrupt event has waked up system or not.
   * \hideinitializer
   */
-#define WDT_GET_TIMEOUT_WAKEUP_FLAG()   ((WDT->CTL & WDT_CTL_WKF_Msk)? 1UL : 0UL)
+#define WDT_GET_TIMEOUT_WAKEUP_FLAG(wdt)   (((wdt)->CTL & WDT_CTL_WKF_Msk)? 1UL : 0UL)
 
 /**
   * @brief      Reset WDT Counter
   *
-  * @param      None
+  * @param[in]  wdt     The pointer of the specified WDT module.
   *
   * @return     None
   *
@@ -147,62 +154,67 @@ extern "C"
   *             reset system before the WDT time-out reset delay period expires.
   * \hideinitializer
   */
-#define WDT_RESET_COUNTER()             (WDT->RSTCNT = WDT_RESET_COUNTER_KEYWORD)
+#define WDT_RESET_COUNTER(wdt)             ((wdt)->RSTCNT = WDT_RESET_COUNTER_KEYWORD)
 
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* static inline functions                                                                                 */
 /*---------------------------------------------------------------------------------------------------------*/
 /* Declare these inline functions here to avoid MISRA C 2004 rule 8.1 error */
-__STATIC_INLINE void WDT_Close(void);
-__STATIC_INLINE void WDT_EnableInt(void);
-__STATIC_INLINE void WDT_DisableInt(void);
+__STATIC_INLINE void WDT_Close(WDT_T *wdt);
+__STATIC_INLINE void WDT_EnableInt(WDT_T *wdt);
+__STATIC_INLINE void WDT_DisableInt(WDT_T *wdt);
 
 /**
   * @brief      Stop WDT Counting
   *
-  * @param      None
+  * @param[in]  wdt     The pointer of the specified WDT module.
   *
   * @return     None
   *
   * @details    This function will stop WDT counting and disable WDT module.
   */
-__STATIC_INLINE void WDT_Close(void)
+__STATIC_INLINE void WDT_Close(WDT_T *wdt)
 {
-    WDT->CTL = 0UL;
-    while(WDT->CTL & WDT_CTL_SYNC_Msk) {} /* Wait disable WDTEN bit completed, it needs 2 * WDT_CLK. */
+    uint32_t u32TimeOutCnt = WDT_TIMEOUT;
+
+    (wdt)->CTL = 0UL;
+    while((wdt)->CTL & WDT_CTL_SYNC_Msk) /* Wait disable WDTEN bit completed, it needs 2 * WDT_CLK. */
+    {
+        if(--u32TimeOutCnt == 0) break;
+    }
 }
 
 /**
   * @brief      Enable WDT Time-out Interrupt
   *
-  * @param      None
+  * @param[in]  wdt     The pointer of the specified WDT module.
   *
   * @return     None
   *
   * @details    This function will enable the WDT time-out interrupt function.
   */
-__STATIC_INLINE void WDT_EnableInt(void)
+__STATIC_INLINE void WDT_EnableInt(WDT_T *wdt)
 {
-    WDT->CTL |= WDT_CTL_INTEN_Msk;
+    (wdt)->CTL |= WDT_CTL_INTEN_Msk;
 }
 
 /**
   * @brief      Disable WDT Time-out Interrupt
   *
-  * @param      None
+  * @param[in]  wdt     The pointer of the specified WDT module.
   *
   * @return     None
   *
   * @details    This function will disable the WDT time-out interrupt function.
   */
-__STATIC_INLINE void WDT_DisableInt(void)
+__STATIC_INLINE void WDT_DisableInt(WDT_T *wdt)
 {
     /* Do not touch another write 1 clear bits */
-    WDT->CTL &= ~(WDT_CTL_INTEN_Msk | WDT_CTL_RSTF_Msk | WDT_CTL_IF_Msk | WDT_CTL_WKF_Msk);
+    (wdt)->CTL &= ~(WDT_CTL_INTEN_Msk | WDT_CTL_RSTF_Msk | WDT_CTL_IF_Msk | WDT_CTL_WKF_Msk);
 }
 
-void WDT_Open(uint32_t u32TimeoutInterval, uint32_t u32ResetDelay, uint32_t u32EnableReset, uint32_t u32EnableWakeup);
+int32_t WDT_Open(WDT_T *wdt, uint32_t u32TimeoutInterval, uint32_t u32ResetDelay, uint32_t u32EnableReset, uint32_t u32EnableWakeup);
 
 /**@}*/ /* end of group WDT_EXPORTED_FUNCTIONS */
 

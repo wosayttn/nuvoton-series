@@ -124,9 +124,15 @@ extern "C"
 #define RTC_IO_PULL_UP_ENABLE           0x1UL   /*!< I/O pull-up is enabled */
 #define RTC_IO_PULL_DOWN_ENABLE         0x2UL   /*!< I/O pull-down is enabled */
 
+/*---------------------------------------------------------------------------------------------------------*/
+/* RTC Define Error Code                                                                                   */
+/*---------------------------------------------------------------------------------------------------------*/
+#define RTC_TIMEOUT         SystemCoreClock     /*!< RTC time-out counter (1 second time-out) */
+#define RTC_OK              ( 0L)               /*!< RTC operation OK */
+#define RTC_ERR_FAIL        (-1L)               /*!< RTC operation failed */
+#define RTC_ERR_TIMEOUT     (-2L)               /*!< RTC operation abort due to timeout error */
 
 /**@}*/ /* end of group RTC_EXPORTED_CONSTANTS */
-
 
 /** @addtogroup RTC_EXPORTED_STRUCTS RTC Exported Structs
   @{
@@ -355,9 +361,9 @@ typedef struct
 #define RTC_WRITE_SPARE_REGISTER(rtc, u32RegNum, u32RegValue)   ((rtc)->SPR[(u32RegNum)] = (u32RegValue))
 
 
-void RTC_Open(S_RTC_TIME_DATA_T *sPt);
+int32_t RTC_Open(S_RTC_TIME_DATA_T *sPt);
 void RTC_Close(void);
-void RTC_32KCalibration(int32_t i32FrequencyX10000);
+int32_t RTC_32KCalibration(int32_t i32FrequencyX10000);
 void RTC_GetDateAndTime(S_RTC_TIME_DATA_T *sPt);
 void RTC_GetAlarmDateAndTime(S_RTC_TIME_DATA_T *sPt);
 void RTC_SetDateAndTime(S_RTC_TIME_DATA_T *sPt);

@@ -22,12 +22,12 @@ extern "C" {
 
 /* Init ETM Interface Multi-function Pins */
 #define ETM_INIT()  { \
-    SYS->GPC_MFPL &= ~(SYS_GPC_MFPL_PC0MFP_ETM_TRACE_Msk | SYS_GPC_MFPL_PC1MFP_ETM_TRACE_Msk | \
-    SYS_GPC_MFPL_PC2MFP_ETM_TRACE_Msk | SYS_GPC_MFPL_PC3MFP_ETM_TRACE_Msk | \
-                     SYS_GPC_MFPL_PC4MFP_ETM_TRACE_Msk); \
-    SYS->GPC_MFPL |= SYS_GPC_MFPL_PC0MFP_ETM_TRACE_CLK | SYS_GPC_MFPL_PC1MFP_ETM_TRACE_DATA0 | \
-                     SYS_GPC_MFPL_PC2MFP_ETM_TRACE_DATA1 | SYS_GPC_MFPL_PC3MFP_ETM_TRACE_DATA2 | \
-                     SYS_GPC_MFPL_PC4MFP_ETM_TRACE_DATA3;}
+    SYS->GPE_MFPH &= ~(SYS_GPE_MFPH_PE12MFP_Msk | SYS_GPE_MFPH_PE11MFP_Msk | \
+                       SYS_GPE_MFPH_PE10MFP_Msk | SYS_GPE_MFPH_PE9MFP_Msk | \
+                       SYS_GPE_MFPH_PE8MFP_Msk); \
+    SYS->GPE_MFPH |= SYS_GPE_MFPH_PE12MFP_TRACE_CLK | SYS_GPE_MFPH_PE11MFP_TRACE_DATA0 | \
+                     SYS_GPE_MFPH_PE10MFP_TRACE_DATA1 | SYS_GPE_MFPH_PE9MFP_TRACE_DATA2 | \
+                     SYS_GPE_MFPH_PE8MFP_TRACE_DATA3;}
 
 
 
@@ -101,9 +101,9 @@ extern uint32_t __PC(void);         /*!< Return the current program counter valu
  * @details    If the expression is false, an error message will be printed out
  *             from debug port (UART0 or UART1).
  */
-#define ASSERT_PARAM(expr)  { if (!(expr)) { AssertError((uint8_t*)__FILE__, __LINE__); } }
+#define ASSERT_PARAM(expr)  { if (!(expr)) { AssertError((const uint8_t*)__FILE__, __LINE__); } }
 
-void AssertError(uint8_t *file, uint32_t line);
+void AssertError(const uint8_t* file, uint32_t line);
 #else
 #define ASSERT_PARAM(expr)
 #endif

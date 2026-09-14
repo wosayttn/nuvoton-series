@@ -280,32 +280,30 @@ extern "C"
 #define CLK_PLLCTL_PLLSRC_HXT   0x00000000UL    /*!< For PLL clock source is HXT.  2MHz < FIN/NR < 8MHz */
 #define CLK_PLLCTL_PLLSRC_HIRC  0x00080000UL    /*!< For PLL clock source is HIRC. 2MHz < FIN/NR < 8MHz */
 
-#define CLK_PLLCTL_NF(x)        ((x)-2UL)       /*!< x must be constant and 2 <= x <= 513. 96MHz < FIN*(2*NF)/NR < 200MHz */
-#define CLK_PLLCTL_NR(x)        (((x)-1UL)<<9)  /*!< x must be constant and 2 <= x <= 33.  2MHz < FIN/NR < 8MHz */
+#define CLK_PLLCTL_NF(x)        ((uint32_t)(x)-2UL)       /*!< x must be constant and 2 <= x <= 513. 96MHz < FIN*(2*NF)/NR < 200MHz */
+#define CLK_PLLCTL_NR(x)        (((uint32_t)(x)-1UL)<<9UL) /*!< x must be constant and 2 <= x <= 33.  2MHz < FIN/NR < 8MHz */
 
 #define CLK_PLLCTL_NO_1         0x0000UL        /*!< For output divider is 1 */
 #define CLK_PLLCTL_NO_2         0x4000UL        /*!< For output divider is 2 */
 #define CLK_PLLCTL_NO_4         0xC000UL        /*!< For output divider is 4 */
 
+#if (__HXT == 12000000)
 #define CLK_PLLCTL_48MHz_HXT    (CLK_PLLCTL_PLLSRC_HXT  | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF(16UL) | CLK_PLLCTL_NO_4) /*!< Predefined PLLCTL setting for 48MHz PLL output with HXT */
-#define CLK_PLLCTL_48MHz_HIRC   (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF(16UL) | CLK_PLLCTL_NO_4) /*!< Predefined PLLCTL setting for 48MHz PLL output with HIRC */
-
 #define CLK_PLLCTL_64MHz_HXT    (CLK_PLLCTL_PLLSRC_HXT  | CLK_PLLCTL_NR(3UL) | CLK_PLLCTL_NF(16UL) | CLK_PLLCTL_NO_2) /*!< Predefined PLLCTL setting for 64MHz PLL output with HXT */
-#define CLK_PLLCTL_64MHz_HIRC   (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(3UL) | CLK_PLLCTL_NF(16UL) | CLK_PLLCTL_NO_2) /*!< Predefined PLLCTL setting for 64Hz PLL output with HIRC */
-
 #define CLK_PLLCTL_84MHz_HXT    (CLK_PLLCTL_PLLSRC_HXT  | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF(14UL) | CLK_PLLCTL_NO_2) /*!< Predefined PLLCTL setting for 84MHz PLL output with HXT */
-#define CLK_PLLCTL_84MHz_HIRC   (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF(14UL) | CLK_PLLCTL_NO_2) /*!< Predefined PLLCTL setting for 84Hz PLL output with HIRC */
-
 #define CLK_PLLCTL_96MHz_HXT    (CLK_PLLCTL_PLLSRC_HXT  | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF(16UL) | CLK_PLLCTL_NO_2) /*!< Predefined PLLCTL setting for 96MHz PLL output with HXT */
-#define CLK_PLLCTL_96MHz_HIRC   (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF(16UL) | CLK_PLLCTL_NO_2) /*!< Predefined PLLCTL setting for 96MHz PLL output with HIRC */
-
 #define CLK_PLLCTL_128MHz_HXT   (CLK_PLLCTL_PLLSRC_HXT  | CLK_PLLCTL_NR(3UL) | CLK_PLLCTL_NF(16UL) | CLK_PLLCTL_NO_1) /*!< Predefined PLLCTL setting for 128MHz PLL output with HXT */
-#define CLK_PLLCTL_128MHz_HIRC  (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(3UL) | CLK_PLLCTL_NF(16UL) | CLK_PLLCTL_NO_1) /*!< Predefined PLLCTL setting for 128MHz PLL output with HIRC */
-
 #define CLK_PLLCTL_144MHz_HXT   (CLK_PLLCTL_PLLSRC_HXT  | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF(12UL) | CLK_PLLCTL_NO_1) /*!< Predefined PLLCTL setting for 144MHz PLL output with HXT */
-#define CLK_PLLCTL_144MHz_HIRC  (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF(12UL) | CLK_PLLCTL_NO_1) /*!< Predefined PLLCTL setting for 144MHz PLL output with HIRC */
-
 #define CLK_PLLCTL_192MHz_HXT   (CLK_PLLCTL_PLLSRC_HXT  | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF(16UL) | CLK_PLLCTL_NO_1) /*!< Predefined PLLCTL setting for 192MHz PLL output with HXT */
+#else
+# error "The PLL pre-definitions are only valid when external crystal is 12MHz"
+#endif
+#define CLK_PLLCTL_48MHz_HIRC   (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF(16UL) | CLK_PLLCTL_NO_4) /*!< Predefined PLLCTL setting for 48MHz PLL output with HIRC */
+#define CLK_PLLCTL_64MHz_HIRC   (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(3UL) | CLK_PLLCTL_NF(16UL) | CLK_PLLCTL_NO_2) /*!< Predefined PLLCTL setting for 64Hz PLL output with HIRC */
+#define CLK_PLLCTL_84MHz_HIRC   (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF(14UL) | CLK_PLLCTL_NO_2) /*!< Predefined PLLCTL setting for 84Hz PLL output with HIRC */
+#define CLK_PLLCTL_96MHz_HIRC   (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF(16UL) | CLK_PLLCTL_NO_2) /*!< Predefined PLLCTL setting for 96MHz PLL output with HIRC */
+#define CLK_PLLCTL_128MHz_HIRC  (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(3UL) | CLK_PLLCTL_NF(16UL) | CLK_PLLCTL_NO_1) /*!< Predefined PLLCTL setting for 128MHz PLL output with HIRC */
+#define CLK_PLLCTL_144MHz_HIRC  (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF(12UL) | CLK_PLLCTL_NO_1) /*!< Predefined PLLCTL setting for 144MHz PLL output with HIRC */
 #define CLK_PLLCTL_192MHz_HIRC  (CLK_PLLCTL_PLLSRC_HIRC | CLK_PLLCTL_NR(2UL) | CLK_PLLCTL_NF(16UL) | CLK_PLLCTL_NO_1) /*!< Predefined PLLCTL setting for 192MHz PLL output with HIRC */
 
 
@@ -318,7 +316,7 @@ extern "C"
 #define MODULE_CLKSEL(x)        (((x) >>28) & 0x3UL)    /*!< Calculate CLKSEL offset on MODULE index, 0x0:CLKSEL0, 0x1:CLKSEL1, 0x2:CLKSEL2, 0x3:CLKSEL3 */
 #define MODULE_CLKSEL_Msk(x)    (((x) >>25) & 0x7UL)    /*!< Calculate CLKSEL mask offset on MODULE index */
 #define MODULE_CLKSEL_Pos(x)    (((x) >>20) & 0x1fUL)   /*!< Calculate CLKSEL position offset on MODULE index */
-#define MODULE_CLKDIV(x)        (((x) >>18) & 0x3UL)    /*!< Calculate APBCLK CLKDIV on MODULE index, 0x0:CLKDIV0, 0x1:CLKDIV1, 0x4:CLKDIV4 */
+#define MODULE_CLKDIV(x)        (((x) >>18) & 0x3UL)    /*!< Calculate CLKDIV offset on MODULE index, 0x0:CLKDIV0, 0x1:CLKDIV1, 0x4:CLKDIV4 */
 #define MODULE_CLKDIV_Msk(x)    (((x) >>10) & 0xffUL)   /*!< Calculate CLKDIV mask offset on MODULE index */
 #define MODULE_CLKDIV_Pos(x)    (((x) >>5 ) & 0x1fUL)   /*!< Calculate CLKDIV position offset on MODULE index */
 #define MODULE_IP_EN_Pos(x)     (((x) >>0 ) & 0x1fUL)   /*!< Calculate APBCLK offset on MODULE index */
@@ -338,11 +336,11 @@ extern "C"
 /* AHBCLK */
 #define PDMA0_MODULE   (MODULE_APBCLK_ENC( 0UL)|MODULE_IP_EN_Pos_ENC((uint32_t)CLK_AHBCLK_PDMA0CKEN_Pos)|\
                         MODULE_CLKSEL_ENC(  NA)|MODULE_CLKSEL_Msk_ENC(NA)|MODULE_CLKSEL_Pos_ENC(NA)|\
-                        MODULE_CLKDIV_ENC(  NA)|MODULE_CLKDIV_Msk_ENC(NA)|MODULE_CLKDIV_Pos_ENC(NA))      /*!< PDMA Module */
+                        MODULE_CLKDIV_ENC(  NA)|MODULE_CLKDIV_Msk_ENC(NA)|MODULE_CLKDIV_Pos_ENC(NA))      /*!< PDMA0 Module */
 
 #define PDMA1_MODULE   (MODULE_APBCLK_ENC( 0UL)|MODULE_IP_EN_Pos_ENC((uint32_t)CLK_AHBCLK_PDMA1CKEN_Pos)|\
                         MODULE_CLKSEL_ENC(  NA)|MODULE_CLKSEL_Msk_ENC(NA)|MODULE_CLKSEL_Pos_ENC(NA)|\
-                        MODULE_CLKDIV_ENC(  NA)|MODULE_CLKDIV_Msk_ENC(NA)|MODULE_CLKDIV_Pos_ENC(NA))      /*!< PDMA Module */
+                        MODULE_CLKDIV_ENC(  NA)|MODULE_CLKDIV_Msk_ENC(NA)|MODULE_CLKDIV_Pos_ENC(NA))      /*!< PDMA1 Module */
 
 #define ISP_MODULE     (MODULE_APBCLK_ENC( 0UL)|MODULE_IP_EN_Pos_ENC((uint32_t)CLK_AHBCLK_ISPCKEN_Pos)|\
                         MODULE_CLKSEL_ENC(  NA)|MODULE_CLKSEL_Msk_ENC(NA)|MODULE_CLKSEL_Pos_ENC(NA)|\
@@ -716,12 +714,29 @@ extern "C"
 #define CLK_SPDWKPIN_DEBOUNCEEN     (0x1UL << 8)     /*!< Enable Standby power-down pin De-bounce function */
 #define CLK_SPDWKPIN_DEBOUNCEDIS    (0x0UL << 8)     /*!< Disable Standby power-down pin De-bounce function */
 
+/*---------------------------------------------------------------------------------------------------------*/
+/* CLK Time-out Handler Constant Definitions                                                               */
+/*---------------------------------------------------------------------------------------------------------*/
+#define CLK_TIMEOUT                 (SystemCoreClock) /*!< CLK time-out counter (1 second time-out) */
 
 /**@}*/ /* end of group CLK_EXPORTED_CONSTANTS */
 
 /** @addtogroup CLK_EXPORTED_FUNCTIONS CLK Exported Functions
   @{
 */
+
+/**
+  * @brief      Wait CLK_PMUCTL Write Busy Flag
+  * @param      None
+  * @return     None
+  * @details    This macro waits CLK_PMUCTL write busy flag is cleared and skips when time-out.
+  */
+#define CLK_WAIT_PMUCTL_WRBUSY() \
+    do{ \
+        uint32_t u32TimeOutCnt = CLK_TIMEOUT; \
+        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk) \
+            if(--u32TimeOutCnt == 0) break; \
+    }while(0)
 
 /**
   * @brief      Disable Wake-up Timer
@@ -731,7 +746,7 @@ extern "C"
   */
 #define CLK_DISABLE_WKTMR() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKTMREN_Msk; \
     }while(0)
 
@@ -743,7 +758,7 @@ extern "C"
   */
 #define CLK_ENABLE_WKTMR() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL |= CLK_PMUCTL_WKTMREN_Msk; \
     }while(0)
 
@@ -755,7 +770,7 @@ extern "C"
   */
 #define CLK_DISABLE_DPDWKPIN() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPINEN_Msk; \
     }while(0)
 
@@ -767,7 +782,7 @@ extern "C"
   */
 #define CLK_DISABLE_DPDWKPIN0() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPIN0EN_Msk; \
     }while(0)
 
@@ -779,7 +794,7 @@ extern "C"
   */
 #define CLK_DISABLE_DPDWKPIN1() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPIN1EN_Msk; \
     }while(0)
 
@@ -791,7 +806,7 @@ extern "C"
   */
 #define CLK_DISABLE_DPDWKPIN2() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPIN2EN_Msk; \
     }while(0)
 
@@ -803,7 +818,7 @@ extern "C"
   */
 #define CLK_DISABLE_DPDWKPIN3() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPIN3EN_Msk; \
     }while(0)
 
@@ -815,7 +830,7 @@ extern "C"
   */
 #define CLK_DISABLE_DPDWKPIN4() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_WKPIN4EN_Msk; \
     }while(0)
 
@@ -827,7 +842,7 @@ extern "C"
   */
 #define CLK_DISABLE_SPDACMP() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_ACMPSPWK_Msk; \
     }while(0)
 
@@ -839,7 +854,7 @@ extern "C"
   */
 #define CLK_ENABLE_SPDACMP() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL |= CLK_PMUCTL_ACMPSPWK_Msk; \
     }while(0)
 
@@ -851,7 +866,7 @@ extern "C"
   */
 #define CLK_DISABLE_RTCWK() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_RTCWKEN_Msk; \
     }while(0)
 
@@ -863,7 +878,7 @@ extern "C"
   */
 #define CLK_ENABLE_RTCWK() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL |= CLK_PMUCTL_RTCWKEN_Msk; \
     }while(0)
 
@@ -888,7 +903,7 @@ extern "C"
  */
 #define CLK_SET_WKTMR_INTERVAL(u32Interval) \
    do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL = (CLK->PMUCTL & (~CLK_PMUCTL_WKTMRIS_Msk)) | (u32Interval); \
     }while(0)
 
@@ -929,7 +944,7 @@ extern "C"
   */
 #define CLK_DISABLE_SPDTAMPER() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL &= ~CLK_PMUCTL_TAMPERWK_Msk; \
     }while(0)
 
@@ -941,7 +956,7 @@ extern "C"
   */
 #define CLK_ENABLE_SPDTAMPER() \
     do{ \
-        while(CLK->PMUCTL & CLK_PMUCTL_WRBUSY_Msk); \
+        CLK_WAIT_PMUCTL_WRBUSY(); \
         CLK->PMUCTL |= CLK_PMUCTL_TAMPERWK_Msk; \
     }while(0)
 
@@ -960,7 +975,7 @@ __STATIC_INLINE void CLK_SysTickLongDelay(uint32_t us);
   *                             96MHz => 174762us, 84MHz => 199728us,
   *                             64MHz => 262143us, 48MHz => 349525us ...
   * @return     None
-  * @details    Use the SysTick to generate the delay time and the UNIT is in us.
+  * @details    Use the SysTick to generate the delay time and the unit is in us.
   *             The SysTick clock source is from HCLK, i.e the same as system core clock.
   *             User can use SystemCoreClockUpdate() to calculate CyclesPerUs automatically before using this function.
   */
@@ -990,20 +1005,21 @@ __STATIC_INLINE void CLK_SysTickDelay(uint32_t us)
 __STATIC_INLINE void CLK_SysTickLongDelay(uint32_t us)
 {
     uint32_t u32Delay;
+    uint32_t usLocal = us;  /* local copy to avoid modifying parameter (Rule 17.8) */
 
     /* It should <= 65536us for each delay loop */
     u32Delay = 65536UL;
 
     do
     {
-        if(us > u32Delay)
+        if(usLocal > u32Delay)
         {
-            us -= u32Delay;
+            usLocal -= u32Delay;
         }
         else
         {
-            u32Delay = us;
-            us = 0UL;
+            u32Delay = usLocal;
+            usLocal = 0UL;
         }
 
         SysTick->LOAD = u32Delay * CyclesPerUs;
@@ -1015,10 +1031,7 @@ __STATIC_INLINE void CLK_SysTickLongDelay(uint32_t us)
 
         /* Disable SysTick counter */
         SysTick->CTRL = 0UL;
-
-    }
-    while(us > 0UL);
-
+    }while(usLocal > 0UL);
 }
 
 

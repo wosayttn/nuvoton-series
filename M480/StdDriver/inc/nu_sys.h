@@ -71,6 +71,7 @@ extern "C"
 #define OTG_RST             ((4UL<<24) | SYS_IPRST1_OTGRST_Pos)         /*!< Reset OTG \hideinitializer */
 #define USBD_RST            ((4UL<<24) | SYS_IPRST1_USBDRST_Pos)        /*!< Reset USBD \hideinitializer */
 #define EADC_RST            ((4UL<<24) | SYS_IPRST1_EADCRST_Pos)        /*!< Reset EADC \hideinitializer */
+#define EADC0_RST           (EADC_RST)                                  /*!< Reset EADC0 \hideinitializer */
 #define I2S0_RST            ((4UL<<24) | SYS_IPRST1_I2S0RST_Pos)        /*!< Reset I2S0 \hideinitializer */
 #define HSOTG_RST           ((4UL<<24) | SYS_IPRST1_HSOTGRST_Pos)       /*!< Reset HSOTG \hideinitializer */
 #define TRNG_RST            ((4UL<<24) | SYS_IPRST1_TRNGRST_Pos)        /*!< Reset TRNG \hideinitializer */

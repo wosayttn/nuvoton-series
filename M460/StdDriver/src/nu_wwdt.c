@@ -41,6 +41,7 @@
   *                             - \ref WWDT_PRESCALER_1024
   *                             - \ref WWDT_PRESCALER_1536
   *                             - \ref WWDT_PRESCALER_2048
+  * @param[in]  wwdt            The pointer of the specified WWDT module.
   * @param[in]  u32CmpValue     Setting the window compared value. Valid values are between 0x0 to 0x3F.
   * @param[in]  u32EnableInt    Enable WWDT time-out interrupt function. Valid values are TRUE and FALSE.
   *
@@ -49,14 +50,15 @@
   * @details    This function makes WWDT module start counting with different counter period by pre-scale setting and compared window value.
   * @note       Application can call this function only once after boot up.
   */
-void WWDT_Open(uint32_t u32PreScale,
+void WWDT_Open(WWDT_T *wwdt,
+               uint32_t u32PreScale,
                uint32_t u32CmpValue,
                uint32_t u32EnableInt)
 {
-    WWDT->CTL = u32PreScale |
-                (u32CmpValue << WWDT_CTL_CMPDAT_Pos) |
-                ((u32EnableInt == (uint32_t)TRUE) ? WWDT_CTL_INTEN_Msk : 0UL) |
-                WWDT_CTL_WWDTEN_Msk;
+    (wwdt)->CTL = u32PreScale |
+                  (u32CmpValue << WWDT_CTL_CMPDAT_Pos) |
+                  ((u32EnableInt == (uint32_t)TRUE) ? WWDT_CTL_INTEN_Msk : 0UL) |
+                  WWDT_CTL_WWDTEN_Msk;
 }
 
 /**@}*/ /* end of group WWDT_EXPORTED_FUNCTIONS */

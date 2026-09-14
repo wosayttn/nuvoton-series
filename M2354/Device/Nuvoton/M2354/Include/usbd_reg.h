@@ -76,9 +76,9 @@ typedef struct
      * |        |          |1 = DATA1 PID.
      * |        |          |For IN token, DSQSYNC specify DATA0 or DATA1 PID in transfer data packet.
      * |        |          |For OUT token, DSQSYNC specify DATA0 or DATA1 PID in received data packet.
-     * |        |          |DSQSYNC will be toggled automatically by hardware when IN or OUT token transfer successfully in single buffer mode, but won’t be toggled in double buffer mode.
+     * |        |          |DSQSYNC will be toggled automatically by hardware when IN or OUT token transfer successfully in single buffer mode, but won't be toggled in double buffer mode.
      * |        |          |Note 1: When double buffer is enabled, hardware will automatically write 0 to DSQSYNC with active double buffer and write 1 to DSQSYNC with inactive double buffer.
-     * |        |          |Note 2: It won’t be toggled by hardware when DBEN = 1. USB data toggle will be guaranteed by changing endpoint.
+     * |        |          |Note 2: It won't be toggled by hardware when DBEN = 1. USB data toggle will be guaranteed by changing endpoint.
      * |[9]     |CSTALL    |Clear STALL Response
      * |        |          |0 = Disable the device to clear the STALL handshake in setup stage.
      * |        |          |1 = Clear the device to response STALL handshake in setup stage.

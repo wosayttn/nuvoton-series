@@ -1,9 +1,7 @@
 /**************************************************************************//**
  * @file     nu_usci_i2c.h
  * @version  V3.0
- * $Revision: 1 $
- * $Date: 16/07/07 7:50p $
- * @brief    M2355 series USCI I2C(UI2C) driver header file
+ * @brief    M2354 series USCI I2C(UI2C) driver header file
  *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
@@ -90,8 +88,17 @@ enum UI2C_SLAVE_EVENT
 #define UI2C_ERR_INT_MASK          (0x020U)    /*!< Error interrupt mask */
 #define UI2C_ACK_INT_MASK          (0x040U)    /*!< Acknowledge interrupt mask */
 
+/*---------------------------------------------------------------------------------------------------------*/
+/* USCI_I2C Define Error Code                                                                              */
+/*---------------------------------------------------------------------------------------------------------*/
+#define UI2C_TIMEOUT               SystemCoreClock  /*!< UI2C time-out counter (1 second time-out) \hideinitializer */
+#define UI2C_OK                    ( 0L)            /*!< UI2C operation OK \hideinitializer */
+#define UI2C_ERR_FAIL              (-1L)            /*!< UI2C operation failed \hideinitializer */
+#define UI2C_ERR_TIMEOUT           (-2L)            /*!< UI2C operation abort due to timeout error \hideinitializer */
+
 /**@}*/ /* end of group USCI_I2C_EXPORTED_CONSTANTS */
 
+extern int32_t g_UI2C_i32ErrCode;
 
 /** @addtogroup USCI_I2C_EXPORTED_FUNCTIONS USCI_I2C Exported Functions
   @{
@@ -280,11 +287,11 @@ void UI2C_ClearTimeoutFlag(UI2C_T *ui2c);
 void UI2C_Trigger(UI2C_T *ui2c, uint8_t u8Start, uint8_t u8Stop, uint8_t u8Ptrg, uint8_t u8Ack);
 void UI2C_DisableInt(UI2C_T *ui2c, uint32_t u32Mask);
 void UI2C_EnableInt(UI2C_T *ui2c, uint32_t u32Mask);
-uint32_t UI2C_GetBusClockFreq(UI2C_T *ui2c);
+uint32_t UI2C_GetBusClockFreq(const UI2C_T *ui2c);
 uint32_t UI2C_SetBusClockFreq(UI2C_T *ui2c, uint32_t u32BusClock);
-uint32_t UI2C_GetIntFlag(UI2C_T *ui2c, uint32_t u32Mask);
+uint32_t UI2C_GetIntFlag(const UI2C_T *ui2c, uint32_t u32Mask);
 void UI2C_ClearIntFlag(UI2C_T* ui2c, uint32_t u32Mask);
-uint32_t UI2C_GetData(UI2C_T *ui2c);
+uint32_t UI2C_GetData(const UI2C_T *ui2c);
 void UI2C_SetData(UI2C_T *ui2c, uint8_t u8Data);
 void UI2C_SetSlaveAddr(UI2C_T *ui2c, uint8_t u8SlaveNo, uint16_t u16SlaveAddr, uint8_t u8GCMode);
 void UI2C_SetSlaveAddrMask(UI2C_T *ui2c, uint8_t u8SlaveNo, uint16_t u16SlaveAddrMask);
@@ -293,17 +300,17 @@ void UI2C_DisableTimeout(UI2C_T *ui2c);
 void UI2C_EnableWakeup(UI2C_T *ui2c, uint8_t u8WakeupMode);
 void UI2C_DisableWakeup(UI2C_T *ui2c);
 uint8_t UI2C_WriteByte(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t data);
-uint32_t UI2C_WriteMultiBytes(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t data[], uint32_t u32wLen);
+uint32_t UI2C_WriteMultiBytes(UI2C_T *ui2c, uint8_t u8SlaveAddr, const uint8_t *data, uint32_t u32wLen);
 uint8_t UI2C_WriteByteOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, uint8_t data);
-uint32_t UI2C_WriteMultiBytesOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, uint8_t data[], uint32_t u32wLen);
+uint32_t UI2C_WriteMultiBytesOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, const uint8_t *data, uint32_t u32wLen);
 uint8_t UI2C_WriteByteTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, uint8_t data);
-uint32_t UI2C_WriteMultiBytesTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, uint8_t data[], uint32_t u32wLen);
+uint32_t UI2C_WriteMultiBytesTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, const uint8_t *data, uint32_t u32wLen);
 uint8_t UI2C_ReadByte(UI2C_T *ui2c, uint8_t u8SlaveAddr);
-uint32_t UI2C_ReadMultiBytes(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t rdata[], uint32_t u32rLen);
+uint32_t UI2C_ReadMultiBytes(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t *rdata, uint32_t u32rLen);
 uint8_t UI2C_ReadByteOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr);
-uint32_t UI2C_ReadMultiBytesOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, uint8_t rdata[], uint32_t u32rLen);
+uint32_t UI2C_ReadMultiBytesOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, uint8_t *rdata, uint32_t u32rLen);
 uint8_t UI2C_ReadByteTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr);
-uint32_t UI2C_ReadMultiBytesTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, uint8_t rdata[], uint32_t u32rLen);
+uint32_t UI2C_ReadMultiBytesTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, uint8_t *rdata, uint32_t u32rLen);
 /**@}*/ /* end of group USCI_I2C_EXPORTED_FUNCTIONS */
 
 /**@}*/ /* end of group USCI_I2C_Driver */

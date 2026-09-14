@@ -1,5 +1,5 @@
 /**************************************************************************//**
- * @file     timer.h
+ * @file     nu_timer_pwm.h
  * @version  V3.00
  * @brief    Timer PWM Controller(Timer PWM) driver header file
  *
@@ -130,8 +130,12 @@ extern "C"
 #define TPWM_CNTR_SYNC_START_BY_TIMER2          ((1<<TIMER_PWMSCTL_SYNCSRC_Pos) | (1<<TIMER_PWMSCTL_SYNCMODE_Pos))  /*!< PWM counter synchronous start by TIMER2 PWM \hideinitializer */
 #define TPWM_CNTR_SYNC_CLEAR_BY_TIMER2          ((1<<TIMER_PWMSCTL_SYNCSRC_Pos) | (3<<TIMER_PWMSCTL_SYNCMODE_Pos))  /*!< PWM counter synchronous clear by TIMER2 PWM \hideinitializer */
 
-/**@}*/ /* end of group TIMER_PWM_EXPORTED_CONSTANTS */
+/*---------------------------------------------------------------------------------------------------------*/
+/* TIMER PWM Time-out Handler Constant Definitions                                                         */
+/*---------------------------------------------------------------------------------------------------------*/
+#define TPWM_TIMEOUT         (SystemCoreClock)   /*!< TIMER PWM time-out counter (1 second time-out) */
 
+/**@}*/ /* end of group TIMER_PWM_EXPORTED_CONSTANTS */
 
 /** @addtogroup TIMER_PWM_EXPORTED_FUNCTIONS TIMER PWM Exported Functions
   @{
@@ -150,12 +154,19 @@ extern "C"
   */
 #define TPWM_ENABLE_PWM_MODE(timer) \
     do{ \
+        uint32_t u32TimeOutCnt = TPWM_TIMEOUT; \
         if(((uint32_t)&((timer)->PWMCTL) & TMR45_BASE) == TMR45_BASE) { \
             (timer)->CTL |= TIMER_CTL_FUNCSEL_Msk; \
-            while(((timer)->CTL & TIMER_CTL_FUNCSEL_Msk) == 0) {} \
+            while(((timer)->CTL & TIMER_CTL_FUNCSEL_Msk) == 0) \
+            { \
+                if(--u32TimeOutCnt == 0) break; \
+            } \
         } else { \
             (timer)->ALTCTL = TIMER_ALTCTL_FUNCSEL_Msk; \
-            while(((timer)->ALTCTL & TIMER_ALTCTL_FUNCSEL_Msk) == 0) {} \
+            while(((timer)->ALTCTL & TIMER_ALTCTL_FUNCSEL_Msk) == 0) \
+            { \
+                if(--u32TimeOutCnt == 0) break; \
+            } \
         } \
     }while(0)
 
@@ -172,12 +183,19 @@ extern "C"
   */
 #define TPWM_DISABLE_PWM_MODE(timer) \
     do{ \
+        uint32_t u32TimeOutCnt = TPWM_TIMEOUT; \
         if(((uint32_t)&((timer)->PWMCTL) & TMR45_BASE) == TMR45_BASE) { \
             (timer)->CTL &= ~TIMER_CTL_FUNCSEL_Msk; \
-            while(((timer)->CTL & TIMER_CTL_FUNCSEL_Msk) == TIMER_CTL_FUNCSEL_Msk) {} \
+            while(((timer)->CTL & TIMER_CTL_FUNCSEL_Msk) == TIMER_CTL_FUNCSEL_Msk) \
+            { \
+                if(--u32TimeOutCnt == 0) break; \
+            } \
         } else { \
             (timer)->ALTCTL &= ~TIMER_ALTCTL_FUNCSEL_Msk; \
-            while(((timer)->ALTCTL & TIMER_ALTCTL_FUNCSEL_Msk) == TIMER_ALTCTL_FUNCSEL_Msk) {} \
+            while(((timer)->ALTCTL & TIMER_ALTCTL_FUNCSEL_Msk) == TIMER_ALTCTL_FUNCSEL_Msk) \
+            { \
+                if(--u32TimeOutCnt == 0) break; \
+            } \
         } \
     }while(0)
 
@@ -855,7 +873,7 @@ void TPWM_DisableTriggerPDMA(TIMER_T *timer);
 void TPWM_EnableFaultBrake(TIMER_T *timer, uint32_t u32CH0Level, uint32_t u32CH1Level, uint32_t u32BrakeSource);
 void TPWM_EnableFaultBrakeInt(TIMER_T *timer, uint32_t u32IntSource);
 void TPWM_DisableFaultBrakeInt(TIMER_T *timer, uint32_t u32IntSource);
-uint32_t TPWM_GetFaultBrakeIntFlag(TIMER_T *timer, uint32_t u32IntSource);
+uint32_t TPWM_GetFaultBrakeIntFlag(const TIMER_T *timer, uint32_t u32IntSource);
 void TPWM_ClearFaultBrakeIntFlag(TIMER_T *timer, uint32_t u32IntSource);
 void TPWM_SetLoadMode(TIMER_T *timer, uint32_t u32LoadMode);
 void TPWM_EnableBrakePinDebounce(TIMER_T *timer, uint32_t u32BrakePinSrc, uint32_t u32DebounceCnt, uint32_t u32ClkSrcSel);

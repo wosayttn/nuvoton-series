@@ -16,7 +16,7 @@ if GetDepend(['SOC_SERIES_M460']):
 if GetDepend(['SOC_SERIES_M480']):
     objs = objs + SConscript('M480/SConscript')
 
-if GetDepend(['SOC_SERIES_M032']):
+if GetDepend(['SOC_SERIES_M031']):
     objs = objs + SConscript('M031/SConscript')
 
 if GetDepend(['SOC_SERIES_M2354']):
@@ -24,6 +24,15 @@ if GetDepend(['SOC_SERIES_M2354']):
 
 if GetDepend(['SOC_SERIES_M3331']):
     objs = objs + SConscript('M3331/SConscript')
+
+if GetDepend(['SOC_SERIES_M2L31']):
+    objs = objs + SConscript('M2L31/SConscript')
+
+if GetDepend(['SOC_SERIES_M3351']):
+    objs = objs + SConscript('M3351/SConscript')
+
+if GetDepend(['SOC_SERIES_M5531']):
+    objs = objs + SConscript('M5531/SConscript')
 
 if GetDepend(['SOC_SERIES_N9H30']):
     objs = objs + SConscript('N9H30/SConscript')

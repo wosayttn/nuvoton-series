@@ -150,11 +150,20 @@ extern "C"
 #define SYS_SRAMPC0_SRAM_POWER_SHUT_DOWN 0x2UL   /*!< Select SRAM power mode to power shut down mode */
 
 /*---------------------------------------------------------------------------------------------------------*/
-/*  SRAMPPC1 constant definitions. (Write-Protection Register)                                             */
+/*  SRAMPC1 constant definitions. (Write-Protection Register)                                              */
 /*---------------------------------------------------------------------------------------------------------*/
 #define SYS_SRAMPC1_SRAM_NORMAL          0x80000000UL   /*!< Select SRAM power mode to normal mode */
 #define SYS_SRAMPC1_SRAM_RETENTION       0x80000001UL   /*!< Select SRAM power mode to retention mode */
 #define SYS_SRAMPC1_SRAM_POWER_SHUT_DOWN 0x80000002UL   /*!< Select SRAM power mode to power shut down mode */
+
+
+/*---------------------------------------------------------------------------------------------------------*/
+/* SYS Define Error Code                                                                                   */
+/*---------------------------------------------------------------------------------------------------------*/
+#define SYS_TIMEOUT         SystemCoreClock     /*!< SYS time-out counter (1 second time-out) */
+#define SYS_OK              ( 0L)               /*!< SYS operation OK */
+#define SYS_ERR_FAIL        (-1L)               /*!< SYS operation failed */
+#define SYS_ERR_TIMEOUT     (-2L)               /*!< SYS operation abort due to timeout error */
 
 /*---------------------------------------------------------------------------------------------------------*/
 /*  Multi-Function constant definitions.                                                                   */
@@ -4013,16 +4022,31 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
 #define SET_XT1_IN_PF3()         SYS->GPF_MFPL = (SYS->GPF_MFPL & (~XT1_IN_PF3_Msk)) | XT1_IN_PF3                /*!< Set PF3 function to XT1_IN           */
 #define SET_XT1_OUT_PF2()        SYS->GPF_MFPL = (SYS->GPF_MFPL & (~XT1_OUT_PF2_Msk)) | XT1_OUT_PF2              /*!< Set PF2 function to XT1_OUT          */
 
+/**
+  * @brief      Wait SYS_BODCTL Write Busy Flag
+  * @param      None
+  * @return     None
+  * @details    This macro waits SYS_BODCTL write busy flag is cleared and skips when time-out.
+  */
+#define SYS_WAIT_BODCTL_WRBUSY() \
+    do{ \
+        uint32_t u32TimeOutCnt = SYS_TIMEOUT; \
+        while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk) \
+        { \
+            if(--u32TimeOutCnt == 0) break; \
+        } \
+    }while(0)
 
 /**
   * @brief      Clear Brown-out detector interrupt flag
   * @param      None
   * @return     None
   * @details    This macro clear Brown-out detector interrupt flag.
+  * @note       This macro sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SYS time-out.
   */
 #define SYS_CLEAR_BOD_INT_FLAG() \
    do{ \
-        while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk); \
+        SYS_WAIT_BODCTL_WRBUSY(); \
         SYS->BODCTL |= SYS_BODCTL_BODIF_Msk; \
     }while(0)
 
@@ -4032,10 +4056,11 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
   * @return     None
   * @details    This macro disable Brown-out detector function.
   *             The register write-protection function should be disabled before using this macro.
+  * @note       This macro sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SYS time-out.
   */
 #define SYS_DISABLE_BOD() \
    do{ \
-        while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk); \
+        SYS_WAIT_BODCTL_WRBUSY(); \
         SYS->BODCTL &= ~SYS_BODCTL_BODEN_Msk; \
     }while(0)
 
@@ -4045,10 +4070,11 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
   * @return     None
   * @details    This macro enable Brown-out detector function.
   *             The register write-protection function should be disabled before using this macro.
+  * @note       This macro sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SYS time-out.
   */
 #define SYS_ENABLE_BOD() \
    do{ \
-        while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk); \
+        SYS_WAIT_BODCTL_WRBUSY(); \
         SYS->BODCTL |= SYS_BODCTL_BODEN_Msk; \
     }while(0)
 
@@ -4077,10 +4103,11 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
   * @return     None
   * @details    This macro enable Brown-out detector interrupt function.
   *             The register write-protection function should be disabled before using this macro.
+  * @note       This macro sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SYS time-out.
   */
 #define SYS_DISABLE_BOD_RST() \
    do{ \
-        while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk); \
+        SYS_WAIT_BODCTL_WRBUSY(); \
         SYS->BODCTL &= ~SYS_BODCTL_BODRSTEN_Msk; \
     }while(0)
 
@@ -4090,10 +4117,11 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
   * @return     None
   * @details    This macro enable Brown-out detect reset function.
   *             The register write-protection function should be disabled before using this macro.
+  * @note       This macro sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SYS time-out.
   */
 #define SYS_ENABLE_BOD_RST() \
    do{ \
-        while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk); \
+        SYS_WAIT_BODCTL_WRBUSY(); \
         SYS->BODCTL |= SYS_BODCTL_BODRSTEN_Msk; \
     }while(0)
 
@@ -4111,10 +4139,11 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
   * @return     None
   * @details    This macro set Brown-out detector voltage level.
   *             The write-protection function should be disabled before using this macro.
+  * @note       This macro sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SYS time-out.
   */
 #define SYS_SET_BOD_LEVEL(u32Level) \
    do{ \
-        while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk); \
+        SYS_WAIT_BODCTL_WRBUSY(); \
         SYS->BODCTL = (SYS->BODCTL & ~SYS_BODCTL_BODVL_Msk) | (u32Level); \
     }while(0)
 
@@ -4187,10 +4216,11 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
   * @return     None
   * @details    This macro disable Low-Voltage-Reset function.
   *             The register write-protection function should be disabled before using this macro.
+  * @note       This macro sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SYS time-out.
   */
 #define SYS_DISABLE_LVR() \
    do{ \
-        while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk); \
+        SYS_WAIT_BODCTL_WRBUSY(); \
         SYS->BODCTL &= ~SYS_BODCTL_LVREN_Msk; \
     }while(0)
 
@@ -4200,10 +4230,11 @@ Example: If user want to set PA.1 as UART0_TXD and PA.0 as UART0_RXD in initial 
   * @return     None
   * @details    This macro enable Low-Voltage-Reset function.
   *             The register write-protection function should be disabled before using this macro.
+  * @note       This macro sets g_SYS_i32ErrCode to SYS_TIMEOUT_ERR if waiting SYS time-out.
   */
 #define SYS_ENABLE_LVR() \
    do{ \
-        while(SYS->BODCTL & SYS_BODCTL_WRBUSY_Msk); \
+        SYS_WAIT_BODCTL_WRBUSY(); \
         SYS->BODCTL |= SYS_BODCTL_LVREN_Msk; \
     }while(0)
 
@@ -4259,11 +4290,15 @@ __STATIC_INLINE void SYS_LockReg(void);
   */
 __STATIC_INLINE void SYS_UnlockReg(void)
 {
+    uint32_t u32TimeOutCount = __HIRC;
+
     do
     {
         SYS->REGLCTL = 0x59UL;
         SYS->REGLCTL = 0x16UL;
         SYS->REGLCTL = 0x88UL;
+
+        if(--u32TimeOutCount == 0) break;
     }
     while(SYS->REGLCTL == 0UL);
 }
@@ -4289,12 +4324,12 @@ uint32_t SYS_ReadPDID(void);
 void SYS_ResetChip(void);
 void SYS_ResetCPU(void);
 void SYS_ResetModule(uint32_t u32ModuleIndex);
-void SYS_EnableBOD(int32_t i32Mode, uint32_t u32BODLevel);
-void SYS_DisableBOD(void);
-void SYS_SetPowerLevel(uint32_t u32PowerLevel);
-uint32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator);
-void SYS_SetSSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode);
-void SYS_SetPSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode);
+int32_t SYS_EnableBOD(int32_t i32Mode, uint32_t u32BODLevel);
+int32_t SYS_DisableBOD(void);
+int32_t SYS_SetPowerLevel(uint32_t u32PowerLevel);
+int32_t SYS_SetPowerRegulator(uint32_t u32PowerRegulator);
+int32_t SYS_SetSSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode);
+int32_t SYS_SetPSRAMPowerMode(uint32_t u32SRAMSel, uint32_t u32PowerMode);
 void SYS_SetVRef(uint32_t u32VRefCTL);
 
 

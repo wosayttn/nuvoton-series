@@ -52,8 +52,15 @@ extern "C"
 /*---------------------------------------------------------------------------------------------------------*/
 #define EWDT_RESET_COUNTER_KEYWORD   (0x00005AA5UL)    /*!< Fill this value to EWDT_RSTCNT register to free reset EWDT counter \hideinitializer */
 
-/**@}*/ /* end of group EWDT_EXPORTED_CONSTANTS */
+/*---------------------------------------------------------------------------------------------------------*/
+/* EWDT Define Error Code                                                                                  */
+/*---------------------------------------------------------------------------------------------------------*/
+#define EWDT_TIMEOUT        SystemCoreClock     /*!< EWDT time-out counter (1 second time-out) \hideinitializer */
+#define EWDT_OK             ( 0L)               /*!< EWDT operation OK \hideinitializer */
+#define EWDT_ERR_FAIL       (-1L)               /*!< EWDT operation failed \hideinitializer */
+#define EWDT_ERR_TIMEOUT    (-2L)               /*!< EWDT operation abort due to timeout error \hideinitializer */
 
+/**@}*/ /* end of group EWDT_EXPORTED_CONSTANTS */
 
 /** @addtogroup EWDT_EXPORTED_FUNCTIONS EWDT Exported Functions
   @{
@@ -169,8 +176,13 @@ __STATIC_INLINE void EWDT_DisableInt(void);
   */
 __STATIC_INLINE void EWDT_Close(void)
 {
+    uint32_t u32TimeOutCnt = EWDT_TIMEOUT;
+
     EWDT->CTL = 0UL;
-    while((EWDT->CTL & EWDT_CTL_SYNC_Msk) == EWDT_CTL_SYNC_Msk) {} /* Wait disable WDTEN bit completed, it needs 2 * EWDT_CLK. */
+    while((EWDT->CTL & EWDT_CTL_SYNC_Msk) == EWDT_CTL_SYNC_Msk) /* Wait disable WDTEN bit completed, it needs 2 * EWDT_CLK. */
+    {
+        if(--u32TimeOutCnt == 0) break;
+    }
 }
 
 /**
@@ -202,7 +214,7 @@ __STATIC_INLINE void EWDT_DisableInt(void)
     EWDT->CTL &= ~(EWDT_CTL_INTEN_Msk | EWDT_CTL_RSTF_Msk | EWDT_CTL_IF_Msk | EWDT_CTL_WKF_Msk);
 }
 
-void EWDT_Open(uint32_t u32TimeoutInterval, uint32_t u32ResetDelay, uint32_t u32EnableReset, uint32_t u32EnableWakeup);
+int32_t EWDT_Open(uint32_t u32TimeoutInterval, uint32_t u32ResetDelay, uint32_t u32EnableReset, uint32_t u32EnableWakeup);
 
 /**@}*/ /* end of group WDT_EXPORTED_FUNCTIONS */
 

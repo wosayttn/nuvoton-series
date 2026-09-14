@@ -114,6 +114,7 @@
 //   <h> TIMER
 //   <o.17>  TMR23      <0=> Secure <1=> Non-Secure
 //   <o.18>  TMR45      <0=> Secure <1=> Non-Secure
+//   </h>
 //   <h> EPWM
 //   <o.24>  EPWM0      <0=> Secure <1=> Non-Secure
 //   <o.25>  EPWM1      <0=> Secure <1=> Non-Secure
@@ -218,7 +219,7 @@
 //   <o.6>  PA6       <0=> Secure <1=> Non-Secure
 //   <o.7>  PA7       <0=> Secure <1=> Non-Secure
 //   <o.8>  PA8       <0=> Secure <1=> Non-Secure
-//   <o.7>  PA9       <0=> Secure <1=> Non-Secure
+//   <o.9>  PA9       <0=> Secure <1=> Non-Secure
 //   <o.10>  PA10       <0=> Secure <1=> Non-Secure
 //   <o.11>  PA11       <0=> Secure <1=> Non-Secure
 //   <o.12>  PA12       <0=> Secure <1=> Non-Secure
@@ -687,7 +688,7 @@
  */
 
 #define SAU_INIT_REGION(n) \
-    SAU->RNR  =  (n                                     & SAU_RNR_REGION_Msk); \
+    SAU->RNR  =  ((n)                                     & SAU_RNR_REGION_Msk); \
     SAU->RBAR =  (SAU_INIT_START##n                     & SAU_RBAR_BADDR_Msk); \
     SAU->RLAR =  (SAU_INIT_END##n                       & SAU_RLAR_LADDR_Msk) | \
                 ((SAU_INIT_NSC##n << SAU_RLAR_NSC_Pos)  & SAU_RLAR_NSC_Msk)   | 1U

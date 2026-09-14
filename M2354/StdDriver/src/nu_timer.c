@@ -42,7 +42,8 @@
 uint32_t TIMER_Open(TIMER_T *timer, uint32_t u32Mode, uint32_t u32Freq)
 {
     uint32_t u32ClkFreq = TIMER_GetModuleClock(timer);
-    uint32_t u32Cmpr = 0UL, u32Prescale = 0UL;
+    uint32_t u32Cmpr = 0UL;
+    uint32_t u32Prescale = 0UL;
 
     /* Fastest possible timer working freq is (u32Clk / 2). While cmpr = 2, prescaler = 0. */
     if(u32Freq > (u32ClkFreq / 2UL))
@@ -54,7 +55,9 @@ uint32_t TIMER_Open(TIMER_T *timer, uint32_t u32Mode, uint32_t u32Freq)
         u32Cmpr = u32ClkFreq / u32Freq;
         u32Prescale = (u32Cmpr >> 24);  /* for 24 bits CMPDAT */
         if(u32Prescale > 0UL)
+        {
             u32Cmpr = u32Cmpr / (u32Prescale + 1UL);
+        }
     }
 
     timer->CTL = u32Mode | u32Prescale;
@@ -84,17 +87,22 @@ void TIMER_Close(TIMER_T *timer)
   * @param[in]  timer       The pointer of the specified Timer module. It could be TIMER0 ~ TIMER5.
   * @param[in]  u32Usec     Delay period in micro seconds. Valid values are between 100~1000000 (100 micro second ~ 1 second).
   *
-  * @return     None
+  * @retval     TIMER_OK          Delay success, target delay time reached
+  * @retval     TIMER_ERR_TIMEOUT Delay function execute failed due to timer stop working
   *
   * @details    This API is used to create a delay loop for u32usec micro seconds by using timer one-shot mode.
   * @note       This API overwrites the register setting of the timer used to count the delay time.
   * @note       This API use polling mode. So there is no need to enable interrupt for the timer module used to generate delay.
   */
-void TIMER_Delay(TIMER_T *timer, uint32_t u32Usec)
+int32_t TIMER_Delay(TIMER_T *timer, uint32_t u32Usec)
 {
     uint32_t u32ClkFreq = TIMER_GetModuleClock(timer);
-    uint32_t u32Prescale = 0UL, u32Delay = (SystemCoreClock / u32ClkFreq) + 1UL;
-    uint32_t u32Cmpr, u32NsecPerTick;
+    uint32_t u32Prescale = 0UL;
+    uint32_t u32Delay;
+    uint32_t u32Cmpr;
+    uint32_t u32Cntr;
+    uint32_t i = 0UL;
+    uint32_t u32UsecLocal = u32Usec;
 
     /* Clear current timer configuration */
     timer->CTL = 0UL;
@@ -102,39 +110,42 @@ void TIMER_Delay(TIMER_T *timer, uint32_t u32Usec)
 
     if(u32ClkFreq <= 1000000UL)   /* min delay is 1000 us if timer clock source is <= 1 MHz */
     {
-        if(u32Usec < 1000UL)
+        if(u32UsecLocal < 1000UL)
         {
-            u32Usec = 1000UL;
+            u32UsecLocal = 1000UL;
         }
-        if(u32Usec > 1000000UL)
+        if(u32UsecLocal > 1000000UL)
         {
-            u32Usec = 1000000UL;
+            u32UsecLocal = 1000000UL;
         }
     }
     else
     {
-        if(u32Usec < 100UL)
+        if(u32UsecLocal < 100UL)
         {
-            u32Usec = 100UL;
+            u32UsecLocal = 100UL;
         }
-        if(u32Usec > 1000000UL)
+        if(u32UsecLocal > 1000000UL)
         {
-            u32Usec = 1000000UL;
+            u32UsecLocal = 1000000UL;
         }
     }
 
     if(u32ClkFreq <= 1000000UL)
     {
+        uint32_t u32NsecPerTick;
         u32Prescale = 0UL;
         u32NsecPerTick = 1000000000UL / u32ClkFreq;
-        u32Cmpr = (u32Usec * 1000UL) / u32NsecPerTick;
+        u32Cmpr = (u32UsecLocal * 1000UL) / u32NsecPerTick;
     }
     else
     {
-        u32Cmpr = u32Usec * (u32ClkFreq / 1000000UL);
+        u32Cmpr = u32UsecLocal * (u32ClkFreq / 1000000UL);
         u32Prescale = (u32Cmpr >> 24);  /* for 24 bits CMPDAT */
         if(u32Prescale > 0UL)
+        {
             u32Cmpr = u32Cmpr / (u32Prescale + 1UL);
+        }
     }
 
     timer->CMP = u32Cmpr;
@@ -144,12 +155,33 @@ void TIMER_Delay(TIMER_T *timer, uint32_t u32Usec)
         When system clock is faster than timer clock, it is possible timer active bit cannot set in time while we check it.
         And the while loop below return immediately, so put a tiny delay here allowing timer start counting and raise active flag.
     */
-    for(; u32Delay > 0UL; u32Delay--)
+    for(u32Delay = (SystemCoreClock / u32ClkFreq) + 1UL; u32Delay > 0UL; u32Delay--)
     {
         __NOP();
     }
 
-    while((timer->CTL & TIMER_CTL_ACTSTS_Msk) == TIMER_CTL_ACTSTS_Msk) {}
+    /* Add a bail out counter here in case timer clock source is disabled accidentally.
+       Prescale counter reset every ECLK * (prescale value + 1).
+       The u32Delay here is to make sure timer counter value changed when prescale counter reset */
+    u32Delay = (SystemCoreClock / TIMER_GetModuleClock(timer)) * (u32Prescale + 1UL);
+    u32Cntr = timer->CNT;
+    while((timer->CTL & TIMER_CTL_ACTSTS_Msk) == TIMER_CTL_ACTSTS_Msk)
+    {
+        /* Bailed out if timer stop counting e.g. Some interrupt handler close timer clock source. */
+        if(u32Cntr == timer->CNT)
+        {
+            if(i++ > u32Delay)
+            {
+                return TIMER_ERR_TIMEOUT;
+            }
+        }
+        else
+        {
+            i = 0UL;
+            u32Cntr = timer->CNT;
+        }
+    }
+    return TIMER_OK;
 }
 
 /**
@@ -239,7 +271,8 @@ void TIMER_DisableEventCounter(TIMER_T *timer)
   */
 uint32_t TIMER_GetModuleClock(TIMER_T *timer)
 {
-    uint32_t u32Src, u32ClkFreq = __HIRC;
+    uint32_t u32Src;
+    uint32_t u32ClkFreq = __HIRC;
     const uint32_t au32Clk[] = {__HXT, __LXT, 0UL, 0UL, __MIRC, __LIRC, 0UL, __HIRC};
 
     if(timer == TIMER0)
@@ -339,10 +372,10 @@ void TIMER_EnableFreqCounter(TIMER_T *timer,
     }
     else
     {
-        t = 0;
+        t = NULL;
     }
 
-    if(t != 0)
+    if(t != NULL)
     {
         t->CMP = 0xFFFFFFUL;
         t->EXTCTL = u32EnableInt ? TIMER_EXTCTL_CAPIEN_Msk : 0UL;
@@ -399,6 +432,30 @@ void TIMER_SetTriggerSource(TIMER_T *timer, uint32_t u32Src)
 void TIMER_SetTriggerTarget(TIMER_T *timer, uint32_t u32Mask)
 {
     timer->TRGCTL = (timer->TRGCTL & ~(TIMER_TRGCTL_TRGPWM_Msk | TIMER_TRGCTL_TRGDAC_Msk | TIMER_TRGCTL_TRGEADC_Msk | TIMER_TRGCTL_TRGPDMA_Msk)) | u32Mask;
+}
+
+/**
+  * @brief      Reset Counter
+  *
+  * @param[in]  timer       The pointer of the specified Timer module. It could be TIMER0 ~ TIMER5.
+  *
+  * @retval     TIMER_OK          Timer reset success
+  * @retval     TIMER_ERR_TIMEOUT Timer reset failed
+  *
+  * @details    This function is used to reset current counter value and internal prescale counter value.
+  */
+int32_t TIMER_ResetCounter(TIMER_T *timer)
+{
+    uint32_t u32Delay;
+
+    timer->CNT = 0UL;
+    /* Takes 2~3 ECLKs to reset timer counter */
+    u32Delay = (SystemCoreClock / TIMER_GetModuleClock(timer)) * 3UL;
+    while(((timer->CNT&TIMER_CNT_RSTACT_Msk) == TIMER_CNT_RSTACT_Msk) && (--u32Delay))
+    {
+        __NOP();
+    }
+    return (u32Delay > 0UL) ? TIMER_OK : TIMER_ERR_TIMEOUT;
 }
 
 /**@}*/ /* end of group TIMER_EXPORTED_FUNCTIONS */

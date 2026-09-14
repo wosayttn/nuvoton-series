@@ -173,36 +173,37 @@ extern int32_t g_RTC_i32ErrCode;
   * @details    According to current date, return this year is leap year or not.
   * \hideinitializer
   */
-#define RTC_IS_LEAP_YEAR()              ((RTC->LEAPYEAR & RTC_LEAPYEAR_LEAPYEAR_Msk)? 1:0)
+#define RTC_IS_LEAP_YEAR(rtc)           (((rtc)->LEAPYEAR & RTC_LEAPYEAR_LEAPYEAR_Msk)? 1:0)
 
 /**
   * @brief      Clear RTC Alarm Interrupt Flag
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @return     None
   *
   * @details    This macro is used to clear RTC alarm interrupt flag.
   * \hideinitializer
   */
-#define RTC_CLEAR_ALARM_INT_FLAG()      (RTC->INTSTS = RTC_INTSTS_ALMIF_Msk)
+#define RTC_CLEAR_ALARM_INT_FLAG(rtc)   ((rtc)->INTSTS = RTC_INTSTS_ALMIF_Msk)
 
 /**
   * @brief      Clear RTC Tick Interrupt Flag
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @return     None
   *
   * @details    This macro is used to clear RTC tick interrupt flag.
   * \hideinitializer
   */
-#define RTC_CLEAR_TICK_INT_FLAG()       (RTC->INTSTS = RTC_INTSTS_TICKIF_Msk)
+#define RTC_CLEAR_TICK_INT_FLAG(rtc)    ((rtc)->INTSTS = RTC_INTSTS_TICKIF_Msk)
 
 /**
   * @brief      Clear RTC Tamper Interrupt Flag
   *
-  * @param      u32TamperFlag   Tamper interrupt flag. It consists of:    \n
+  * @param[in]  rtc             The pointer of RTC module.
+  * @param[in]  u32TamperFlag   Tamper interrupt flag. It consists of:    \n
   *                             - \ref RTC_INTSTS_TAMP0IF_Msk    \n
   *                             - \ref RTC_INTSTS_TAMP1IF_Msk    \n
   *                             - \ref RTC_INTSTS_TAMP2IF_Msk    \n
@@ -215,12 +216,12 @@ extern int32_t g_RTC_i32ErrCode;
   * @details    This macro is used to clear RTC tamper pin interrupt flag.
   * \hideinitializer
   */
-#define RTC_CLEAR_TAMPER_INT_FLAG(u32TamperFlag)    (RTC->INTSTS = (u32TamperFlag))
+#define RTC_CLEAR_TAMPER_INT_FLAG(rtc, u32TamperFlag)    ((rtc)->INTSTS = (u32TamperFlag))
 
 /**
   * @brief      Get RTC Alarm Interrupt Flag
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @retval     0   RTC alarm interrupt did not occur
   * @retval     1   RTC alarm interrupt occurred
@@ -228,12 +229,12 @@ extern int32_t g_RTC_i32ErrCode;
   * @details    This macro indicates RTC alarm interrupt occurred or not.
   * \hideinitializer
   */
-#define RTC_GET_ALARM_INT_FLAG()        ((RTC->INTSTS & RTC_INTSTS_ALMIF_Msk)? 1:0)
+#define RTC_GET_ALARM_INT_FLAG(rtc)     (((rtc)->INTSTS & RTC_INTSTS_ALMIF_Msk)? 1:0)
 
 /**
   * @brief      Get RTC Time Tick Interrupt Flag
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @retval     0   RTC time tick interrupt did not occur
   * @retval     1   RTC time tick interrupt occurred
@@ -241,36 +242,36 @@ extern int32_t g_RTC_i32ErrCode;
   * @details    This macro indicates RTC time tick interrupt occurred or not.
   * \hideinitializer
   */
-#define RTC_GET_TICK_INT_FLAG()         ((RTC->INTSTS & RTC_INTSTS_TICKIF_Msk)? 1:0)
+#define RTC_GET_TICK_INT_FLAG(rtc)      (((rtc)->INTSTS & RTC_INTSTS_TICKIF_Msk)? 1:0)
 
 /**
   * @brief      Set I/O Control By GPIO Module
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @return     None
   *
   * @details    This macro sets the PF.4~11 pin I/O is controlled by GPIO module.
   * \hideinitializer
   */
-#define RTC_SET_IOCTL_BY_GPIO()             (RTC->LXTCTL &= ~RTC_LXTCTL_IOCTLSEL_Msk)
+#define RTC_SET_IOCTL_BY_GPIO(rtc)          ((rtc)->LXTCTL &= ~RTC_LXTCTL_IOCTLSEL_Msk)
 
 /**
   * @brief      Set I/O Control By RTC Module
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @return     None
   *
   * @details    This macro sets the PF.4~11 pin I/O is controlled by RTC module.
   * \hideinitializer
   */
-#define RTC_SET_IOCTL_BY_RTC()              (RTC->LXTCTL |= RTC_LXTCTL_IOCTLSEL_Msk)
+#define RTC_SET_IOCTL_BY_RTC(rtc)           ((rtc)->LXTCTL |= RTC_LXTCTL_IOCTLSEL_Msk)
 
 /**
   * @brief      Get I/O Control Property
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @retval     0   PF.4~11 pin I/O is controlled by GPIO module
   * @retval     1   PF.4~11 pin I/O is controlled by RTC module
@@ -278,12 +279,12 @@ extern int32_t g_RTC_i32ErrCode;
   * @details    This macro indicates the PF.4~11 pin I/O control property.
   * \hideinitializer
   */
-#define RTC_GET_IOCTL_PROPERTY()            ((RTC->LXTCTL & RTC_LXTCTL_IOCTLSEL_Msk)? 1:0)
+#define RTC_GET_IOCTL_PROPERTY(rtc)         (((rtc)->LXTCTL & RTC_LXTCTL_IOCTLSEL_Msk)? 1:0)
 
 /**
   * @brief      Get RTC Tamper Interrupt Flag
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @retval     0   RTC tamper event interrupt did not occur
   * @retval     1   RTC tamper event interrupt occurred
@@ -291,12 +292,12 @@ extern int32_t g_RTC_i32ErrCode;
   * @details    This macro indicates RTC tamper event occurred or not.
   * \hideinitializer
   */
-#define RTC_GET_TAMPER_INT_FLAG()      ((RTC->INTSTS & (0x3F00))? 1:0)
+#define RTC_GET_TAMPER_INT_FLAG(rtc)        (((rtc)->INTSTS & (0x3F00))? 1:0)
 
 /**
   * @brief      Get RTC Tamper Interrupt Status
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @retval     RTC_INTSTS_TAMP0IF_Msk    Tamper 0 interrupt flag is generated
   * @retval     RTC_INTSTS_TAMP1IF_Msk    Tamper 1 interrupt flag is generated
@@ -308,19 +309,19 @@ extern int32_t g_RTC_i32ErrCode;
   * @details    This macro indicates RTC tamper interrupt status.
   * \hideinitializer
   */
-#define RTC_GET_TAMPER_INT_STATUS()      ((RTC->INTSTS & (0x3F00)))
+#define RTC_GET_TAMPER_INT_STATUS(rtc)      (((rtc)->INTSTS & (0x3F00)))
 
 /**
   * @brief      Enable RTC Tick Wake-up Function
   *
-  * @param      None
+  * @param[in]  rtc         The pointer of RTC module.
   *
   * @return     None
   *
   * @details    This macro is used to enable RTC tick interrupt wake-up function.
   * \hideinitializer
   */
-#define RTC_ENABLE_TICK_WAKEUP()            (RTC->INTEN |= RTC_INTEN_TICKIEN_Msk);
+#define RTC_ENABLE_TICK_WAKEUP(rtc)         ((rtc)->INTEN |= RTC_INTEN_TICKIEN_Msk)
 
 /**
   * @brief      Disable RTC Tick Wake-up Function
@@ -332,7 +333,7 @@ extern int32_t g_RTC_i32ErrCode;
   * @details    This macro is used to disable RTC tick interrupt wake-up function.
   * \hideinitializer
   */
-#define RTC_DISABLE_TICK_WAKEUP(rtc)        ((rtc)->INTEN &= ~RTC_INTEN_TICKIEN_Msk);
+#define RTC_DISABLE_TICK_WAKEUP(rtc)        ((rtc)->INTEN &= ~RTC_INTEN_TICKIEN_Msk)
 
 /**
   * @brief      Read Spare Register
@@ -345,11 +346,12 @@ extern int32_t g_RTC_i32ErrCode;
   * @details    Read the specify spare register content.
   * \hideinitializer
   */
-#define RTC_READ_SPARE_REGISTER(u32RegNum)          (RTC->SPR[(u32RegNum)])
+#define RTC_READ_SPARE_REGISTER(rtc, u32RegNum)          ((rtc)->SPR[(u32RegNum)])
 
 /**
   * @brief      Write Spare Register
   *
+  * @param[in]  rtc             The pointer of RTC module.
   * @param[in]  u32RegNum       The spare register number, 0~19.
   * @param[in]  u32RegValue     The spare register value.
   *
@@ -358,7 +360,7 @@ extern int32_t g_RTC_i32ErrCode;
   * @details    Write specify data to spare register.
   * \hideinitializer
   */
-#define RTC_WRITE_SPARE_REGISTER(u32RegNum, u32RegValue)   (RTC->SPR[(u32RegNum)] = (u32RegValue))
+#define RTC_WRITE_SPARE_REGISTER(rtc, u32RegNum, u32RegValue)   ((rtc)->SPR[(u32RegNum)] = (u32RegValue))
 
 int32_t RTC_Open(S_RTC_TIME_DATA_T *sPt);
 void RTC_Close(void);

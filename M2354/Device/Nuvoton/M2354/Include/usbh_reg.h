@@ -136,7 +136,7 @@ typedef struct
      * |        |          |This bit is set when the content of HcRhStatus or the content of HcRhPortStatus register has changed.
      * |        |          |0 = The content of HcRhStatus and the content of HcRhPortStatus register didn't change.
      * |        |          |1 = The content of HcRhStatus or the content of HcRhPortStatus register has changed.
-     * |        |          |Note: This bit is cleared by writing ‘1Fh’ to HcRhPortStatus1[20:16].
+     * |        |          |Note: This bit is cleared by writing '1Fh' to HcRhPortStatus1[20:16].
      * @var USBH_T::HcInterruptEnable
      * Offset: 0x10  Host Controller Interrupt Enable Register
      * ---------------------------------------------------------------------------------------------------

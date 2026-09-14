@@ -61,31 +61,31 @@ extern "C"
 /**
   * @brief      Clear WWDT Reset System Flag
   *
-  * @param      None
+  * @param[in]  wwdt    The pointer of the specified WWDT module.
   *
   * @return     None
   *
   * @details    This macro is used to clear WWDT time-out reset system flag.
   * \hideinitializer
   */
-#define WWDT_CLEAR_RESET_FLAG()     (WWDT->STATUS = WWDT_STATUS_WWDTRF_Msk)
+#define WWDT_CLEAR_RESET_FLAG(wwdt)     ((wwdt)->STATUS = WWDT_STATUS_WWDTRF_Msk)
 
 /**
   * @brief      Clear WWDT Compared Match Interrupt Flag
   *
-  * @param      None
+  * @param[in]  wwdt    The pointer of the specified WWDT module.
   *
   * @return     None
   *
   * @details    This macro is used to clear WWDT compared match interrupt flag.
   * \hideinitializer
   */
-#define WWDT_CLEAR_INT_FLAG()       (WWDT->STATUS = WWDT_STATUS_WWDTIF_Msk)
+#define WWDT_CLEAR_INT_FLAG(wwdt)       ((wwdt)->STATUS = WWDT_STATUS_WWDTIF_Msk)
 
 /**
   * @brief      Get WWDT Reset System Flag
   *
-  * @param      None
+  * @param[in]  wwdt    The pointer of the specified WWDT module.
   *
   * @retval     0   WWDT time-out reset system did not occur
   * @retval     1   WWDT time-out reset system occurred
@@ -93,12 +93,12 @@ extern "C"
   * @details    This macro is used to indicate system has been reset by WWDT time-out reset or not.
   * \hideinitializer
   */
-#define WWDT_GET_RESET_FLAG()       ((WWDT->STATUS & WWDT_STATUS_WWDTRF_Msk)? 1 : 0)
+#define WWDT_GET_RESET_FLAG(wwdt)       (((wwdt)->STATUS & WWDT_STATUS_WWDTRF_Msk)? 1 : 0)
 
 /**
   * @brief      Get WWDT Compared Match Interrupt Flag
   *
-  * @param      None
+  * @param[in]  wwdt    The pointer of the specified WWDT module.
   *
   * @retval     0   WWDT compare match interrupt did not occur
   * @retval     1   WWDT compare match interrupt occurred
@@ -106,24 +106,24 @@ extern "C"
   * @details    This macro is used to indicate WWDT counter value matches CMPDAT value or not.
   * \hideinitializer
   */
-#define WWDT_GET_INT_FLAG()         ((WWDT->STATUS & WWDT_STATUS_WWDTIF_Msk)? 1 : 0)
+#define WWDT_GET_INT_FLAG(wwdt)         (((wwdt)->STATUS & WWDT_STATUS_WWDTIF_Msk)? 1 : 0)
 
 /**
   * @brief      Get WWDT Counter
   *
-  * @param      None
+  * @param[in]  wwdt    The pointer of the specified WWDT module.
   *
   * @return     WWDT Counter Value
   *
   * @details    This macro reflects the current WWDT counter value.
   * \hideinitializer
   */
-#define WWDT_GET_COUNTER()          (WWDT->CNT)
+#define WWDT_GET_COUNTER(wwdt)          ((wwdt)->CNT)
 
 /**
   * @brief      Reload WWDT Counter
   *
-  * @param      None
+  * @param[in]  wwdt    The pointer of the specified WWDT module.
   *
   * @return     None
   *
@@ -133,9 +133,9 @@ extern "C"
   *             WWDT reset signal will generate immediately to reset system.
   * \hideinitializer
   */
-#define WWDT_RELOAD_COUNTER()       (WWDT->RLDCNT = WWDT_RELOAD_WORD)
+#define WWDT_RELOAD_COUNTER(wwdt)       ((wwdt)->RLDCNT = WWDT_RELOAD_WORD)
 
-void WWDT_Open(uint32_t u32PreScale, uint32_t u32CmpValue, uint32_t u32EnableInt);
+void WWDT_Open(WWDT_T *wwdt, uint32_t u32PreScale, uint32_t u32CmpValue, uint32_t u32EnableInt);
 
 /*@}*/ /* end of group WWDT_EXPORTED_FUNCTIONS */
 

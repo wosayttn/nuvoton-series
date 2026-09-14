@@ -9,8 +9,6 @@
 #ifndef __NU_USBD_H__
 #define __NU_USBD_H__
 
-#define SUPPORT_LPM     // define to support LPM
-
 #ifdef __cplusplus
 extern "C"
 {
@@ -272,7 +270,7 @@ extern const S_USBD_INFO_T gsInfo;
   *
   * @return   None
   *
-  * @details  Set DRVSE0 bit of USB_DRVSE0 register to enable software-disconnect function. Force USB PHY transceiver to drive SE0 to bus.
+  * @details  Set SE0 bit of USB_SE0 register to enable software-disconnect function. Force USB PHY transceiver to drive SE0 to bus.
   *
   */
 #define USBD_SET_SE0()              (((__PC() & NS_OFFSET) == NS_OFFSET)? ((uint32_t)(USBD_NS->SE0 |= USBD_DRVSE0)):((uint32_t)(USBD->SE0 |= USBD_DRVSE0)))
@@ -284,10 +282,34 @@ extern const S_USBD_INFO_T gsInfo;
   *
   * @return   None
   *
-  * @details  Clear DRVSE0 bit of USB_DRVSE0 register to disable software-disconnect function.
+  * @details  Clear SE0 bit of USB_SE0 register to disable software-disconnect function.
   *
   */
 #define USBD_CLR_SE0()              (((__PC() & NS_OFFSET) == NS_OFFSET)? ((uint32_t)(USBD_NS->SE0 &= ~USBD_DRVSE0)):((uint32_t)(USBD->SE0 &= ~USBD_DRVSE0)))
+
+/**
+  * @brief    Disconnect from the USB host using software settings
+  *
+  * @param    None
+  *
+  * @return   None
+  *
+  * @details  Set USB_SE0 register to enable SE0 to disconnect USBD from the USB host.
+  *
+  */
+#define USBD_SwDisconnect()         (((__PC() & NS_OFFSET) == NS_OFFSET)? ((uint32_t)(USBD_NS->SE0 |= USBD_DRVSE0)):((uint32_t)(USBD->SE0 |= USBD_DRVSE0)))
+
+/**
+  * @brief    Reconnect to the USB host using software settings
+  *
+  * @param    None
+  *
+  * @return   None
+  *
+  * @details  Clear USB_SE0 register to disable SE0 to reconnect USBD to the USB host.
+  *
+  */
+#define USBD_SwReconnect()          (((__PC() & NS_OFFSET) == NS_OFFSET)? ((uint32_t)(USBD_NS->SE0 &= ~USBD_DRVSE0)):((uint32_t)(USBD->SE0 &= ~USBD_DRVSE0)))
 
 /**
   * @brief       Set USB device address
@@ -299,7 +321,18 @@ extern const S_USBD_INFO_T gsInfo;
   * @details     Write USB device address to USB_FADDR register.
   *
   */
-#define USBD_SET_ADDR(addr)         (((__PC() & NS_OFFSET) == NS_OFFSET)? (USBD_NS->FADDR = (addr)):(USBD->FADDR = (addr)))
+#define USBD_SET_ADDR(addr)                       \
+do                                                \
+{                                                 \
+    if (((__PC() & NS_OFFSET) == NS_OFFSET))      \
+    {                                             \
+        USBD_NS->FADDR = (uint32_t)(addr);        \
+    }                                             \
+    else                                          \
+    {                                             \
+        USBD->FADDR = (uint32_t)(addr);           \
+    }                                             \
+} while (0)
 
 /**
   * @brief    Get USB device address
@@ -353,7 +386,18 @@ extern const S_USBD_INFO_T gsInfo;
   * @details    Clear USB related interrupt flags specified by flag parameter.
   *
   */
-#define USBD_CLR_INT_FLAG(flag)     (((__PC() & NS_OFFSET) == NS_OFFSET)? (USBD_NS->INTSTS = (flag)):(USBD->INTSTS = (flag)))
+#define USBD_CLR_INT_FLAG(flag)                  \
+do                                               \
+{                                                \
+    if (((__PC() & NS_OFFSET) == NS_OFFSET))     \
+    {                                            \
+        USBD_NS->INTSTS = (uint32_t)(flag);      \
+    }                                            \
+    else                                         \
+    {                                            \
+        USBD->INTSTS = (uint32_t)(flag);         \
+    }                                            \
+} while (0)
 
 /**
   * @brief    Get endpoint status
@@ -372,18 +416,16 @@ extern const S_USBD_INFO_T gsInfo;
   *
   * @param    None
   *
-  * @return   The value of USB_ATTR[13:12] and USB_ATTR[3:0].
+  * @return   The value of USB_ATTR[3:0].
   *           Bit 0  indicates USB bus reset status.
   *           Bit 1  indicates USB bus suspend status.
   *           Bit 2  indicates USB bus resume status.
   *           Bit 3  indicates USB bus time-out status.
-  *           Bit 12 indicates USB bus LPM L1 suspend status.
-  *           Bit 13 indicates USB bus LPM L1 resume status.
   *
-  * @details  Return USB_ATTR[13:12] and USB_ATTR[3:0] for USB bus events.
+  * @details  Return USB_ATTR[3:0] for USB bus events.
   *
   */
-#define USBD_GET_BUS_STATE()        (((__PC() & NS_OFFSET) == NS_OFFSET)? ((uint32_t)(USBD_NS->ATTR & 0x300F)):((uint32_t)(USBD->ATTR & 0x300F)))
+#define USBD_GET_BUS_STATE()        (((__PC() & NS_OFFSET) == NS_OFFSET)? ((uint32_t)(USBD_NS->ATTR & 0xF)):((uint32_t)(USBD->ATTR & 0xF)))
 
 /**
   * @brief    Check cable connection state
@@ -448,7 +490,22 @@ extern const S_USBD_INFO_T gsInfo;
   * @details    This macro will write the transfer length to USB_MXPLDx register for IN data transaction.
   *
   */
-#define USBD_SET_PAYLOAD_LEN(ep, size)  (((__PC() & NS_OFFSET) == NS_OFFSET)? (*((__IO uint32_t *) ((uint32_t)&USBD_NS->EP[0].MXPLD + (uint32_t)((ep) << 4))) = (size)):(*((__IO uint32_t *) ((uint32_t)&USBD->EP[0].MXPLD + (uint32_t)((ep) << 4))) = (size)))
+#define USBD_SET_PAYLOAD_LEN(ep, size)                                      \
+do                                                                          \
+{                                                                           \
+    if (((__PC() & NS_OFFSET) == NS_OFFSET))                                \
+    {                                                                       \
+        *((__IO uint32_t *)                                                 \
+          ((uint32_t)&USBD_NS->EP[0].MXPLD +                                \
+          ((uint32_t)(ep) << 4U))) = (uint32_t)(size);                      \
+    }                                                                       \
+    else                                                                    \
+    {                                                                       \
+        *((__IO uint32_t *)                                                 \
+          ((uint32_t)&USBD->EP[0].MXPLD +                                   \
+          ((uint32_t)(ep) << 4U))) = (uint32_t)(size);                      \
+    }                                                                       \
+} while (0)
 
 /**
   * @brief      Get USB payload size (OUT data)
@@ -614,14 +671,16 @@ extern const S_USBD_INFO_T gsInfo;
   * @details    This function will copy the number of data specified by size and src parameters to the address specified by dest parameter.
   *
   */
-__STATIC_INLINE void USBD_MemCopy(uint8_t dest[], uint8_t src[], uint32_t size)
+__STATIC_INLINE void USBD_MemCopy(uint8_t dest[], const uint8_t src[], uint32_t size)
 {
     uint32_t volatile i = 0UL;
+    uint32_t u32Cnt = size;
 
-    while(size--)
+    while(u32Cnt > 0UL)
     {
         dest[i] = src[i];
         i++;
+        u32Cnt--;
     }
 }
 
@@ -637,8 +696,6 @@ __STATIC_INLINE void USBD_MemCopy(uint8_t dest[], uint8_t src[], uint32_t size)
   */
 __STATIC_INLINE void USBD_SetStall(uint8_t epnum)
 {
-    uint32_t u32CfgAddr;
-    uint32_t u32Cfg;
     uint32_t i;
     USBD_T *pUSBD;
 
@@ -653,8 +710,8 @@ __STATIC_INLINE void USBD_SetStall(uint8_t epnum)
 
     for(i = 0UL; i < USBD_MAX_EP; i++)
     {
-        u32CfgAddr = (uint32_t)(i << 4) + (uint32_t)&pUSBD->EP[0].CFG; /* USBD_CFG0 */
-        u32Cfg = *((__IO uint32_t *)(u32CfgAddr));
+        uint32_t u32CfgAddr = (uint32_t)(i << 4) + (uint32_t)&pUSBD->EP[0].CFG; /* USBD_CFG0 */
+        uint32_t u32Cfg = *((__IO uint32_t *)(u32CfgAddr));
 
         if((u32Cfg & 0xFUL) == epnum)
         {
@@ -678,8 +735,6 @@ __STATIC_INLINE void USBD_SetStall(uint8_t epnum)
   */
 __STATIC_INLINE void USBD_ClearStall(uint8_t epnum)
 {
-    uint32_t u32CfgAddr;
-    uint32_t u32Cfg;
     uint32_t i;
     USBD_T *pUSBD;
 
@@ -694,8 +749,8 @@ __STATIC_INLINE void USBD_ClearStall(uint8_t epnum)
 
     for(i = 0UL; i < USBD_MAX_EP; i++)
     {
-        u32CfgAddr = (uint32_t)(i << 4) + (uint32_t)&pUSBD->EP[0].CFG; /* USBD_CFG0 */
-        u32Cfg = *((__IO uint32_t *)(u32CfgAddr));
+        uint32_t u32CfgAddr = (uint32_t)(i << 4) + (uint32_t)&pUSBD->EP[0].CFG; /* USBD_CFG0 */
+        uint32_t u32Cfg = *((__IO uint32_t *)(u32CfgAddr));
 
         if((u32Cfg & 0xFUL) == epnum)
         {
@@ -722,7 +777,6 @@ __STATIC_INLINE void USBD_ClearStall(uint8_t epnum)
 __STATIC_INLINE uint32_t USBD_GetStall(uint8_t epnum)
 {
     uint32_t u32CfgAddr = 0UL;
-    uint32_t u32Cfg;
     uint32_t i;
     USBD_T *pUSBD;
 
@@ -737,6 +791,7 @@ __STATIC_INLINE uint32_t USBD_GetStall(uint8_t epnum)
 
     for(i = 0UL; i < USBD_MAX_EP; i++)
     {
+        uint32_t u32Cfg;
         u32CfgAddr = (uint32_t)(i << 4) + (uint32_t)&pUSBD->EP[0].CFG; /* USBD_CFG0 */
         u32Cfg = *((__IO uint32_t *)(u32CfgAddr));
 

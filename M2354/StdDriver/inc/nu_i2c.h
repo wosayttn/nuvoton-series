@@ -1,9 +1,7 @@
 /**************************************************************************//**
  * @file     nu_i2c.h
  * @version  V3.0
- * $Revision: 1 $
- * $Date: 16/07/07 7:50p $
- * @brief    M2355 series I2C Serial Interface Controller(I2C) driver header file
+ * @brief    M2354 series I2C Serial Interface Controller(I2C) driver header file
  *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
@@ -56,7 +54,17 @@ extern "C"
 #define I2C_PECTX_ENABLE            (1U)    /*!< Enable  SMBus Packet Error Check Transmit function                          */
 #define I2C_PECTX_DISABLE           (0U)    /*!< Disable SMBus Packet Error Check Transmit function                          */
 
+/*---------------------------------------------------------------------------------------------------------*/
+/* I2C Define Error Code                                                                                   */
+/*---------------------------------------------------------------------------------------------------------*/
+#define I2C_TIMEOUT                 SystemCoreClock /*!< I2C time-out counter (1 second time-out)                            */
+#define I2C_OK                      ( 0L)           /*!< I2C operation OK                                                    */
+#define I2C_ERR_FAIL                (-1L)           /*!< I2C operation failed                                                */
+#define I2C_ERR_TIMEOUT             (-2L)           /*!< I2C operation abort due to timeout error                            */
+
 /**@}*/ /* end of group I2C_EXPORTED_CONSTANTS */
+
+extern int32_t g_I2C_i32ErrCode;
 
 /** @addtogroup I2C_EXPORTED_FUNCTIONS I2C Exported Functions
   @{
@@ -94,6 +102,17 @@ extern "C"
  *    @details      When a new status is presented of I2C bus, the SI flag will be set in I2C_CTL register.
  */
 #define I2C_WAIT_READY(i2c)     while(!((i2c)->CTL0 & I2C_CTL0_SI_Msk))
+
+/**
+ *    @brief        The macro is used to wait for the I2C bus status to be cleared.
+ *
+ *    @param[in]    i2c        Specify I2C port
+ *
+ *    @return       None
+ *
+ *    @details      When the interrupt task is completed, the SI flag will be set and cleared.
+ */
+#define I2C_WAIT_SI_CLEAR(i2c)  while(((i2c)->CTL0 & I2C_CTL0_SI_Msk) == I2C_CTL0_SI_Msk)
 
 /**
  *    @brief        The macro is used to Read I2C Bus Data Register
@@ -463,9 +482,13 @@ static __INLINE void I2C_STOP(I2C_T *i2c);
  */
 static __INLINE void I2C_STOP(I2C_T *i2c)
 {
+    uint32_t u32TimeOutCount = I2C_TIMEOUT;
 
     (i2c)->CTL0 |= (I2C_CTL0_SI_Msk | I2C_CTL0_STO_Msk);
-    while(i2c->CTL0 & I2C_CTL0_STO_Msk) {}
+    while(i2c->CTL0 & I2C_CTL0_STO_Msk)
+    {
+        if(--u32TimeOutCount == 0) break;
+    }
 }
 
 
@@ -488,11 +511,11 @@ void I2C_EnableWakeup(I2C_T *i2c);
 void I2C_DisableWakeup(I2C_T *i2c);
 void I2C_SetData(I2C_T *i2c, uint8_t u8Data);
 uint8_t I2C_WriteByte(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8Data);
-uint32_t I2C_WriteMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t au8Data[], uint32_t u32wLen);
+uint32_t I2C_WriteMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, const uint8_t au8Data[], uint32_t u32wLen);
 uint8_t I2C_WriteByteOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, uint8_t u8Data);
-uint32_t I2C_WriteMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, uint8_t au8Data[], uint32_t u32wLen);
+uint32_t I2C_WriteMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, const uint8_t au8Data[], uint32_t u32wLen);
 uint8_t I2C_WriteByteTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, uint8_t u8Data);
-uint32_t I2C_WriteMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, uint8_t au8Data[], uint32_t u32wLen);
+uint32_t I2C_WriteMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, const uint8_t au8Data[], uint32_t u32wLen);
 uint8_t I2C_ReadByte(I2C_T *i2c, uint8_t u8SlaveAddr);
 uint32_t I2C_ReadMultiBytes(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t au8Rdata[], uint32_t u32rLen);
 uint8_t I2C_ReadByteOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr);
@@ -500,7 +523,7 @@ uint32_t I2C_ReadMultiBytesOneReg(I2C_T *i2c, uint8_t u8SlaveAddr, uint8_t u8Dat
 uint8_t I2C_ReadByteTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr);
 uint32_t I2C_ReadMultiBytesTwoRegs(I2C_T *i2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, uint8_t au8Rdata[], uint32_t u32rLen);
 uint32_t I2C_SMBusGetStatus(I2C_T *i2c);
-void I2C_SMBusClearInterruptFlag(I2C_T *i2c, uint8_t u8ClrSMBusIntFlag);
+void I2C_SMBusClearInterruptFlag(I2C_T *i2c, uint8_t u8SMBusIntFlag);
 void I2C_SMBusSetPacketByteCount(I2C_T *i2c, uint32_t u32PktSize);
 void I2C_SMBusOpen(I2C_T *i2c, uint8_t u8HostDevice);
 void I2C_SMBusClose(I2C_T *i2c);

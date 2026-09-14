@@ -87,6 +87,15 @@ extern "C"
 #define EADC_CMP_ADCMPIE_ENABLE             (EADC_CMP_ADCMPIE_Msk)   /*!< A/D result compare interrupt enable */
 #define EADC_CMP_ADCMPIE_DISABLE            (~EADC_CMP_ADCMPIE_Msk)  /*!< A/D result compare interrupt disable */
 
+/*---------------------------------------------------------------------------------------------------------*/
+/* EADC Define Error Code                                                                                  */
+/*---------------------------------------------------------------------------------------------------------*/
+#define EADC_TIMEOUT        SystemCoreClock     /*!< EADC time-out counter (1 second time-out) */
+#define EADC_OK             ( 0L)               /*!< EADC operation OK */
+#define EADC_ERR_FAIL       (-1L)               /*!< EADC operation failed */
+#define EADC_ERR_TIMEOUT    (-2L)               /*!< EADC operation abort due to timeout error */
+
+
 /**@}*/ /* end of group EADC_EXPORTED_CONSTANTS */
 
 /** @addtogroup EADC_EXPORTED_FUNCTIONS EADC Exported Functions
@@ -114,7 +123,7 @@ extern "C"
   *         user can enable this bit to generate a PDMA data transfer request.
   * \hideinitializer
   */
-#define EADC_ENABLE_SAMPLE_MODULE_PDMA(eadc, u32ModuleMask) ((eadc)->PDMACTL |= u32ModuleMask)
+#define EADC_ENABLE_SAMPLE_MODULE_PDMA(eadc, u32ModuleMask) ((eadc)->PDMACTL |= (u32ModuleMask))
 
 /**
   * @brief Disable Sample Module PDMA transfer.
@@ -540,7 +549,7 @@ extern "C"
 /*---------------------------------------------------------------------------------------------------------*/
 /* Define EADC functions prototype                                                                         */
 /*---------------------------------------------------------------------------------------------------------*/
-void EADC_Open(EADC_T *eadc, uint32_t u32InputMode);
+int32_t EADC_Open(EADC_T *eadc, uint32_t u32InputMode);
 void EADC_Close(EADC_T *eadc);
 void EADC_ConfigSampleModule(EADC_T *eadc, uint32_t u32ModuleNum, uint32_t u32TriggerSrc, uint32_t u32Channel);
 void EADC_SetTriggerDelayTime(EADC_T *eadc, uint32_t u32ModuleNum, uint32_t u32TriggerDelayTime, uint32_t u32DelayClockDivider);

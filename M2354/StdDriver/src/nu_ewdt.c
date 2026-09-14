@@ -42,24 +42,35 @@
   * @param[in]  u32EnableReset      Enable EWDT time-out reset system function. Valid values are TRUE and FALSE.
   * @param[in]  u32EnableWakeup     Enable EWDT time-out wake-up system function. Valid values are TRUE and FALSE.
   *
-  * @return     None
+  * @retval     EWDT_OK             EWDT operation OK.
+  * @retval     EWDT_ERR_TIMEOUT    EWDT operation abort due to timeout error.
   *
   * @details    This function makes EWDT module start counting with different time-out interval, reset delay period and choose to \n
   *             enable or disable EWDT time-out reset system or wake-up system.
   * @note       Please make sure that Register Write-Protection Function has been disabled before using this function.
   */
-void EWDT_Open(uint32_t u32TimeoutInterval,
+int32_t EWDT_Open(uint32_t u32TimeoutInterval,
                uint32_t u32ResetDelay,
                uint32_t u32EnableReset,
                uint32_t u32EnableWakeup)
 {
+    uint32_t u32TimeOutCnt = EWDT_TIMEOUT;
+
     EWDT->ALTCTL = u32ResetDelay;
 
     EWDT->CTL = u32TimeoutInterval | EWDT_CTL_WDTEN_Msk |
                 (u32EnableReset << EWDT_CTL_RSTEN_Pos) |
                 (u32EnableWakeup << EWDT_CTL_WKEN_Pos);
 
-    while((EWDT->CTL & EWDT_CTL_SYNC_Msk) == EWDT_CTL_SYNC_Msk) {} /* Wait enable WDTEN bit completed, it needs 2 * EWDT_CLK. */
+    while((EWDT->CTL & EWDT_CTL_SYNC_Msk) == EWDT_CTL_SYNC_Msk) /* Wait enable WDTEN bit completed, it needs 2 * EWDT_CLK. */
+    {
+        if(--u32TimeOutCnt == 0)
+        {
+            return EWDT_ERR_TIMEOUT;
+        }
+    }
+
+    return EWDT_OK;
 }
 
 /**@}*/ /* end of group EWDT_EXPORTED_FUNCTIONS */

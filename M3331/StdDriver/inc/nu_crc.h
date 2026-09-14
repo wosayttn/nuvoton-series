@@ -59,6 +59,7 @@ extern "C"
 /**
   * @brief      Set CRC Seed Value
   *
+  * @param[in]  crc         The pointer of CRC module.
   * @param[in]  u32Seed     Seed value
   *
   * @return     None
@@ -69,23 +70,24 @@ extern "C"
   *             to CRC controller.
   * \hideinitializer
   */
-#define CRC_SET_SEED(u32Seed)   do{ CRC->SEED = (u32Seed); CRC->CTL |= CRC_CTL_CHKSINIT_Msk; }while(0)
+#define CRC_SET_SEED(crc, u32Seed)   do{ (crc)->SEED = (u32Seed); (crc)->CTL |= CRC_CTL_CHKSINIT_Msk; }while(0)
 
 /**
  * @brief       Get CRC Seed Value
  *
-  * @param      None
+ * @param[in]   crc         The pointer of CRC module.
  *
  * @return      CRC seed value
  *
  * @details     This macro gets the current CRC seed value.
  * \hideinitializer
  */
-#define CRC_GET_SEED()          (CRC->SEED)
+#define CRC_GET_SEED(crc)          ((crc)->SEED)
 
 /**
  * @brief       CRC Write Data
  *
+ * @param[in]   crc         The pointer of CRC module.
  * @param[in]   u32Data     Write data
  *
  * @return      None
@@ -93,11 +95,12 @@ extern "C"
  * @details    User can write data directly to CRC Write Data Register(CRC_DAT) by this macro to perform CRC operation.
  * \hideinitializer
  */
-#define CRC_WRITE_DATA(u32Data) (CRC->DAT = (u32Data))
+#define CRC_WRITE_DATA(crc, u32Data) ((crc)->DAT = (u32Data))
 
 /**
   * @brief      Set CRC Polynomial Value
   *
+  * @param[in]  crc             The pointer of CRC module.
   * @param[in]  u32Polynomial   Polynomial value
   *
   * @return     None
@@ -107,72 +110,72 @@ extern "C"
   * @note       User must to set CRC polynomial value for specified CRC operarion.
   * \hideinitializer
   */
-#define CRC_SET_POLYNOMIAL(u32Polynomial)   (CRC->POLYNOMIAL = (u32Polynomial))
+#define CRC_SET_POLYNOMIAL(crc, u32Polynomial)   ((crc)->POLYNOMIAL = (u32Polynomial))
 
 /**
  * @brief       Enable CRC DMA Interrupt
  *
- * @param       None
+ * @param[in]   crc         The pointer of CRC module.
  *
  * @return      None
  *
  * @details     This macro is used to enable the CRC DMA interrupt.
  * \hideinitializer
  */
-#define CRC_ENABLE_DMA_INT()                (CRC->DMACTL |= CRC_DMACTL_INTEN_Msk)
+#define CRC_ENABLE_DMA_INT(crc)                ((crc)->DMACTL |= CRC_DMACTL_INTEN_Msk)
 
 /**
  * @brief       Disable CRC DMA Interrupt
  *
- * @param       None
+ * @param[in]   crc         The pointer of CRC module.
  *
  * @return      None
  *
  * @details     This macro is used to disable the CRC DMA interrupt.
  * \hideinitializer
  */
-#define CRC_DISABLE_DMA_INT()               (CRC->DMACTL &= ~(CRC_DMACTL_INTEN_Msk))
+#define CRC_DISABLE_DMA_INT(crc)               ((crc)->DMACTL &= ~(CRC_DMACTL_INTEN_Msk))
 
 /**
  * @brief       Abort CRC DMA Operation
  *
- * @param       None
+ * @param[in]   crc         The pointer of CRC module.
  *
  * @return      None
  *
  * @details     This macro is used to abort the CRC DMA operation.
  * \hideinitializer
  */
-#define CRC_DMA_ABORT()                     (CRC->DMACTL |= CRC_DMACTL_ABORT_Msk)
+#define CRC_DMA_ABORT(crc)                     ((crc)->DMACTL |= CRC_DMACTL_ABORT_Msk)
 
 /**
  * @brief       Pause CRC DMA Operation
  *
- * @param       None
+ * @param[in]   crc         The pointer of CRC module.
  *
  * @return      None
  *
  * @details     This macro is used to pause the CRC DMA operation.
  * \hideinitializer
  */
-#define CRC_DMA_PAUSE()                     (CRC->DMACTL |= CRC_DMACTL_PAUSE_Msk)
+#define CRC_DMA_PAUSE(crc)                     ((crc)->DMACTL |= CRC_DMACTL_PAUSE_Msk)
 
 /**
  * @brief       Resume CRC DMA Operation
  *
- * @param       None
+ * @param[in]   crc         The pointer of CRC module.
  *
  * @return      None
  *
  * @details     This macro is used to resume the CRC DMA operation.
  * \hideinitializer
  */
-#define CRC_DMA_RESUME()                    (CRC->DMACTL &= ~CRC_DMACTL_PAUSE_Msk)
+#define CRC_DMA_RESUME(crc)                    ((crc)->DMACTL &= ~CRC_DMACTL_PAUSE_Msk)
 
 /**
  * @brief       Check if CRC DMA Pasused
  *
- * @param       None
+ * @param[in]   crc         The pointer of CRC module.
  *
  * @retval      0   CRC DMA operation in progress
  * @retval      1   CRC DMA operation Paused
@@ -180,24 +183,25 @@ extern "C"
  * @details     This macro is used to check if CRC DMA operation is Pasused.
  * \hideinitializer
  */
- #define CRC_IS_DMA_PAUSE()                ((CRC->DMACTL & CRC_DMACTL_PAUSE_Msk)? 1 : 0)
+ #define CRC_IS_DMA_PAUSE(crc)                (((crc)->DMACTL & CRC_DMACTL_PAUSE_Msk)? 1 : 0)
 
 /**
  * @brief       Start CRC DMA Operation
  *
- * @param       None
+ * @param[in]   crc         The pointer of CRC module.
  *
  * @return      None
  *
  * @details     This macro is used to start the CRC DMA operation.
  * \hideinitializer
  */
-#define CRC_DMA_START()                     (CRC->DMACTL |= CRC_DMACTL_START_Msk)
+#define CRC_DMA_START(crc)                     ((crc)->DMACTL |= CRC_DMACTL_START_Msk)
 
 /**
  * @brief       Set CRC DMA Source Address
  *
- * @param       None
+ * @param[in]   crc         The pointer of CRC module.
+ * @param[in]   u32Addr     Source address
  *
  * @return      None
  *
@@ -205,12 +209,13 @@ extern "C"
  * @note        This source addrese must be word-aligned(4-bytes), and should be aligned to 16 words(64-bytes) for Flash XOM region.
  * \hideinitializer
  */
-#define CRC_SET_DMA_SADDR(u32Addr)          (CRC->SADDR = (u32Addr))
+#define CRC_SET_DMA_SADDR(crc, u32Addr)          ((crc)->SADDR = (u32Addr))
 
 /**
  * @brief       Set CRC DMA Size
  *
- * @param       None
+ * @param[in]   crc         The pointer of CRC module.
+ * @param[in]   u32Cnt      Operation byte count
  *
  * @return      None
  *
@@ -218,12 +223,13 @@ extern "C"
  * @note        This operation size must be word-aligned(4-bytes), and should be aligned to 16 words64-bytes) for Flash XOM region.
  * \hideinitializer
  */
-#define CRC_SET_DMA_SIZE(u32Cnt)            (CRC->DMACNT = (u32Cnt))
+#define CRC_SET_DMA_SIZE(crc, u32Cnt)            ((crc)->DMACNT = (u32Cnt))
 
 /**
  * @brief       Set CRC DMA Word Count
  *
- * @param       None
+ * @param[in]   crc         The pointer of CRC module.
+ * @param[in]   u32WordCnt  Operation word count
  *
  * @return      None
  *
@@ -231,19 +237,19 @@ extern "C"
  * @note        This operation size must be word-aligned(4-bytes), and should be aligned to 16 words64-bytes) for Flash XOM region.
  * \hideinitializer
  */
-#define CRC_SET_DMA_WORD_CNT(u32WordCnt)    (CRC->DMACNT = ((u32WordCnt) << CRC_DMACNT_DMACNT_Pos))
+#define CRC_SET_DMA_WORD_CNT(crc, u32WordCnt)    ((crc)->DMACNT = ((u32WordCnt) << CRC_DMACNT_DMACNT_Pos))
 
 /**
  * @brief       Get CRC DMA Operation Status
  *
-  * @param      None
+ * @param[in]   crc         The pointer of CRC module.
  *
  * @return      CRC DMA Status
  *
  * @details     This macro gets the current CRC DMA operation status.
  * \hideinitializer
  */
-#define CRC_GET_DMA_STATUS()                (CRC->DMASTS)
+#define CRC_GET_DMA_STATUS(crc)                ((crc)->DMASTS)
 
 
 void CRC_Open(uint32_t u32Mode, uint32_t u32Attribute, uint32_t u32Seed, uint32_t u32DataLen);

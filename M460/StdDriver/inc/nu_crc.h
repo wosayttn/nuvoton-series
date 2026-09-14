@@ -59,6 +59,7 @@ extern "C"
 /**
   * @brief      Set CRC Seed Value
   *
+  * @param[in]  crc         The pointer of CRC module.
   * @param[in]  u32Seed     Seed value
   *
   * @return     None
@@ -69,23 +70,24 @@ extern "C"
   *             to CRC controller.
   * \hideinitializer
   */
-#define CRC_SET_SEED(u32Seed)   do{ CRC->SEED = (u32Seed); CRC->CTL |= CRC_CTL_CHKSINIT_Msk; }while(0)
+#define CRC_SET_SEED(crc, u32Seed)   do{ (crc)->SEED = (u32Seed); (crc)->CTL |= CRC_CTL_CHKSINIT_Msk; }while(0)
 
 /**
  * @brief       Get CRC Seed Value
  *
-  * @param      None
+ * @param[in]   crc         The pointer of CRC module.
  *
  * @return      CRC seed value
  *
  * @details     This macro gets the current CRC seed value.
  * \hideinitializer
  */
-#define CRC_GET_SEED()          (CRC->SEED)
+#define CRC_GET_SEED(crc)          ((crc)->SEED)
 
 /**
  * @brief       CRC Write Data
  *
+ * @param[in]   crc         The pointer of CRC module.
  * @param[in]   u32Data     Write data
  *
  * @return      None
@@ -93,7 +95,7 @@ extern "C"
  * @details    User can write data directly to CRC Write Data Register(CRC_DAT) by this macro to perform CRC operation.
  * \hideinitializer
  */
-#define CRC_WRITE_DATA(u32Data)   (CRC->DAT = (u32Data))
+#define CRC_WRITE_DATA(crc, u32Data)   ((crc)->DAT = (u32Data))
 
 
 void CRC_Open(uint32_t u32Mode, uint32_t u32Attribute, uint32_t u32Seed, uint32_t u32DataLen);

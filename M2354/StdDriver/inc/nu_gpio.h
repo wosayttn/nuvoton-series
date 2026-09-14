@@ -65,7 +65,7 @@ extern "C"
 
 
 /*---------------------------------------------------------------------------------------------------------*/
-/*  GPIO Pull-up And Pull-down Type Constant Definitions                                                   */
+/*  GPIO Pull-up and Pull-down Type Constant Definitions                                                   */
 /*---------------------------------------------------------------------------------------------------------*/
 #define GPIO_PUSEL_DISABLE          0x0UL           /*!< GPIO PUSEL setting for Disable Mode */
 #define GPIO_PUSEL_PULL_UP          0x1UL           /*!< GPIO PUSEL setting for Pull-up Mode */
@@ -765,6 +765,15 @@ extern "C"
 
 /* GPIO bit definitions for non-secure */
 #define GPIO_PIN_DATA_NS(port, pin)    (*((volatile uint32_t *)((GPIO_PIN_DATA_BASE+NS_OFFSET+(0x40*(port))) + ((pin)<<2))))
+
+#ifndef GPIO_PIN_DATA
+#if defined (__NONSECURE_CODE)
+#define GPIO_PIN_DATA(port, pin)    GPIO_PIN_DATA_NS(port, pin)
+#else
+#define GPIO_PIN_DATA(port, pin)    GPIO_PIN_DATA_S(port, pin)
+#endif
+#endif
+
 #define PA0_NS            GPIO_PIN_DATA_NS(0, 0 ) /*!< Specify PA.0 Pin Data Input/Output */
 #define PA1_NS            GPIO_PIN_DATA_NS(0, 1 ) /*!< Specify PA.1 Pin Data Input/Output */
 #define PA2_NS            GPIO_PIN_DATA_NS(0, 2 ) /*!< Specify PA.2 Pin Data Input/Output */
@@ -889,7 +898,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  *
  * @return      None
@@ -907,7 +916,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  *
  * @return      None
@@ -925,7 +934,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  * @return      None
  *
@@ -942,7 +951,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  *
  * @return      None
@@ -960,7 +969,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  *
  * @return      None
@@ -978,7 +987,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  *
  * @return      None
@@ -996,7 +1005,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  *
  * @return      None
@@ -1014,7 +1023,7 @@ extern "C"
  *                          It could be BIT0 ~ BIT13 for PC. \n
  *                          It could be BIT0 ~ BIT12, BIT14 for PD. \n
  *                          It could be BIT0 ~ BIT11 for PF. \n
- *                          It could be BIT2 ~ BIT3, BIT9 ~ BIT15 for PG. \n
+ *                          It could be BIT2 ~ BIT4, BIT9 ~ BIT15 for PG. \n
  *                          It could be BIT4 ~ BIT11 for PH.
  *
  * @retval      0           No interrupt at specified GPIO pin
@@ -1050,10 +1059,10 @@ extern "C"
  * @return      None
  *
  * @details     Set the interrupt de-bounce sampling cycle time based on the debounce counter clock source. \n
- *              Example: _GPIO_SET_DEBOUNCE_TIME(PA, GPIO_DBCTL_DBCLKSRC_LIRC, GPIO_DBCTL_DBCLKSEL_4). \n
- *              It's meaning the De-debounce counter clock source is internal 10 KHz and sampling cycle selection is 4. \n
- *              Then the target de-bounce sampling cycle time is (4)*(1/(10*1000)) s = 4*0.0001 s = 400 us,
- *              and system will sampling interrupt input once per 400 us.
+ *              Example: GPIO_SET_DEBOUNCE_TIME(PA, GPIO_DBCTL_DBCLKSRC_LIRC, GPIO_DBCTL_DBCLKSEL_4). \n
+ *              It's meaning the De-debounce counter clock source is internal 32 KHz and sampling cycle selection is 4. \n
+ *              Then the target de-bounce sampling cycle time is (4)*(1/(32*1000)) s = 125 us,
+ *              and system will sampling interrupt input once per 125 us.
  */
 #define GPIO_SET_DEBOUNCE_TIME(port, u32ClkSrc, u32ClkSel)    ((port)->DBCTL = (GPIO_DBCTL_ICLKON_Msk | (u32ClkSrc) | (u32ClkSel)))
 
@@ -1130,7 +1139,7 @@ extern "C"
  *
  * @return      None
  *
- * @details     This function is used to enable specified GPIO pin interrupt.
+ * @details     This function is used to disable specified GPIO pin interrupt.
  */
 #define GPIO_DisableEINT    GPIO_DisableInt
 

@@ -94,6 +94,11 @@ extern "C"
 #define LCD_PWR_SAVING_NORMAL_MODE              (0ul << LCD_DCTL_PSVREV_Pos) /*!< The timing of LCD power saving is normal \hideinitializer */
 #define LCD_PWR_SAVING_REVERSE_MODE             (1ul << LCD_DCTL_PSVREV_Pos) /*!< The timing of LCD power saving is reverse \hideinitializer */
 
+/*---------------------------------------------------------------------------------------------------------*/
+/* LCD Time-out Handler Constant Definitions                                                               */
+/*---------------------------------------------------------------------------------------------------------*/
+#define LCD_TIMEOUT                             (SystemCoreClock)   /*!< LCD time-out counter (1 second time-out) \hideinitializer */
+
 /**@}*/ /* end of group LCD_EXPORTED_CONSTANTS */
 
 
@@ -117,7 +122,6 @@ typedef struct
 
 /**@}*/ /* end of group LCD_EXPORTED_STRUCTS */
 
-
 /** @addtogroup LCD_EXPORTED_FUNCTIONS LCD Exported Functions
   @{
 */
@@ -131,7 +135,15 @@ typedef struct
   *
   * @details    This macro is used to enable LCD display.
   */
-#define LCD_ENABLE_DISPLAY()        do{ LCD->CTL |= LCD_CTL_EN_Msk; while(LCD->CTL & LCD_CTL_SYNC_Msk) {} }while(0)
+#define LCD_ENABLE_DISPLAY() \
+    do{ \
+        uint32_t u32TimeOutCnt = LCD_TIMEOUT; \
+        LCD->CTL |= LCD_CTL_EN_Msk; \
+        while(LCD->CTL & LCD_CTL_SYNC_Msk) \
+        { \
+            if(--u32TimeOutCnt == 0) break; \
+        } \
+    }while(0)
 
 /**
   * @brief      Disable LCD Display
@@ -142,7 +154,15 @@ typedef struct
   *
   * @details    This macro is used to disable LCD display.
   */
-#define LCD_DISABLE_DISPLAY()       do{ LCD->CTL &= ~LCD_CTL_EN_Msk; while(LCD->CTL & LCD_CTL_SYNC_Msk) {} }while(0)
+#define LCD_DISABLE_DISPLAY() \
+    do{ \
+        uint32_t u32TimeOutCnt = LCD_TIMEOUT; \
+        LCD->CTL &= ~LCD_CTL_EN_Msk; \
+        while(LCD->CTL & LCD_CTL_SYNC_Msk) \
+        { \
+            if(--u32TimeOutCnt == 0) break; \
+        } \
+    }while(0)
 
 /**
   * @brief      Set LCD Waveform Type
@@ -168,7 +188,7 @@ typedef struct
   *
   * @details    This macro is used to set the LCD operarion frequency is (LCD source frequency / div).
   */
-#define LCD_SET_FREQDIV(div)        (LCD->PCTL = (LCD->PCTL & ~LCD_PCTL_FREQDIV_Msk) | (((div)-1) << LCD_PCTL_FREQDIV_Pos))
+#define LCD_SET_FREQDIV(div)        (LCD->PCTL = (LCD->PCTL & ~LCD_PCTL_FREQDIV_Msk) | (((div)-1U) << LCD_PCTL_FREQDIV_Pos))
 
 /**
   * @brief      Set Charge Pump Voltage
@@ -243,7 +263,7 @@ typedef struct
   * @details    This macro is used to set the LCD frame counting value to configure the blink interval.
   * @note       For type-B waveform, the frame counter increases at the end of odd frames, not even frames.
   */
-#define LCD_SET_FRAME_COUNTING_VALUE(value)     (LCD->FCTL = (LCD->FCTL & ~LCD_FCTL_FCV_Msk) | (((value)-1) << LCD_FCTL_FCV_Pos))
+#define LCD_SET_FRAME_COUNTING_VALUE(value)     (LCD->FCTL = (LCD->FCTL & ~LCD_FCTL_FCV_Msk) | (((value)-1U) << LCD_FCTL_FCV_Pos))
 
 /**
   * @brief      Set Null Frame Time
@@ -509,7 +529,7 @@ typedef struct
 #define LCD_GET_CHARGE_TIME()              ((LCD->STS & LCD_STS_CTIME_Msk) >> 16)
 
 
-uint32_t LCD_Open(S_LCD_CFG_T *pLCDCfg);
+uint32_t LCD_Open(const S_LCD_CFG_T *pLCDCfg);
 void LCD_Close(void);
 void LCD_SetPixel(uint32_t u32Com, uint32_t u32Seg, uint32_t u32OnFlag);
 void LCD_SetAllPixels(uint32_t u32OnOff);

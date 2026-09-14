@@ -64,6 +64,12 @@ extern "C"
 #define    CardDetect_From_GPIO  (1UL << 8)   /*!< Card detection pin is GPIO \hideinitializer */
 #define    CardDetect_From_DAT3  (1UL << 9)   /*!< Card detection pin is DAT3 \hideinitializer */
 
+/* SDH Define Error Code */
+#define SDH_TIMEOUT_CNT     SystemCoreClock     /*!< SDH time-out counter (1 second time-out) \hideinitializer */
+#define SDH_OK              ( 0L)               /*!< SDH operation OK \hideinitializer */
+#define SDH_ERR_FAIL        (-1L)               /*!< SDH operation failed \hideinitializer */
+#define SDH_ERR_TIMEOUT     (-2L)               /*!< SDH operation abort due to timeout error \hideinitializer */
+
 /**@}*/ /* end of group SDH_EXPORTED_CONSTANTS */
 
 /** @addtogroup SDH_EXPORTED_TYPEDEF SDH Exported Type Defines
@@ -91,6 +97,7 @@ typedef struct SDH_info_t
 extern SDH_INFO_T SD0;
 extern uint8_t volatile g_u8SDDataReadyFlag;
 extern uint8_t g_u8R3Flag;
+extern int32_t g_SDH_i32ErrCode;
 
 /** @endcond HIDDEN_SYMBOLS */
 
@@ -183,9 +190,9 @@ extern uint8_t g_u8R3Flag;
 
 void SDH_Open(SDH_T *sdh, uint32_t u32CardDetSrc);
 uint32_t SDH_Probe(SDH_T *sdh);
-uint32_t SDH_Read(SDH_T *sdh, uint8_t *pu8BufAddr, uint32_t u32StartSec, uint32_t u32SecCount);
-uint32_t SDH_Write(SDH_T *sdh, uint8_t *pu8BufAddr, uint32_t u32StartSec, uint32_t u32SecCount);
-void SDH_Set_clock(SDH_T *sdh, uint32_t u32SDClockKhz);
+uint32_t SDH_Read(SDH_T *sdh, const volatile uint8_t *pu8BufAddr, uint32_t u32StartSec, uint32_t u32SecCount);
+uint32_t SDH_Write(SDH_T *sdh, const uint8_t *pu8BufAddr, uint32_t u32StartSec, uint32_t u32SecCount);
+
 uint32_t SDH_CardDetection(SDH_T *sdh);
 void SDH_Open_Disk(SDH_T *sdh, uint32_t u32CardDetSrc);
 void SDH_Close_Disk(SDH_T *sdh);

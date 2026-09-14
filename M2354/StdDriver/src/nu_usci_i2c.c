@@ -1,9 +1,7 @@
 /****************************************************************************//**
  * @file     usci_i2c.c
  * @version  V3.00
- * $Revision: 1 $
- * $Date: 16/07/07 7:50p $
- * @brief    M2355 series USCI I2C(UI2C) driver source file
+ * @brief    M2354 series USCI I2C(UI2C) driver source file
  *
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
@@ -18,6 +16,7 @@
   @{
 */
 
+int32_t g_UI2C_i32ErrCode = 0;       /*!< UI2C global error code */
 
 /** @addtogroup USCI_I2C_EXPORTED_FUNCTIONS USCI_I2C Exported Functions
   @{
@@ -56,7 +55,7 @@ uint32_t UI2C_Open(UI2C_T *ui2c, uint32_t u32BusClock)
     /* Data format configuration */
     /* 8 bit data length */
     ui2c->LINECTL &= ~UI2C_LINECTL_DWIDTH_Msk;
-    ui2c->LINECTL |= 8u << UI2C_LINECTL_DWIDTH_Pos;
+    ui2c->LINECTL |= 8UL << UI2C_LINECTL_DWIDTH_Pos;
 
     /* MSB data format */
     ui2c->LINECTL &= ~UI2C_LINECTL_LSB_Msk;
@@ -259,7 +258,7 @@ void UI2C_EnableInt(UI2C_T *ui2c, uint32_t u32Mask)
  *
  *    @details      The function returns the actual USCI_I2C module bus clock.
  */
-uint32_t UI2C_GetBusClockFreq(UI2C_T *ui2c)
+uint32_t UI2C_GetBusClockFreq(const UI2C_T *ui2c)
 {
     uint32_t u32Divider;
     uint32_t u32Pclk;
@@ -328,7 +327,7 @@ uint32_t UI2C_SetBusClockFreq(UI2C_T *ui2c, uint32_t u32BusClock)
  *
  *    @details      Use this function to get USCI_I2C interrupt flag when module occurs interrupt event.
  */
-uint32_t UI2C_GetIntFlag(UI2C_T *ui2c, uint32_t u32Mask)
+uint32_t UI2C_GetIntFlag(const UI2C_T *ui2c, uint32_t u32Mask)
 {
     uint32_t u32IntFlag = 0U;
     uint32_t u32TmpValue;
@@ -451,7 +450,7 @@ void UI2C_ClearIntFlag(UI2C_T *ui2c, uint32_t u32Mask)
  *
  *    @details      To read a byte data from USCI_I2C module receive data register.
  */
-uint32_t UI2C_GetData(UI2C_T *ui2c)
+uint32_t UI2C_GetData(const UI2C_T *ui2c)
 {
     return (ui2c->RXDAT);
 }
@@ -502,7 +501,7 @@ void UI2C_SetSlaveAddr(UI2C_T *ui2c, uint8_t u8SlaveNo, uint16_t u16SlaveAddr, u
  *    @brief        Configure the mask bit of slave address.
  *
  *    @param[in]    ui2c             The pointer of the specified USCI_I2C module.
- *    @param[in]    u8SlaveNo        Slave channle number [0/1]
+ *    @param[in]    u8SlaveNo        Slave channel number [0/1]
  *    @param[in]    u16SlaveAddrMask The slave address mask.
  *
  *    @return None
@@ -596,24 +595,38 @@ void UI2C_DisableWakeup(UI2C_T *ui2c)
   *
   * @details    The function is used for USCI_I2C Master write a byte data to Slave.
   *
+  * @note       This function sets g_UI2C_i32ErrCode to UI2C_ERR_TIMEOUT if waiting USCI_I2C time-out.
+  *
   */
 
 uint8_t UI2C_WriteByte(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t data)
 {
-    uint8_t u8Xfering = 1U, u8Err = 0U, u8Ctrl = 0U;
+    uint8_t u8Xfering = 1U;
+    uint8_t u8Err = 0U;
+    uint8_t u8Ctrl = 0U;
     enum UI2C_MASTER_EVENT eEvent = MASTER_SEND_START;
+
+    g_UI2C_i32ErrCode = 0;
 
     UI2C_START(ui2c);                                                       /* Send START */
 
-    while(u8Xfering)
+    while(u8Xfering && (u8Err == 0U))
     {
-        while(!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));                      /* Wait UI2C new status occur */
+        uint32_t u32TimeOutCount = UI2C_TIMEOUT;
+        while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))                     /* Wait UI2C new status occur */
+        {
+            if(--u32TimeOutCount == 0)
+            {
+                g_UI2C_i32ErrCode = UI2C_ERR_TIMEOUT;
+                break;
+            }
+        }
 
         switch(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
         {
             case UI2C_PROTSTS_STARIF_Msk:
                 UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STARIF_Msk);     /* Clear START INT Flag */
-                UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x00U);              /* Write SLA+W to Register UI2C_TXDAT */
+                UI2C_SET_DATA(ui2c, ((uint32_t)u8SlaveAddr << 1U));    /* Write SLA+W to Register UI2C_TXDAT */
                 eEvent = MASTER_SEND_ADDRESS;
                 u8Ctrl = UI2C_CTL_PTRG;                                     /* Clear SI */
                 break;
@@ -670,24 +683,37 @@ uint8_t UI2C_WriteByte(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t data)
   *
   * @details    The function is used for USCI_I2C Master write multi bytes data to Slave.
   *
+  * @note       This function sets g_UI2C_i32ErrCode to UI2C_ERR_TIMEOUT if waiting USCI_I2C time-out.
+  *
   */
 
-uint32_t UI2C_WriteMultiBytes(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t *data, uint32_t u32wLen)
+uint32_t UI2C_WriteMultiBytes(UI2C_T *ui2c, uint8_t u8SlaveAddr, const uint8_t *data, uint32_t u32wLen)
 {
-    uint8_t u8Xfering = 1U, u8Ctrl = 0U;
+    uint8_t u8Xfering = 1U;
+    uint8_t u8Ctrl = 0U;
     uint32_t u32txLen = 0U;
+
+    g_UI2C_i32ErrCode = 0;
 
     UI2C_START(ui2c);                                                       /* Send START */
 
     while(u8Xfering)
     {
-        while(!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));                      /* Wait UI2C new status occur */
+        uint32_t u32TimeOutCount = UI2C_TIMEOUT;
+        while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))                     /* Wait UI2C new status occur */
+        {
+            if(--u32TimeOutCount == 0)
+            {
+                g_UI2C_i32ErrCode = UI2C_ERR_TIMEOUT;
+                break;
+            }
+        }
 
         switch(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
         {
             case UI2C_PROTSTS_STARIF_Msk:
                 UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STARIF_Msk);     /* Clear START INT Flag */
-                UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x00U);              /* Write SLA+W to Register UI2C_TXDAT */
+                UI2C_SET_DATA(ui2c, ((uint32_t)u8SlaveAddr << 1U));    /* Write SLA+W to Register UI2C_TXDAT */
                 u8Ctrl = UI2C_CTL_PTRG;                                     /* Clear SI */
                 break;
 
@@ -695,7 +721,10 @@ uint32_t UI2C_WriteMultiBytes(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t *data, 
                 UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_ACKIF_Msk);      /* Clear ACK INT Flag */
 
                 if(u32txLen < u32wLen)
-                    UI2C_SET_DATA(ui2c, data[u32txLen++]);                  /* Write data to UI2C_TXDAT */
+                {
+                    UI2C_SET_DATA(ui2c, data[u32txLen]);                  /* Write data to UI2C_TXDAT */
+                    u32txLen++;
+                }
                 else
                 {
                     u8Ctrl = (UI2C_CTL_PTRG | UI2C_CTL_STO);                /* Clear SI and send STOP */
@@ -739,24 +768,38 @@ uint32_t UI2C_WriteMultiBytes(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t *data, 
   *
   * @details    The function is used for USCI_I2C Master specify a address that data write to in Slave.
   *
+  * @note       This function sets g_UI2C_i32ErrCode to UI2C_ERR_TIMEOUT if waiting USCI_I2C time-out.
+  *
   */
 
 uint8_t UI2C_WriteByteOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, uint8_t data)
 {
-    uint8_t u8Xfering = 1U, u8Err = 0U, u8Ctrl = 0U;
+    uint8_t u8Xfering = 1U;
+    uint8_t u8Err = 0U;
+    uint8_t u8Ctrl = 0U;
     uint32_t u32txLen = 0U;
+
+    g_UI2C_i32ErrCode = 0;
 
     UI2C_START(ui2c);                                                       /* Send START */
 
-    while(u8Xfering)
+    while(u8Xfering && (u8Err == 0U))
     {
-        while(!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));                      /* Wait UI2C new status occur */
+        uint32_t u32TimeOutCount = UI2C_TIMEOUT;
+        while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))                     /* Wait UI2C new status occur */
+        {
+            if(--u32TimeOutCount == 0)
+            {
+                g_UI2C_i32ErrCode = UI2C_ERR_TIMEOUT;
+                break;
+            }
+        }
 
         switch(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
         {
             case UI2C_PROTSTS_STARIF_Msk:
                 UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STARIF_Msk);     /* Clear START INT Flag */
-                UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x00U);              /* Write SLA+W to Register UI2C_TXDAT */
+                UI2C_SET_DATA(ui2c, ((uint32_t)u8SlaveAddr << 1U));    /* Write SLA+W to Register UI2C_TXDAT */
                 u8Ctrl = UI2C_CTL_PTRG;                                     /* Clear SI */
                 break;
 
@@ -819,25 +862,38 @@ uint8_t UI2C_WriteByteOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8DataAd
   *
   * @details    The function is used for USCI_I2C Master specify a byte address that multi data bytes write to in Slave.
   *
+  * @note       This function sets g_UI2C_i32ErrCode to UI2C_ERR_TIMEOUT if waiting USCI_I2C time-out.
+  *
   */
 
-uint32_t UI2C_WriteMultiBytesOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, uint8_t *data, uint32_t u32wLen)
+uint32_t UI2C_WriteMultiBytesOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, const uint8_t *data, uint32_t u32wLen)
 {
-    uint8_t u8Xfering = 1U, u8Ctrl = 0U;
+    uint8_t u8Xfering = 1U;
+    uint8_t u8Ctrl = 0U;
     uint32_t u32txLen = 0U;
     enum UI2C_MASTER_EVENT eEvent = MASTER_SEND_START;
+
+    g_UI2C_i32ErrCode = 0;
 
     UI2C_START(ui2c);                                                       /* Send START */
 
     while(u8Xfering)
     {
-        while(!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));                      /* Wait UI2C new status occur */
+        uint32_t u32TimeOutCount = UI2C_TIMEOUT;
+        while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))                     /* Wait UI2C new status occur */
+        {
+            if(--u32TimeOutCount == 0)
+            {
+                g_UI2C_i32ErrCode = UI2C_ERR_TIMEOUT;
+                break;
+            }
+        }
 
         switch(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
         {
             case UI2C_PROTSTS_STARIF_Msk:
                 UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STARIF_Msk);     /* Clear START INT Flag */
-                UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x00U);              /* Write SLA+W to Register UI2C_TXDAT */
+                UI2C_SET_DATA(ui2c, ((uint32_t)u8SlaveAddr << 1U));    /* Write SLA+W to Register UI2C_TXDAT */
                 eEvent = MASTER_SEND_ADDRESS;
                 u8Ctrl = UI2C_CTL_PTRG;                                     /* Clear SI */
                 break;
@@ -853,7 +909,10 @@ uint32_t UI2C_WriteMultiBytesOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u
                 else
                 {
                     if(u32txLen < u32wLen)
-                        UI2C_SET_DATA(ui2c, data[u32txLen++]);              /* Write data to UI2C_TXDAT */
+                    {
+                        UI2C_SET_DATA(ui2c, data[u32txLen]);                  /* Write data to UI2C_TXDAT */
+                        u32txLen++;
+                    }
                     else
                     {
                         u8Ctrl = (UI2C_CTL_PTRG | UI2C_CTL_STO);            /* Clear SI and send STOP */
@@ -898,24 +957,38 @@ uint32_t UI2C_WriteMultiBytesOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u
   *
   * @details    The function is used for USCI_I2C Master specify two bytes address that data write to in Slave.
   *
+  * @note       This function sets g_UI2C_i32ErrCode to UI2C_ERR_TIMEOUT if waiting USCI_I2C time-out.
+  *
   */
 
 uint8_t UI2C_WriteByteTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, uint8_t data)
 {
-    uint8_t u8Xfering = 1U, u8Err = 0U, u8Ctrl = 0U;
+    uint8_t u8Xfering = 1U;
+    uint8_t u8Err = 0U;
+    uint8_t u8Ctrl = 0U;
     uint32_t u32txLen = 0U;
+
+    g_UI2C_i32ErrCode = 0;
 
     UI2C_START(ui2c);                                                           /* Send START */
 
-    while(u8Xfering)
+    while(u8Xfering && (u8Err == 0U))
     {
-        while(!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));                      /* Wait UI2C new status occur */
+        uint32_t u32TimeOutCount = UI2C_TIMEOUT;
+        while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))                     /* Wait UI2C new status occur */
+        {
+            if(--u32TimeOutCount == 0)
+            {
+                g_UI2C_i32ErrCode = UI2C_ERR_TIMEOUT;
+                break;
+            }
+        }
 
         switch(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
         {
             case UI2C_PROTSTS_STARIF_Msk:
                 UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STARIF_Msk);         /* Clear START INT Flag */
-                UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x00U);                  /* Write SLA+W to Register UI2C_TXDAT */
+                UI2C_SET_DATA(ui2c, ((uint32_t)u8SlaveAddr << 1U));    /* Write SLA+W to Register UI2C_TXDAT */
                 u8Ctrl = UI2C_CTL_PTRG;                                         /* Clear SI */
                 break;
 
@@ -924,7 +997,7 @@ uint8_t UI2C_WriteByteTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16Dat
 
                 if(u32txLen == 0U)
                 {
-                    UI2C_SET_DATA(ui2c, (uint8_t)(u16DataAddr & 0xFF00U) >> 8U);  /* Write Hi byte data address to UI2C_TXDAT */
+                    UI2C_SET_DATA(ui2c, ((uint32_t)u16DataAddr >> 8U) & 0xFFU);  /* Write Hi byte data address to UI2C_TXDAT */
                     u32txLen++;
                 }
                 else if(u32txLen == 1U)
@@ -983,25 +1056,39 @@ uint8_t UI2C_WriteByteTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16Dat
   *
   * @details    The function is used for USCI_I2C Master specify a byte address that multi data write to in Slave.
   *
+  * @note       This function sets g_UI2C_i32ErrCode to UI2C_ERR_TIMEOUT if waiting USCI_I2C time-out.
+  *
   */
 
-uint32_t UI2C_WriteMultiBytesTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, uint8_t *data, uint32_t u32wLen)
+uint32_t UI2C_WriteMultiBytesTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, const uint8_t *data, uint32_t u32wLen)
 {
-    uint8_t u8Xfering = 1U, u8Addr = 1U, u8Ctrl = 0U;
+    uint8_t u8Xfering = 1U;
+    uint8_t u8Addr = 1U;
+    uint8_t u8Ctrl = 0U;
     uint32_t u32txLen = 0U;
     enum UI2C_MASTER_EVENT eEvent = MASTER_SEND_START;
+
+    g_UI2C_i32ErrCode = 0;
 
     UI2C_START(ui2c);                                                           /* Send START */
 
     while(u8Xfering)
     {
-        while(!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));                      /* Wait UI2C new status occur */
+        uint32_t u32TimeOutCount = UI2C_TIMEOUT;
+        while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))                     /* Wait UI2C new status occur */
+        {
+            if(--u32TimeOutCount == 0)
+            {
+                g_UI2C_i32ErrCode = UI2C_ERR_TIMEOUT;
+                break;
+            }
+        }
 
         switch(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
         {
             case UI2C_PROTSTS_STARIF_Msk:
                 UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STARIF_Msk);         /* Clear START INT Flag */
-                UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x00U);                  /* Write SLA+W to Register UI2C_TXDAT */
+                UI2C_SET_DATA(ui2c, ((uint32_t)u8SlaveAddr << 1U));    /* Write SLA+W to Register UI2C_TXDAT */
                 eEvent = MASTER_SEND_ADDRESS;
                 u8Ctrl = UI2C_CTL_PTRG;                                         /* Clear SI */
                 break;
@@ -1011,7 +1098,7 @@ uint32_t UI2C_WriteMultiBytesTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t
 
                 if(eEvent == MASTER_SEND_ADDRESS)
                 {
-                    UI2C_SET_DATA(ui2c, (uint8_t)(u16DataAddr & 0xFF00U) >> 8U);  /* Write Hi byte data address to UI2C_TXDAT */
+                    UI2C_SET_DATA(ui2c, ((uint32_t)u16DataAddr & 0xFF00U) >> 8U);  /* Write Hi byte data address to UI2C_TXDAT */
                     eEvent = MASTER_SEND_DATA;
                 }
                 else if(eEvent == MASTER_SEND_DATA)
@@ -1025,13 +1112,18 @@ uint32_t UI2C_WriteMultiBytesTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t
                     {
                         if(u32txLen < u32wLen)
                         {
-                            UI2C_SET_DATA(ui2c, data[u32txLen++]);                  /* Write data to UI2C_TXDAT */
+                            UI2C_SET_DATA(ui2c, data[u32txLen]);                  /* Write data to UI2C_TXDAT */
+                            u32txLen++;
                         }
                         else
                         {
                             u8Ctrl = (UI2C_CTL_PTRG | UI2C_CTL_STO);                /* Clear SI and send STOP */
                         }
                     }
+                }
+                else
+                {
+                    /* Unexpected event - send STOP */
                 }
 
                 break;
@@ -1069,23 +1161,38 @@ uint32_t UI2C_WriteMultiBytesTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t
   *
   * @details    The function is used for USCI_I2C Master to read a byte data from Slave.
   *
+  * @note       This function sets g_UI2C_i32ErrCode to UI2C_ERR_TIMEOUT if waiting USCI_I2C time-out.
+  *
   */
 uint8_t UI2C_ReadByte(UI2C_T *ui2c, uint8_t u8SlaveAddr)
 {
-    uint8_t u8Xfering = 1U, u8Err = 0U, rdata = 0U, u8Ctrl = 0U;
+    uint8_t u8Xfering = 1U;
+    uint8_t u8Err = 0U;
+    uint8_t rdata = 0U;
+    uint8_t u8Ctrl = 0U;
     enum UI2C_MASTER_EVENT eEvent = MASTER_SEND_START;
+
+    g_UI2C_i32ErrCode = 0;
 
     UI2C_START(ui2c);                                                       /* Send START */
 
-    while(u8Xfering)
+    while(u8Xfering && (u8Err == 0U))
     {
-        while(!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));                      /* Wait UI2C new status occur */
+        uint32_t u32TimeOutCount = UI2C_TIMEOUT;
+        while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))                     /* Wait UI2C new status occur */
+        {
+            if(--u32TimeOutCount == 0)
+            {
+                g_UI2C_i32ErrCode = UI2C_ERR_TIMEOUT;
+                break;
+            }
+        }
 
         switch(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
         {
             case UI2C_PROTSTS_STARIF_Msk:
                 UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STARIF_Msk);     /* Clear START INT Flag */
-                UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x01U);              /* Write SLA+R to Register UI2C_TXDAT */
+                UI2C_SET_DATA(ui2c, (uint8_t)((u8SlaveAddr << 1U) | 0x01U));    /* Write SLA+R to Register UI2C_TXDAT */
                 eEvent = MASTER_SEND_H_RD_ADDRESS;
                 u8Ctrl = UI2C_CTL_PTRG;
                 break;
@@ -1128,7 +1235,9 @@ uint8_t UI2C_ReadByte(UI2C_T *ui2c, uint8_t u8SlaveAddr)
     }
 
     if(u8Err)
+    {
         rdata = 0U;
+    }
 
     return rdata;                                                           /* Return read data */
 }
@@ -1146,25 +1255,37 @@ uint8_t UI2C_ReadByte(UI2C_T *ui2c, uint8_t u8SlaveAddr)
   *
   * @details    The function is used for USCI_I2C Master to read multi data bytes from Slave.
   *
+  * @note       This function sets g_UI2C_i32ErrCode to UI2C_ERR_TIMEOUT if waiting USCI_I2C time-out.
   *
   */
 uint32_t UI2C_ReadMultiBytes(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t *rdata, uint32_t u32rLen)
 {
-    uint8_t u8Xfering = 1U, u8Ctrl = 0U;
+    uint8_t u8Xfering = 1U;
+    uint8_t u8Ctrl = 0U;
     uint32_t u32rxLen = 0U;
     enum UI2C_MASTER_EVENT eEvent = MASTER_SEND_START;
+
+    g_UI2C_i32ErrCode = 0;
 
     UI2C_START(ui2c);                                                       /* Send START */
 
     while(u8Xfering)
     {
-        while(!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));                      /* Wait UI2C new status occur */
+        uint32_t u32TimeOutCount = UI2C_TIMEOUT;
+        while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))                     /* Wait UI2C new status occur */
+        {
+            if(--u32TimeOutCount == 0)
+            {
+                g_UI2C_i32ErrCode = UI2C_ERR_TIMEOUT;
+                break;
+            }
+        }
 
         switch(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
         {
             case UI2C_PROTSTS_STARIF_Msk:
                 UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_STARIF_Msk);     /* Clear START INT Flag */
-                UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x01U);              /* Write SLA+R to Register UI2C_TXDAT */
+                UI2C_SET_DATA(ui2c, (uint8_t)((u8SlaveAddr << 1U) | 0x01U)); /* Write SLA+R to Register UI2C_TXDAT */
                 eEvent = MASTER_SEND_H_RD_ADDRESS;
                 u8Ctrl = UI2C_CTL_PTRG;
                 break;
@@ -1179,12 +1300,17 @@ uint32_t UI2C_ReadMultiBytes(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t *rdata, 
                 }
                 else
                 {
-                    rdata[u32rxLen++] = (unsigned char) UI2C_GET_DATA(ui2c);    /* Receive Data */
+                    rdata[u32rxLen] = (unsigned char)UI2C_GET_DATA(ui2c);
+                    u32rxLen++;    /* Receive Data */
 
                     if(u32rxLen < (u32rLen - 1U))
+                    {
                         u8Ctrl = (UI2C_CTL_PTRG | UI2C_CTL_AA);
+                    }
                     else
+                    {
                         u8Ctrl = UI2C_CTL_PTRG;
+                    }
                 }
 
                 break;
@@ -1193,7 +1319,10 @@ uint32_t UI2C_ReadMultiBytes(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t *rdata, 
                 UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_NACKIF_Msk);     /* Clear NACK INT Flag */
 
                 if(eEvent == MASTER_READ_DATA)
-                    rdata[u32rxLen++] = (unsigned char) UI2C_GET_DATA(ui2c);    /* Receive Data */
+                {
+                    rdata[u32rxLen] = (unsigned char)UI2C_GET_DATA(ui2c);   /* Receive Data */
+                    u32rxLen++;
+                }
 
                 u8Ctrl = (UI2C_CTL_PTRG | UI2C_CTL_STO);                        /* Clear SI and send STOP */
 
@@ -1229,18 +1358,32 @@ uint32_t UI2C_ReadMultiBytes(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t *rdata, 
   *
   * @details    The function is used for USCI_I2C Master specify a byte address that a data byte read from Slave.
   *
+  * @note       This function sets g_UI2C_i32ErrCode to UI2C_ERR_TIMEOUT if waiting USCI_I2C time-out.
   *
   */
 uint8_t UI2C_ReadByteOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr)
 {
-    uint8_t u8Xfering = 1U, u8Err = 0U, rdata = 0U, u8Ctrl = 0U;
+    uint8_t u8Xfering = 1U;
+    uint8_t u8Err = 0U;
+    uint8_t rdata = 0U;
+    uint8_t u8Ctrl = 0U;
     enum UI2C_MASTER_EVENT eEvent = MASTER_SEND_START;
+
+    g_UI2C_i32ErrCode = 0;
 
     UI2C_START(ui2c);                                                       /* Send START */
 
-    while(u8Xfering)
+    while(u8Xfering && (u8Err == 0U))
     {
-        while(!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));                      /* Wait UI2C new status occur */
+        uint32_t u32TimeOutCount = UI2C_TIMEOUT;
+        while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))                     /* Wait UI2C new status occur */
+        {
+            if(--u32TimeOutCount == 0)
+            {
+                g_UI2C_i32ErrCode = UI2C_ERR_TIMEOUT;
+                break;
+            }
+        }
 
         switch(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
         {
@@ -1249,13 +1392,17 @@ uint8_t UI2C_ReadByteOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8DataAdd
 
                 if(eEvent == MASTER_SEND_START)
                 {
-                    UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x00U);          /* Write SLA+W to Register UI2C_TXDAT */
+                    UI2C_SET_DATA(ui2c, ((uint32_t)u8SlaveAddr << 1U));    /* Write SLA+W to Register UI2C_TXDAT */
                     eEvent = MASTER_SEND_ADDRESS;
                 }
                 else if(eEvent == MASTER_SEND_REPEAT_START)
                 {
-                    UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x01U);         /* Write SLA+R to Register TXDAT */
+                    UI2C_SET_DATA(ui2c, (uint8_t)((u8SlaveAddr << 1U) | 0x01U));    /* Write SLA+R to Register TXDAT */
                     eEvent = MASTER_SEND_H_RD_ADDRESS;
+                }
+                else
+                {
+                    /* Unexpected start event - no action */
                 }
 
                 u8Ctrl = UI2C_CTL_PTRG;
@@ -1317,7 +1464,9 @@ uint8_t UI2C_ReadByteOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8DataAdd
     }
 
     if(u8Err)
+    {
         rdata = 0U;                                                 /* If occurs error, return 0 */
+    }
 
     return rdata;                                                  /* Return read data */
 }
@@ -1335,19 +1484,31 @@ uint8_t UI2C_ReadByteOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8DataAdd
   *
   * @details    The function is used for USCI_I2C Master specify a byte address that multi data bytes read from Slave.
   *
+  * @note       This function sets g_UI2C_i32ErrCode to UI2C_ERR_TIMEOUT if waiting USCI_I2C time-out.
   *
   */
 uint32_t UI2C_ReadMultiBytesOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8DataAddr, uint8_t *rdata, uint32_t u32rLen)
 {
-    uint8_t u8Xfering = 1U, u8Ctrl = 0U;
+    uint8_t u8Xfering = 1U;
+    uint8_t u8Ctrl = 0U;
     uint32_t u32rxLen = 0U;
     enum UI2C_MASTER_EVENT eEvent = MASTER_SEND_START;
+
+    g_UI2C_i32ErrCode = 0;
 
     UI2C_START(ui2c);                                                       /* Send START */
 
     while(u8Xfering)
     {
-        while(!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));                      /* Wait UI2C new status occur */
+        uint32_t u32TimeOutCount = UI2C_TIMEOUT;
+        while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))                     /* Wait UI2C new status occur */
+        {
+            if(--u32TimeOutCount == 0)
+            {
+                g_UI2C_i32ErrCode = UI2C_ERR_TIMEOUT;
+                break;
+            }
+        }
 
         switch(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
         {
@@ -1356,13 +1517,17 @@ uint32_t UI2C_ReadMultiBytesOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8
 
                 if(eEvent == MASTER_SEND_START)
                 {
-                    UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x00U);          /* Write SLA+W to Register UI2C_TXDAT */
+                    UI2C_SET_DATA(ui2c, ((uint32_t)u8SlaveAddr << 1U));    /* Write SLA+W to Register UI2C_TXDAT */
                     eEvent = MASTER_SEND_ADDRESS;
                 }
                 else if(eEvent == MASTER_SEND_REPEAT_START)
                 {
-                    UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x01U);         /* Write SLA+R to Register TXDAT */
+                    UI2C_SET_DATA(ui2c, ((uint32_t)u8SlaveAddr << 1U) | 0x01U);    /* Write SLA+R to Register TXDAT */
                     eEvent = MASTER_SEND_H_RD_ADDRESS;
+                }
+                else
+                {
+                    /* Unexpected start event - no action */
                 }
 
                 u8Ctrl = UI2C_CTL_PTRG;
@@ -1390,12 +1555,17 @@ uint32_t UI2C_ReadMultiBytesOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8
                 }
                 else
                 {
-                    rdata[u32rxLen++] = (uint8_t) UI2C_GET_DATA(ui2c);      /* Receive Data */
+                    rdata[u32rxLen] = (uint8_t)UI2C_GET_DATA(ui2c);      /* Receive Data */
+                    u32rxLen++;
 
-                    if(u32rxLen < u32rLen - 1U)
+                    if(u32rxLen < (u32rLen - 1U))
+                    {
                         u8Ctrl = (UI2C_CTL_PTRG | UI2C_CTL_AA);
+                    }
                     else
+                    {
                         u8Ctrl = UI2C_CTL_PTRG;
+                    }
                 }
 
                 break;
@@ -1404,7 +1574,10 @@ uint32_t UI2C_ReadMultiBytesOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8
                 UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_NACKIF_Msk);     /* Clear NACK INT Flag */
 
                 if(eEvent == MASTER_READ_DATA)
-                    rdata[u32rxLen++] = (uint8_t) UI2C_GET_DATA(ui2c);                  /* Receive Data */
+                {
+                    rdata[u32rxLen] = (uint8_t)UI2C_GET_DATA(ui2c);                /* Receive Data */
+                    u32rxLen++;
+                }
 
                 u8Ctrl = (UI2C_CTL_PTRG | UI2C_CTL_STO);                        /* Clear SI and send STOP */
 
@@ -1439,18 +1612,33 @@ uint32_t UI2C_ReadMultiBytesOneReg(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint8_t u8
   *
   * @details    The function is used for USCI_I2C Master specify two bytes address that a data byte read from Slave.
   *
+  * @note       This function sets g_UI2C_i32ErrCode to UI2C_ERR_TIMEOUT if waiting USCI_I2C time-out.
   *
   */
 uint8_t UI2C_ReadByteTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr)
 {
-    uint8_t u8Xfering = 1U, u8Err = 0U, rdata = 0U, u8Addr = 1U, u8Ctrl = 0U;
+    uint8_t u8Xfering = 1U;
+    uint8_t u8Err = 0U;
+    uint8_t rdata = 0U;
+    uint8_t u8Addr = 1U;
+    uint8_t u8Ctrl = 0U;
     enum UI2C_MASTER_EVENT eEvent = MASTER_SEND_START;
+
+    g_UI2C_i32ErrCode = 0;
 
     UI2C_START(ui2c);                                                       /* Send START */
 
-    while(u8Xfering)
+    while(u8Xfering && (u8Err == 0u))
     {
-        while(!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));                      /* Wait UI2C new status occur */
+        uint32_t u32TimeOutCount = UI2C_TIMEOUT;
+        while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))                     /* Wait UI2C new status occur */
+        {
+            if(--u32TimeOutCount == 0)
+            {
+                g_UI2C_i32ErrCode = UI2C_ERR_TIMEOUT;
+                break;
+            }
+        }
 
         switch(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
         {
@@ -1459,13 +1647,17 @@ uint8_t UI2C_ReadByteTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16Data
 
                 if(eEvent == MASTER_SEND_START)
                 {
-                    UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x00U);         /* Write SLA+W to Register UI2C_TXDAT */
+                    UI2C_SET_DATA(ui2c, ((uint32_t)u8SlaveAddr << 1U));    /* Write SLA+W to Register UI2C_TXDAT */
                     eEvent = MASTER_SEND_ADDRESS;
                 }
                 else if(eEvent == MASTER_SEND_REPEAT_START)
                 {
-                    UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x01U);         /* Write SLA+R to Register TXDAT */
+                    UI2C_SET_DATA(ui2c, ((uint32_t)u8SlaveAddr << 1U) | 0x01U);    /* Write SLA+R to Register TXDAT */
                     eEvent = MASTER_SEND_H_RD_ADDRESS;
+                }
+                else
+                {
+                    /* Unexpected start event - no action */
                 }
 
                 u8Ctrl = UI2C_CTL_PTRG;
@@ -1476,7 +1668,7 @@ uint8_t UI2C_ReadByteTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16Data
 
                 if(eEvent == MASTER_SEND_ADDRESS)
                 {
-                    UI2C_SET_DATA(ui2c, (uint8_t)(u16DataAddr & 0xFF00U) >> 8U);  /* Write Hi byte address of register */
+                    UI2C_SET_DATA(ui2c, (uint8_t)((u16DataAddr & 0xFF00U) >> 8U));  /* Write Hi byte address of register */
                     eEvent = MASTER_SEND_DATA;
                 }
                 else if(eEvent == MASTER_SEND_DATA)
@@ -1534,7 +1726,9 @@ uint8_t UI2C_ReadByteTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16Data
     }
 
     if(u8Err)
-        rdata = 0U;                                                 /* If occurs error, return 0 */
+    {
+        rdata = 0U;
+    }                                                 /* If occurs error, return 0 */
 
     return rdata;                                                  /* Return read data */
 }
@@ -1552,19 +1746,32 @@ uint8_t UI2C_ReadByteTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16Data
   *
   * @details    The function is used for USCI_I2C Master specify two bytes address that multi data bytes read from Slave.
   *
+  * @note       This function sets g_UI2C_i32ErrCode to UI2C_ERR_TIMEOUT if waiting USCI_I2C time-out.
   *
   */
 uint32_t UI2C_ReadMultiBytesTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t u16DataAddr, uint8_t *rdata, uint32_t u32rLen)
 {
-    uint8_t u8Xfering = 1U, u8Addr = 1U, u8Ctrl = 0U;
+    uint8_t u8Xfering = 1U;
+    uint8_t u8Addr = 1U;
+    uint8_t u8Ctrl = 0U;
     uint32_t u32rxLen = 0U;
     enum UI2C_MASTER_EVENT eEvent = MASTER_SEND_START;
+
+    g_UI2C_i32ErrCode = 0;
 
     UI2C_START(ui2c);                                                       /* Send START */
 
     while(u8Xfering)
     {
-        while(!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U));                      /* Wait UI2C new status occur */
+        uint32_t u32TimeOutCount = UI2C_TIMEOUT;
+        while (!(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U))                     /* Wait UI2C new status occur */
+        {
+            if(--u32TimeOutCount == 0)
+            {
+                g_UI2C_i32ErrCode = UI2C_ERR_TIMEOUT;
+                break;
+            }
+        }
 
         switch(UI2C_GET_PROT_STATUS(ui2c) & 0x3F00U)
         {
@@ -1573,13 +1780,17 @@ uint32_t UI2C_ReadMultiBytesTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t 
 
                 if(eEvent == MASTER_SEND_START)
                 {
-                    UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x00U);          /* Write SLA+W to Register UI2C_TXDAT */
+                    UI2C_SET_DATA(ui2c, ((uint32_t)u8SlaveAddr << 1U));    /* Write SLA+W to Register UI2C_TXDAT */
                     eEvent = MASTER_SEND_ADDRESS;
                 }
                 else if(eEvent == MASTER_SEND_REPEAT_START)
                 {
-                    UI2C_SET_DATA(ui2c, (uint16_t)(u8SlaveAddr << 1U) | 0x01U);         /* Write SLA+R to Register TXDAT */
+                    UI2C_SET_DATA(ui2c, ((uint32_t)u8SlaveAddr << 1U) | 0x01U);    /* Write SLA+R to Register TXDAT */
                     eEvent = MASTER_SEND_H_RD_ADDRESS;
+                }
+                else
+                {
+                    /* Unexpected start event - no action */
                 }
 
                 u8Ctrl = UI2C_CTL_PTRG;
@@ -1590,7 +1801,7 @@ uint32_t UI2C_ReadMultiBytesTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t 
 
                 if(eEvent == MASTER_SEND_ADDRESS)
                 {
-                    UI2C_SET_DATA(ui2c, (uint8_t)(u16DataAddr & 0xFF00U) >> 8U);  /* Write Hi byte address of register */
+                    UI2C_SET_DATA(ui2c, (uint8_t)((u16DataAddr & 0xFF00U) >> 8U));  /* Write Hi byte address of register */
                     eEvent = MASTER_SEND_DATA;
                 }
                 else if(eEvent == MASTER_SEND_DATA)
@@ -1613,12 +1824,17 @@ uint32_t UI2C_ReadMultiBytesTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t 
                 }
                 else
                 {
-                    rdata[u32rxLen++] = (uint8_t) UI2C_GET_DATA(ui2c);      /* Receive Data */
+                    rdata[u32rxLen] = (uint8_t)UI2C_GET_DATA(ui2c);      /* Receive Data */
+                    u32rxLen++;
 
-                    if(u32rxLen < u32rLen - 1U)
+                    if(u32rxLen < (u32rLen - 1U))
+                    {
                         u8Ctrl = (UI2C_CTL_PTRG | UI2C_CTL_AA);
+                    }
                     else
+                    {
                         u8Ctrl = UI2C_CTL_PTRG;
+                    }
                 }
 
                 break;
@@ -1627,7 +1843,10 @@ uint32_t UI2C_ReadMultiBytesTwoRegs(UI2C_T *ui2c, uint8_t u8SlaveAddr, uint16_t 
                 UI2C_CLR_PROT_INT_FLAG(ui2c, UI2C_PROTSTS_NACKIF_Msk);     /* Clear NACK INT Flag */
 
                 if(eEvent == MASTER_READ_DATA)
-                    rdata[u32rxLen++] = (uint8_t) UI2C_GET_DATA(ui2c);                  /* Receive Data */
+                {
+                    rdata[u32rxLen] = (uint8_t)UI2C_GET_DATA(ui2c);                /* Receive Data */
+                    u32rxLen++;
+                }
 
                 u8Ctrl = (UI2C_CTL_PTRG | UI2C_CTL_STO);                        /* Clear SI and send STOP */
 
