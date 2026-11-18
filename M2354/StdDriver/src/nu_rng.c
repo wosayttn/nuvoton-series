@@ -55,7 +55,7 @@ int32_t RNG_Open(void)
     int32_t timeout = 0x1000000;
 
     /* Basic Configuration */
-    CLK->AHBCLK  |= CLK_AHBCLK_CRPTCKEN_Msk;
+    CLK->AHBCLK  |= CLK_AHBCLK_CRYPTOCKEN_Msk;
     CLK->APBCLK1 |= CLK_APBCLK1_TRNGCKEN_Msk;
     CLK->APBCLK0 |= CLK_APBCLK0_RTCCKEN_Msk;
 
@@ -92,7 +92,7 @@ int32_t RNG_Open(void)
 
     // Waiting for PRNG busy
     i = 0;
-    while(CRPT->PRNG_CTL & (1UL << 8U))
+    while(CRYPTO->PRNG_CTL & (1UL << 8U))
     {
         if(i++ > timeout)
         {
@@ -102,11 +102,11 @@ int32_t RNG_Open(void)
     }
 
     /* Set seed select to TRNG */
-    CRPT->PRNG_CTL = CRPT_PRNG_CTL_SEEDSEL_Msk;
+    CRYPTO->PRNG_CTL = CRYPTO_PRNG_CTL_SEEDSEL_Msk;
 
     /* Waiting for seed src ok */
     i = 0;
-    while((CRPT->PRNG_CTL & CRPT_PRNG_CTL_SEEDSRC_Msk) == 0U)
+    while((CRYPTO->PRNG_CTL & CRYPTO_PRNG_CTL_SEEDSRC_Msk) == 0U)
     {
         if(i++ > timeout)
         {
@@ -116,10 +116,10 @@ int32_t RNG_Open(void)
     }
 
     /* Reload seed only at first time */
-    CRPT->PRNG_CTL |= ((uint32_t)PRNG_KEY_SIZE_256 << CRPT_PRNG_CTL_KEYSZ_Pos) | CRPT_PRNG_CTL_START_Msk | CRPT_PRNG_CTL_SEEDRLD_Msk;
+    CRYPTO->PRNG_CTL |= ((uint32_t)PRNG_KEY_SIZE_256 << CRYPTO_PRNG_CTL_KEYSZ_Pos) | CRYPTO_PRNG_CTL_START_Msk | CRYPTO_PRNG_CTL_SEEDRLD_Msk;
 
     i = 0;
-    while(CRPT->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk)
+    while(CRYPTO->PRNG_CTL & CRYPTO_PRNG_CTL_BUSY_Msk)
     {
         if(i++ > timeout)
         {
@@ -150,7 +150,7 @@ int32_t RNG_Random(uint32_t *pu32Buf, int32_t nWords)
      int32_t nWordsLocal = nWords;
 
     /* Waiting for Busy */
-    while(CRPT->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk)
+    while(CRYPTO->PRNG_CTL & CRYPTO_PRNG_CTL_BUSY_Msk)
     {
         if(timeout-- < 0)
         {
@@ -164,10 +164,10 @@ int32_t RNG_Random(uint32_t *pu32Buf, int32_t nWords)
     }
 
     /* Trig to generate seed 256 bits random number */
-    CRPT->PRNG_CTL = (6UL << CRPT_PRNG_CTL_KEYSZ_Pos) | CRPT_PRNG_CTL_START_Msk;
+    CRYPTO->PRNG_CTL = (6UL << CRYPTO_PRNG_CTL_KEYSZ_Pos) | CRYPTO_PRNG_CTL_START_Msk;
 
     timeout = 0x10000;
-    while(CRPT->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk)
+    while(CRYPTO->PRNG_CTL & CRYPTO_PRNG_CTL_BUSY_Msk)
     {
         if(timeout-- < 0)
         {
@@ -177,7 +177,7 @@ int32_t RNG_Random(uint32_t *pu32Buf, int32_t nWords)
 
     for(i = 0; i < nWordsLocal; i++)
     {
-        pu32Buf[i] = CRPT->PRNG_KEY[i];
+        pu32Buf[i] = CRYPTO->PRNG_KEY[i];
     }
 
     return nWordsLocal;
@@ -204,7 +204,7 @@ int32_t RNG_ECDSA_Init(uint32_t u32KeySize, const uint32_t au32ECC_N[18])
     int32_t timeout = 0x1000000;
 
     /* Basic Configuration */
-    CLK->AHBCLK  |= CLK_AHBCLK_CRPTCKEN_Msk;
+    CLK->AHBCLK  |= CLK_AHBCLK_CRYPTOCKEN_Msk;
     CLK->APBCLK1 |= CLK_APBCLK1_TRNGCKEN_Msk;
     CLK->APBCLK0 |= CLK_APBCLK0_RTCCKEN_Msk;
 
@@ -224,7 +224,7 @@ int32_t RNG_ECDSA_Init(uint32_t u32KeySize, const uint32_t au32ECC_N[18])
     TRNG->CTL = (0UL << TRNG_CTL_CLKPSC_Pos);
 
     /* Reset seed select of PRNG */
-    CRPT->PRNG_CTL = 0U;
+    CRYPTO->PRNG_CTL = 0U;
 
 
     /* Enable SEEDGEN */
@@ -242,7 +242,7 @@ int32_t RNG_ECDSA_Init(uint32_t u32KeySize, const uint32_t au32ECC_N[18])
 
     // Waiting for PRNG busy
     i = 0;
-    while(CRPT->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk)
+    while(CRYPTO->PRNG_CTL & CRYPTO_PRNG_CTL_BUSY_Msk)
     {
         if(i++ > timeout)
         {
@@ -252,11 +252,11 @@ int32_t RNG_ECDSA_Init(uint32_t u32KeySize, const uint32_t au32ECC_N[18])
 
 
     // Set seed select to TRNG
-    CRPT->PRNG_CTL = 1UL << CRPT_PRNG_CTL_SEEDSEL_Pos;
+    CRYPTO->PRNG_CTL = 1UL << CRYPTO_PRNG_CTL_SEEDSEL_Pos;
 
     // Waiting for seed src ok
     i = 0;
-    while((CRPT->PRNG_CTL & CRPT_PRNG_CTL_SEEDSRC_Msk) == 0U)
+    while((CRYPTO->PRNG_CTL & CRYPTO_PRNG_CTL_SEEDSRC_Msk) == 0U)
     {
         if(i++ > timeout)
         {
@@ -267,18 +267,18 @@ int32_t RNG_ECDSA_Init(uint32_t u32KeySize, const uint32_t au32ECC_N[18])
     /* It is necessary to set ECC_N for ECDSA */
     for(i = 0; i < 18; i++)
     {
-        CRPT->ECC_N[i] = au32ECC_N[i];
+        CRYPTO->ECC_N[i] = au32ECC_N[i];
     }
 
-    CRPT->PRNG_KSCTL = 0U;
+    CRYPTO->PRNG_KSCTL = 0U;
 
     /* Reload seed only at first time */
-    CRPT->PRNG_CTL |= (u32KeySize << CRPT_PRNG_CTL_KEYSZ_Pos) |
-                      CRPT_PRNG_CTL_START_Msk | CRPT_PRNG_CTL_SEEDRLD_Msk;
+    CRYPTO->PRNG_CTL |= (u32KeySize << CRYPTO_PRNG_CTL_KEYSZ_Pos) |
+                      CRYPTO_PRNG_CTL_START_Msk | CRYPTO_PRNG_CTL_SEEDRLD_Msk;
 
 
     i = 0;
-    while(CRPT->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk)
+    while(CRYPTO->PRNG_CTL & CRYPTO_PRNG_CTL_BUSY_Msk)
     {
         if(i++ > timeout)
         {
@@ -287,10 +287,10 @@ int32_t RNG_ECDSA_Init(uint32_t u32KeySize, const uint32_t au32ECC_N[18])
     }
 
 
-    CRPT->PRNG_KSCTL = ((uint32_t)KS_OWNER_ECC << CRPT_PRNG_KSCTL_OWNER_Pos) |
-                       CRPT_PRNG_KSCTL_ECDSA_Msk |
-                       (CRPT_PRNG_KSCTL_WDST_Msk) |
-                       ((uint32_t)KS_SRAM << CRPT_PRNG_KSCTL_WSDST_Pos);
+    CRYPTO->PRNG_KSCTL = ((uint32_t)KS_OWNER_ECC << CRYPTO_PRNG_KSCTL_OWNER_Pos) |
+                       CRYPTO_PRNG_KSCTL_ECDSA_Msk |
+                       (CRYPTO_PRNG_KSCTL_WDST_Msk) |
+                       ((uint32_t)KS_SRAM << CRYPTO_PRNG_KSCTL_WSDST_Pos);
 
     return 0;
 }
@@ -311,13 +311,13 @@ int32_t RNG_ECDSA(uint32_t u32KeySize)
     int32_t i;
 
     /* Reload seed only at first time */
-    CRPT->PRNG_CTL = (u32KeySize << CRPT_PRNG_CTL_KEYSZ_Pos) |
+    CRYPTO->PRNG_CTL = (u32KeySize << CRYPTO_PRNG_CTL_KEYSZ_Pos) |
                      0xc0U |
-                     CRPT_PRNG_CTL_START_Msk;
+                     CRYPTO_PRNG_CTL_START_Msk;
 
     timeout = 0x10000;
     i = 0;
-    while(CRPT->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk)
+    while(CRYPTO->PRNG_CTL & CRYPTO_PRNG_CTL_BUSY_Msk)
     {
         if(i++ > timeout)
         {
@@ -326,13 +326,13 @@ int32_t RNG_ECDSA(uint32_t u32KeySize)
         }
     }
 
-    if(CRPT->PRNG_KSSTS & CRPT_PRNG_KSSTS_KCTLERR_Msk)
+    if(CRYPTO->PRNG_KSSTS & CRYPTO_PRNG_KSSTS_KCTLERR_Msk)
     {
         //printf("KCTLERR!\n");
         return -1;
     }
 
-    return (CRPT->PRNG_KSSTS & CRPT_PRNG_KSCTL_NUM_Msk);
+    return (CRYPTO->PRNG_KSSTS & CRYPTO_PRNG_KSCTL_NUM_Msk);
 }
 
 
@@ -356,7 +356,7 @@ int32_t RNG_ECDH_Init(uint32_t u32KeySize, const uint32_t au32ECC_N[18])
     int32_t timeout = 0x1000000;
 
     /* Basic Configuration */
-    CLK->AHBCLK  |= CLK_AHBCLK_CRPTCKEN_Msk;
+    CLK->AHBCLK  |= CLK_AHBCLK_CRYPTOCKEN_Msk;
     CLK->APBCLK1 |= CLK_APBCLK1_TRNGCKEN_Msk;
     CLK->APBCLK0 |= CLK_APBCLK0_RTCCKEN_Msk;
 
@@ -393,7 +393,7 @@ int32_t RNG_ECDH_Init(uint32_t u32KeySize, const uint32_t au32ECC_N[18])
 
     /* Waiting for PRNG busy */
     i = 0;
-    while(CRPT->PRNG_CTL & TRNG_CTL_SEEDGEN_Msk)
+    while(CRYPTO->PRNG_CTL & TRNG_CTL_SEEDGEN_Msk)
     {
         if(i++ > timeout)
         {
@@ -405,11 +405,11 @@ int32_t RNG_ECDH_Init(uint32_t u32KeySize, const uint32_t au32ECC_N[18])
 
 
     /* Set seed select to TRNG */
-    CRPT->PRNG_CTL = (1UL << 6U);
+    CRYPTO->PRNG_CTL = (1UL << 6U);
 
     // Waiting for seed src ok
     i = 0;
-    while((CRPT->PRNG_CTL & (1UL << 7U)) == 0U)
+    while((CRYPTO->PRNG_CTL & (1UL << 7U)) == 0U)
     {
         if(i++ > timeout)
         {
@@ -421,18 +421,18 @@ int32_t RNG_ECDH_Init(uint32_t u32KeySize, const uint32_t au32ECC_N[18])
     /* It is necessary to set ECC_N for ECDSA */
     for(i = 0; i < 18; i++)
     {
-        CRPT->ECC_N[i] = au32ECC_N[i];
+        CRYPTO->ECC_N[i] = au32ECC_N[i];
     }
 
-    CRPT->PRNG_KSCTL = 0U;
+    CRYPTO->PRNG_KSCTL = 0U;
 
     /* Reload seed only at first time */
-    CRPT->PRNG_CTL |= (u32KeySize << CRPT_PRNG_CTL_KEYSZ_Pos) |
-                      CRPT_PRNG_CTL_START_Msk | CRPT_PRNG_CTL_SEEDRLD_Msk;
+    CRYPTO->PRNG_CTL |= (u32KeySize << CRYPTO_PRNG_CTL_KEYSZ_Pos) |
+                      CRYPTO_PRNG_CTL_START_Msk | CRYPTO_PRNG_CTL_SEEDRLD_Msk;
 
 
     i = 0;
-    while(CRPT->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk)
+    while(CRYPTO->PRNG_CTL & CRYPTO_PRNG_CTL_BUSY_Msk)
     {
         if(i++ > timeout)
         {
@@ -441,10 +441,10 @@ int32_t RNG_ECDH_Init(uint32_t u32KeySize, const uint32_t au32ECC_N[18])
         }
     }
 
-    CRPT->PRNG_KSCTL = ((uint32_t)KS_OWNER_ECC << CRPT_PRNG_KSCTL_OWNER_Pos) |
-                       (CRPT_PRNG_KSCTL_ECDH_Msk) |
-                       (CRPT_PRNG_KSCTL_WDST_Msk) |
-                       ((uint32_t)KS_SRAM << CRPT_PRNG_KSCTL_WSDST_Pos);
+    CRYPTO->PRNG_KSCTL = ((uint32_t)KS_OWNER_ECC << CRYPTO_PRNG_KSCTL_OWNER_Pos) |
+                       (CRYPTO_PRNG_KSCTL_ECDH_Msk) |
+                       (CRYPTO_PRNG_KSCTL_WDST_Msk) |
+                       ((uint32_t)KS_SRAM << CRYPTO_PRNG_KSCTL_WSDST_Pos);
 
     return 0;
 }
@@ -465,13 +465,13 @@ int32_t RNG_ECDH(uint32_t u32KeySize)
     int32_t i;
 
     /* Reload seed only at first time */
-    CRPT->PRNG_CTL = (u32KeySize << CRPT_PRNG_CTL_KEYSZ_Pos) |
+    CRYPTO->PRNG_CTL = (u32KeySize << CRYPTO_PRNG_CTL_KEYSZ_Pos) |
                      0xc0U |
-                     CRPT_PRNG_CTL_START_Msk;
+                     CRYPTO_PRNG_CTL_START_Msk;
 
     timeout = 0x10000;
     i = 0;
-    while(CRPT->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk)
+    while(CRYPTO->PRNG_CTL & CRYPTO_PRNG_CTL_BUSY_Msk)
     {
         if(i++ > timeout)
         {
@@ -479,12 +479,12 @@ int32_t RNG_ECDH(uint32_t u32KeySize)
         }
     }
 
-    if(CRPT->PRNG_KSSTS & CRPT_PRNG_KSSTS_KCTLERR_Msk)
+    if(CRYPTO->PRNG_KSSTS & CRYPTO_PRNG_KSSTS_KCTLERR_Msk)
     {
         return -1;
     }
 
-    return (CRPT->PRNG_KSSTS & CRPT_PRNG_KSCTL_NUM_Msk);
+    return (CRYPTO->PRNG_KSSTS & CRYPTO_PRNG_KSCTL_NUM_Msk);
 }
 
 /**@}*/ /* end of group RNG_EXPORTED_FUNCTIONS */

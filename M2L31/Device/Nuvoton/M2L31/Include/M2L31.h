@@ -113,9 +113,9 @@ typedef enum IRQn
     EPWM0_P1_IRQn       = 26,   /*!< EPWM0 pair 1 interrupt                     */
     EPWM0_P2_IRQn       = 27,   /*!< EPWM0 pair 2 interrupt                     */
     EBRAKE1_IRQn        = 28,   /*!< EPWM1 brake interrupt                      */
-    EPWM1_P0_IRQn       = 29,   /*!< EPWM1 pair 0 interrupt                     */
-    EPWM1_P1_IRQn       = 30,   /*!< EPWM1 pair 1 interrupt                     */
-    EPWM1_P2_IRQn       = 31,   /*!< EPWM1 pair 2 interrupt                     */
+    EPWM1P0_IRQn       = 29,   /*!< EPWM1 pair 0 interrupt                     */
+    EPWM1P1_IRQn       = 30,   /*!< EPWM1 pair 1 interrupt                     */
+    EPWM1P2_IRQn       = 31,   /*!< EPWM1 pair 2 interrupt                     */
     TMR0_IRQn           = 32,   /*!< Timer 0 interrupt                          */
     TMR1_IRQn           = 33,   /*!< Timer 1 interrupt                          */
     TMR2_IRQn           = 34,   /*!< Timer 2 interrupt                          */
@@ -155,7 +155,7 @@ typedef enum IRQn
     RESERVED9           = 68,   /*!< Reserved                                   */
     RESERVED10          = 69,   /*!< Reserved                                   */
     OPA_IRQn            = 70,   /*!< Analog OPA interrupt                       */
-    CRPT_IRQn           = 71,   /*!< Crypto interrupt                           */
+    CRYPTO_IRQn           = 71,   /*!< Crypto interrupt                           */
     GPG_IRQn            = 72,   /*!< External interrupt from PG[15:0] pin       */
     EINT6_IRQn          = 73,   /*!< External interrupt from INT6 pin           */
     UART4_IRQn          = 74,   /*!< UART4 interrupt                            */
@@ -478,7 +478,7 @@ extern void SystemInit(void);
 #define CANFD0              ((CANFD_T *)            CANFD0_BASE)
 #define CANFD1              ((CANFD_T *)            CANFD1_BASE)
 #define CRC                 ((CRC_T *)              CRC_BASE)
-#define CRPT                ((CRPT_T *)             CRYP_BASE)
+#define CRYPTO                ((CRYPTO_T *)             CRYP_BASE)
 #define LPSCC               ((LPSCC_T *)            LPSCC_BASE)
 #define LPPDMA0             ((LPPDMA_T *)           LPPDMA0_BASE)
 #define LPGPIO              ((LPGPIO_T *)           LPGPIO_BASE)

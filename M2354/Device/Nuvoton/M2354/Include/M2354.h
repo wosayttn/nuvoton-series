@@ -265,7 +265,7 @@ extern "C" {
 #define SDH1_BASE            (AHBPERIPH_BASE + 0x0E000UL)
 #define EBI_BASE             (AHBPERIPH_BASE + 0x10000UL)
 #define CRC_BASE             (AHBPERIPH_BASE + 0x31000UL)
-#define CRPT_BASE            (AHBPERIPH_BASE + 0x32000UL)
+#define CRYPTO_BASE            (AHBPERIPH_BASE + 0x32000UL)
 #define SCU_BASE             (AHBPERIPH_BASE + 0x2F000UL)
 #define FVC_BASE             (AHBPERIPH_BASE + 0x2F500UL)
 #define DPM_BASE             (AHBPERIPH_BASE + 0x2F600UL)
@@ -406,7 +406,7 @@ extern "C" {
 
 #define SDH0_S                ((SDH_T *)   SDH0_BASE)
 
-#define CRPT_S                ((CRPT_T *) CRPT_BASE)                      /*!< Crypto Accelerator Pointer          */
+#define CRYPTO_S                ((CRYPTO_T *) CRYPTO_BASE)                      /*!< Crypto Accelerator Pointer          */
 #define TRNG_S                ((TRNG_T *)TRNG_BASE)                       /*!< True Random Number Pointer          */
 
 #define BPWM0_S               ((BPWM_T *) BPWM0_BASE)                     /*!< BPWM0 Pointer                       */
@@ -501,7 +501,7 @@ extern "C" {
 #define DAC1_NS                ((DAC_T *)   (DAC1_BASE+NS_OFFSET))                       /*!< DAC1 Pointer                        */
 #define EADC_NS                ((EADC_T *)  (EADC_BASE+NS_OFFSET))                      /*!< EADC Pointer                        */
 #define SDH0_NS                ((SDH_T *)  (SDH0_BASE +NS_OFFSET))
-#define CRPT_NS                ((CRPT_T *) (CRPT_BASE +NS_OFFSET))
+#define CRYPTO_NS                ((CRYPTO_T *) (CRYPTO_BASE +NS_OFFSET))
 #define TRNG_NS                ((TRNG_T *) (TRNG_BASE +NS_OFFSET))                     /*!< Random Number Generator Pointer    */
 #define BPWM0_NS               ((BPWM_T *) (BPWM0_BASE+NS_OFFSET))                     /*!< BPWM0 Pointer                       */
 #define BPWM1_NS               ((BPWM_T *) (BPWM1_BASE+NS_OFFSET))                     /*!< BPWM1 Pointer                       */
@@ -596,9 +596,9 @@ extern "C" {
 #endif
 
 #if defined (SCU_INIT_PNSSET1_VAL) && (SCU_INIT_PNSSET1_VAL & BIT18)
-# define CRPT CRPT_NS
+# define CRYPTO CRYPTO_NS
 #else
-# define CRPT CRPT_S
+# define CRYPTO CRYPTO_S
 #endif
 
 #if defined (SCU_INIT_PNSSET2_VAL) && (SCU_INIT_PNSSET2_VAL & BIT2 )

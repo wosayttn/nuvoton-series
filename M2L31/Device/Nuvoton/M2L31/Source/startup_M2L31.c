@@ -100,7 +100,7 @@ void CRC0_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));     
 void SPI3_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));     // 62: SPI3
 void TK_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));       // 63: Touch Key
 void OPA012_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));   // 70: OPA012
-void CRPT_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));     // 71: CRPT
+void CRYPTO_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));     // 71: CRYPTO
 void GPG_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));      // 72: GPIO Port G
 void EINT6_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));    // 73: External Input 6
 void UART4_IRQHandler(void) __attribute__((weak, alias("Default_Handler")));    // 74: UART4
@@ -248,7 +248,7 @@ const VECTOR_TABLE_Type __VECTOR_TABLE[] __VECTOR_TABLE_ATTRIBUTE =
     0,                                        /*    68: Reserved                                         */
     0,                                        /*    69: Reserved                                         */
     OPA012_IRQHandler,                        /*    70: OPA012                                           */
-    CRPT_IRQHandler,                          /*    71: CRPT                                             */
+    CRYPTO_IRQHandler,                          /*    71: CRYPTO                                             */
     GPG_IRQHandler,                           /*    72: GPIO Port G                                      */
     EINT6_IRQHandler,                         /*    73: External Input 6                                 */
     UART4_IRQHandler,                         /*    74: UART4                                            */

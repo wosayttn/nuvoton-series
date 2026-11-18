@@ -40,7 +40,7 @@ extern "C"
 #define PRNG_SEED_RELOAD        (1UL)     /*!< PRNG reload new seed                    \hideinitializer */
 
 #define PRNG_CTL_SEEDSRC_TRNG      (0UL)                       /*!< PRNG seed from TRNG                    \hideinitializer */
-#define PRNG_CTL_SEEDSRC_SEEDREG   (CRPT_PRNG_CTL_SEEDSRC_Msk) /*!< PRNG seed from PRNG seed register      \hideinitializer */
+#define PRNG_CTL_SEEDSRC_SEEDREG   (CRYPTO_PRNG_CTL_SEEDSRC_Msk) /*!< PRNG seed from PRNG seed register      \hideinitializer */
 
 #define AES_KEY_SIZE_128        (0UL)     /*!< AES select 128-bit key length           \hideinitializer */
 #define AES_KEY_SIZE_192        (1UL)     /*!< AES select 192-bit key length           \hideinitializer */
@@ -82,7 +82,7 @@ extern "C"
   * @return None
   * \hideinitializer
   */
-#define PRNG_ENABLE_INT(crpt)       ((crpt)->INTEN |= CRPT_INTEN_PRNGIEN_Msk)
+#define PRNG_ENABLE_INT(crpt)       ((crpt)->INTEN |= CRYPTO_INTEN_PRNGIEN_Msk)
 
 /**
   * @brief This macro disables PRNG interrupt.
@@ -90,7 +90,7 @@ extern "C"
   * @return None
   * \hideinitializer
   */
-#define PRNG_DISABLE_INT(crpt)      ((crpt)->INTEN &= ~CRPT_INTEN_PRNGIEN_Msk)
+#define PRNG_DISABLE_INT(crpt)      ((crpt)->INTEN &= ~CRYPTO_INTEN_PRNGIEN_Msk)
 
 /**
   * @brief This macro gets PRNG interrupt flag.
@@ -98,7 +98,7 @@ extern "C"
   * @return PRNG interrupt flag.
   * \hideinitializer
   */
-#define PRNG_GET_INT_FLAG(crpt)     ((crpt)->INTSTS & CRPT_INTSTS_PRNGIF_Msk)
+#define PRNG_GET_INT_FLAG(crpt)     ((crpt)->INTSTS & CRYPTO_INTSTS_PRNGIF_Msk)
 
 /**
   * @brief This macro clears PRNG interrupt flag.
@@ -106,7 +106,7 @@ extern "C"
   * @return None
   * \hideinitializer
   */
-#define PRNG_CLR_INT_FLAG(crpt)     ((crpt)->INTSTS = CRPT_INTSTS_PRNGIF_Msk)
+#define PRNG_CLR_INT_FLAG(crpt)     ((crpt)->INTSTS = CRYPTO_INTSTS_PRNGIF_Msk)
 
 /**
   * @brief This macro enables AES interrupt.
@@ -114,7 +114,7 @@ extern "C"
   * @return None
   * \hideinitializer
   */
-#define AES_ENABLE_INT(crpt)        ((crpt)->INTEN |= (CRPT_INTEN_AESIEN_Msk|CRPT_INTEN_AESEIEN_Msk))
+#define AES_ENABLE_INT(crpt)        ((crpt)->INTEN |= (CRYPTO_INTEN_AESIEN_Msk|CRYPTO_INTEN_AESEIEN_Msk))
 
 /**
   * @brief This macro disables AES interrupt.
@@ -122,7 +122,7 @@ extern "C"
   * @return None
   * \hideinitializer
   */
-#define AES_DISABLE_INT(crpt)       ((crpt)->INTEN &= ~(CRPT_INTEN_AESIEN_Msk|CRPT_INTEN_AESEIEN_Msk))
+#define AES_DISABLE_INT(crpt)       ((crpt)->INTEN &= ~(CRYPTO_INTEN_AESIEN_Msk|CRYPTO_INTEN_AESEIEN_Msk))
 
 /**
   * @brief This macro gets AES interrupt flag.
@@ -130,7 +130,7 @@ extern "C"
   * @return AES interrupt flag.
   * \hideinitializer
   */
-#define AES_GET_INT_FLAG(crpt)      ((crpt)->INTSTS & (CRPT_INTSTS_AESIF_Msk|CRPT_INTSTS_AESEIF_Msk))
+#define AES_GET_INT_FLAG(crpt)      ((crpt)->INTSTS & (CRYPTO_INTSTS_AESIF_Msk|CRYPTO_INTSTS_AESEIF_Msk))
 
 /**
   * @brief This macro clears AES interrupt flag.
@@ -138,7 +138,7 @@ extern "C"
   * @return None
   * \hideinitializer
   */
-#define AES_CLR_INT_FLAG(crpt)      ((crpt)->INTSTS = (CRPT_INTSTS_AESIF_Msk|CRPT_INTSTS_AESEIF_Msk))
+#define AES_CLR_INT_FLAG(crpt)      ((crpt)->INTSTS = (CRYPTO_INTSTS_AESIF_Msk|CRYPTO_INTSTS_AESEIF_Msk))
 
 /**
   * @brief This macro enables AES key protection.
@@ -146,7 +146,7 @@ extern "C"
   * @return None
   * \hideinitializer
   */
-#define AES_ENABLE_KEY_PROTECT(crpt)  ((crpt)->AES_CTL |= CRPT_AES_CTL_KEYPRT_Msk)
+#define AES_ENABLE_KEY_PROTECT(crpt)  ((crpt)->AES_CTL |= CRYPTO_AES_CTL_KEYPRT_Msk)
 
 /**
   * @brief This macro disables AES key protection.
@@ -154,8 +154,8 @@ extern "C"
   * @return None
   * \hideinitializer
   */
-#define AES_DISABLE_KEY_PROTECT(crpt) ((crpt)->AES_CTL = ((crpt)->AES_CTL & ~CRPT_AES_CTL_KEYPRT_Msk) | (0x16UL<<CRPT_AES_CTL_KEYUNPRT_Pos)); \
-                                      ((crpt)->AES_CTL &= ~CRPT_AES_CTL_KEYPRT_Msk)
+#define AES_DISABLE_KEY_PROTECT(crpt) ((crpt)->AES_CTL = ((crpt)->AES_CTL & ~CRYPTO_AES_CTL_KEYPRT_Msk) | (0x16UL<<CRYPTO_AES_CTL_KEYUNPRT_Pos)); \
+                                      ((crpt)->AES_CTL &= ~CRYPTO_AES_CTL_KEYPRT_Msk)
 
 /**@}*/ /* end of group CRYPTO_EXPORTED_MACROS */
 
@@ -169,14 +169,14 @@ extern "C"
 /*  Functions                                                                                      */
 /*---------------------------------------------------------------------------------------------------------*/
 
-void PRNG_Open(CRPT_T *crpt, uint32_t u32KeySize, uint32_t u32SeedReload, uint32_t u32Seed);
-int32_t PRNG_Start(CRPT_T *crpt);
-void PRNG_Read(CRPT_T *crpt, uint32_t u32RandKey[]);
-void AES_Open(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32EncDec, uint32_t u32OpMode, uint32_t u32KeySize, uint32_t u32SwapType);
-void AES_Start(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32DMAMode);
-void AES_SetKey(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32Keys[], uint32_t u32KeySize);
-void AES_SetInitVect(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32IV[]);
-void AES_SetDMATransfer(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr, uint32_t u32DstAddr, uint32_t u32TransCnt);
+void PRNG_Open(CRYPTO_T *crpt, uint32_t u32KeySize, uint32_t u32SeedReload, uint32_t u32Seed);
+int32_t PRNG_Start(CRYPTO_T *crpt);
+void PRNG_Read(CRYPTO_T *crpt, uint32_t u32RandKey[]);
+void AES_Open(CRYPTO_T *crpt, uint32_t u32Channel, uint32_t u32EncDec, uint32_t u32OpMode, uint32_t u32KeySize, uint32_t u32SwapType);
+void AES_Start(CRYPTO_T *crpt, uint32_t u32Channel, uint32_t u32DMAMode);
+void AES_SetKey(CRYPTO_T *crpt, uint32_t u32Channel, uint32_t au32Keys[], uint32_t u32KeySize);
+void AES_SetInitVect(CRYPTO_T *crpt, uint32_t u32Channel, uint32_t au32IV[]);
+void AES_SetDMATransfer(CRYPTO_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr, uint32_t u32DstAddr, uint32_t u32TransCnt);
 
 /**@}*/ /* end of group CRYPTO_EXPORTED_FUNCTIONS */
 

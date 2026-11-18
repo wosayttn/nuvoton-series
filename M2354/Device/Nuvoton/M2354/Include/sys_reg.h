@@ -131,7 +131,7 @@ typedef struct
      * |        |          |0 = CRC calculation controller normal operation.
      * |        |          |1 = CRC calculation controller reset.
      * |        |          |Note: This bit is write protected. Refer to the SYS_REGLCTL register.
-     * |[12]    |CRPTRST   |CRYPTO Controller Reset (Write Protect)
+     * |[12]    |CRYPTORST   |CRYPTO Controller Reset (Write Protect)
      * |        |          |Setting this bit to 1 will generate a reset signal to the CRYPTO controller.
      * |        |          |User needs to set this bit to 0 to release from the reset state.
      * |        |          |0 = CRYPTO controller normal operation.
@@ -862,7 +862,7 @@ typedef struct
      * |        |          |11 = Reserved (Write Ignore).
      * |        |          |Note 1: These bits are write protected. Refer to the SYS_REGLCTL register.
      * |        |          |Note 2: Write ignore when PCBUSY is 1.
-     * |        |          |Note 3: If CRPTPWREN of SYS_PSWCTL is set to 1, RSA SRAM is auto set to normal mode by hardware.
+     * |        |          |Note 3: If CRYPTOPWREN of SYS_PSWCTL is set to 1, RSA SRAM is auto set to normal mode by hardware.
      * |[29:28] |KS        |Key Store SRAM Power Mode Select (Write Protect)
      * |        |          |This field can control Key Store sram power mode.
      * |        |          |00 = Normal mode.
@@ -1084,7 +1084,7 @@ typedef struct
      * ---------------------------------------------------------------------------------------------------
      * |Bits    |Field     |Descriptions
      * | :----: | :----:   | :---- |
-     * |[12]    |CRPTPWREN |Cryptographic Accelerator Power Switch Enable Bit (Write Protect)
+     * |[12]    |CRYPTOPWREN |Cryptographic Accelerator Power Switch Enable Bit (Write Protect)
      * |        |          |0 = Cryptographic accelerator power supply Disabled.
      * |        |          |1 = Cryptographic accelerator power supply Enabled.
      * |        |          |Note 1: If this bit is set 1, RSA of SYS_SRAMPC1 is set to normal mode by hardware.
@@ -1300,8 +1300,8 @@ typedef struct
 #define SYS_IPRST0_CRCRST_Pos            (7)                                               /*!< SYS_T::IPRST0: CRCRST Position         */
 #define SYS_IPRST0_CRCRST_Msk            (0x1ul << SYS_IPRST0_CRCRST_Pos)                  /*!< SYS_T::IPRST0: CRCRST Mask             */
 
-#define SYS_IPRST0_CRPTRST_Pos           (12)                                              /*!< SYS_T::IPRST0: CRPTRST Position        */
-#define SYS_IPRST0_CRPTRST_Msk           (0x1ul << SYS_IPRST0_CRPTRST_Pos)                 /*!< SYS_T::IPRST0: CRPTRST Mask            */
+#define SYS_IPRST0_CRYPTORST_Pos           (12)                                              /*!< SYS_T::IPRST0: CRYPTORST Position        */
+#define SYS_IPRST0_CRYPTORST_Msk           (0x1ul << SYS_IPRST0_CRYPTORST_Pos)                 /*!< SYS_T::IPRST0: CRYPTORST Mask            */
 
 #define SYS_IPRST0_KSRST_Pos             (13)                                              /*!< SYS_T::IPRST0: KSRST Position          */
 #define SYS_IPRST0_KSRST_Msk             (0x1ul << SYS_IPRST0_KSRST_Pos)                   /*!< SYS_T::IPRST0: KSRST Mask              */
@@ -2323,8 +2323,8 @@ typedef struct
 #define SYS_PORCTL1_POROFF_Pos           (0)                                               /*!< SYS_T::PORCTL1: POROFF Position        */
 #define SYS_PORCTL1_POROFF_Msk           (0xfffful << SYS_PORCTL1_POROFF_Pos)              /*!< SYS_T::PORCTL1: POROFF Mask            */
 
-#define SYS_PSWCTL_CRPTPWREN_Pos         (12)                                              /*!< SYS_T::PSWCTL: CRPTPWREN Position      */
-#define SYS_PSWCTL_CRPTPWREN_Msk         (0x1ul << SYS_PSWCTL_CRPTPWREN_Pos)               /*!< SYS_T::PSWCTL: CRPTPWREN Mask          */
+#define SYS_PSWCTL_CRYPTOPWREN_Pos         (12)                                              /*!< SYS_T::PSWCTL: CRYPTOPWREN Position      */
+#define SYS_PSWCTL_CRYPTOPWREN_Msk         (0x1ul << SYS_PSWCTL_CRYPTOPWREN_Pos)               /*!< SYS_T::PSWCTL: CRYPTOPWREN Mask          */
 
 #define SYS_PLCTL_PLSEL_Pos              (0)                                               /*!< SYS_T::PLCTL: PLSEL Position           */
 #define SYS_PLCTL_PLSEL_Msk              (0x3ul << SYS_PLCTL_PLSEL_Pos)                    /*!< SYS_T::PLCTL: PLSEL Mask               */

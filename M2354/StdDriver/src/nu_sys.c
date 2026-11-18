@@ -117,7 +117,7 @@ void SYS_ResetCPU(void)
   *             - \ref USBH_RST
   *             - \ref SDH0_RST
   *             - \ref CRC_RST
-  *             - \ref CRPT_RST
+  *             - \ref CRYPTO_RST
   *             - \ref KS_RST
   *             - \ref GPIO_RST
   *             - \ref TMR0_RST

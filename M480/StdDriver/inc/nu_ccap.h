@@ -89,6 +89,9 @@ extern "C"
 #define CCAP_INVALID_PIPE              ((int32_t)(0xFFFFFFFF-3))
 
 #define CCAP_TIMEOUT_ERR    (-1)    /*!< CCAP operation abort due to timeout error \hideinitializer */
+#define CCAP_OK             ( 0L)   /*!< CCAP operation OK */
+#define CCAP_ERR_FAIL       (-1L)   /*!< CCAP operation failed */
+#define CCAP_ERR_TIMEOUT    (-2L)   /*!< CCAP operation abort due to timeout error */
 
 /*@}*/ /* end of group NUC472_442_CCAP_EXPORTED_CONSTANTS */
 
@@ -146,7 +149,7 @@ void CCAP_Close(CCAP_T *ccap);
 void CCAP_EnableInt(CCAP_T *ccap, uint32_t u32IntMask);
 void CCAP_DisableInt(CCAP_T *ccap, uint32_t u32IntMask);
 void CCAP_Start(CCAP_T *ccap);
-void CCAP_Stop(CCAP_T *ccap, uint32_t u32FrameComplete);
+int32_t CCAP_Stop(CCAP_T *ccap, uint32_t u32FrameComplete);
 void CCAP_SetPacketScaling(CCAP_T *ccap, uint32_t u32VNumerator, uint32_t u32VDenominator, uint32_t u32HNumerator, uint32_t u32HDenominator);
 void CCAP_SetPacketStride(CCAP_T *ccap, uint32_t u32Stride);
 void CCAP_EnableMono(CCAP_T *ccap, uint32_t u32Interface);

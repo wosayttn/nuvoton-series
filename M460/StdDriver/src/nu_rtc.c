@@ -1104,7 +1104,7 @@ void RTC_SetGPIOMode(uint32_t u32PFPin, uint32_t u32Mode, uint32_t u32DigitalCtl
     {
         u32Offset = u32PFPin - 4;
 
-        RTC_SET_IOCTL_BY_RTC();
+        RTC_SET_IOCTL_BY_RTC(RTC);
 
         RTC->GPIOCTL0 = (RTC->GPIOCTL0 & ~(0x3FUL << (u32Offset * 8))) |
                         (u32Mode << (u32Offset * 8)) |
@@ -1117,7 +1117,7 @@ void RTC_SetGPIOMode(uint32_t u32PFPin, uint32_t u32Mode, uint32_t u32DigitalCtl
     {
         u32Offset = u32PFPin - 8;
 
-        RTC_SET_IOCTL_BY_RTC();
+        RTC_SET_IOCTL_BY_RTC(RTC);
 
         RTC->GPIOCTL1 = (RTC->GPIOCTL1 & ~(0x3FUL << (u32Offset * 8))) |
                         (u32Mode << (u32Offset * 8)) |

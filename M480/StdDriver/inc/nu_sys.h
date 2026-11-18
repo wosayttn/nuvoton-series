@@ -40,7 +40,7 @@ extern "C"
 #define CRC_RST             ((0UL<<24) | SYS_IPRST0_CRCRST_Pos)         /*!< Reset CRC \hideinitializer */
 #define CCAP_RST            ((0UL<<24) | SYS_IPRST0_CCAPRST_Pos)        /*!< Reset ICAP \hideinitializer */
 #define HSUSBD_RST          ((0UL<<24) | SYS_IPRST0_HSUSBDRST_Pos)      /*!< Reset HSUSBD \hideinitializer */
-#define CRPT_RST            ((0UL<<24) | SYS_IPRST0_CRPTRST_Pos)        /*!< Reset CRPT \hideinitializer */
+#define CRYPTO_RST            ((0UL<<24) | SYS_IPRST0_CRPTRST_Pos)        /*!< Reset CRPT \hideinitializer */
 #define SPIM_RST            ((0UL<<24) | SYS_IPRST0_SPIMRST_Pos)        /*!< Reset SPIM \hideinitializer */
 #define USBH_RST            ((0UL<<24) | SYS_IPRST0_USBHRST_Pos)        /*!< Reset USBH \hideinitializer */
 #define SDH1_RST            ((0UL<<24) | SYS_IPRST0_SDH1RST_Pos)        /*!< Reset SDH1 \hideinitializer */

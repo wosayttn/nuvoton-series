@@ -675,9 +675,9 @@ typedef struct
      * |        |          |Write 1 to set CRC to non-secure state. Write 0 has no effect.
      * |        |          |0 = CRC is a secure module (default).
      * |        |          |1 = CRC is a non-secure module.
-     * |[18]    |CRPT      |Set CRPT to Non-secure State
-     * |        |          |0 = CRPT is a secure module (default).
-     * |        |          |1 = CRPT is a non-secure module.
+     * |[18]    |CRYPTO      |Set CRYPTO to Non-secure State
+     * |        |          |0 = CRYPTO is a secure module (default).
+     * |        |          |1 = CRYPTO is a non-secure module.
      * Offset: 0x08  Peripheral Non-secure Attribution Set Register2 (0x4004_0000~0x4005_FFFF)
      * ---------------------------------------------------------------------------------------------------
      * |Bits    |Field     |Descriptions
@@ -957,7 +957,7 @@ typedef struct
      * |[17]    |SYSIEN    |SYS Security Violation Interrupt Enable Bit
      * |        |          |0 = Interrupt triggered from security violation of system manager Disabled.
      * |        |          |1 = Interrupt triggered from security violation of system manager Enabled.
-     * |[18]    |CRPTIEN   |CRPT Security Violation Interrupt Enable Bit
+     * |[18]    |CRYPTOIEN   |CRYPTO Security Violation Interrupt Enable Bit
      * |        |          |0 = Interrupt triggered from security violation of crypto Disabled.
      * |        |          |1 = Interrupt triggered from security violation of crypto Enabled.
      * |[19]    |KSIEN     |KS Security Violation Interrupt Enable Bit
@@ -1028,9 +1028,9 @@ typedef struct
      * |        |          |0 = No SYS violation interrupt event.
      * |        |          |1 = There is SYS violation interrupt event.
      * |        |          |Note: Write 1 to clear the interrupt flag.
-     * |[18]    |CRPTIF    |CRPT Security Violation Interrupt Status
-     * |        |          |0 = No CRPT violation interrupt event.
-     * |        |          |1 = There is CRPT violation interrupt event.
+     * |[18]    |CRYPTOIF    |CRYPTO Security Violation Interrupt Status
+     * |        |          |0 = No CRYPTO violation interrupt event.
+     * |        |          |1 = There is CRYPTO violation interrupt event.
      * |        |          |Note: Write 1 to clear the interrupt flag.
      * |[19]    |KSIF      |KS Security Violation Interrupt Status
      * |        |          |0 = No KS violation interrupt event.
@@ -1351,7 +1351,7 @@ typedef struct
      * | :----: | :----:   | :---- |
      * |[31:0]  |VIOADDR   |Violation Address
      * |        |          |Indicate the target address of the access, which invokes the security violation.
-     * @var SCU_T::CRPTVSRC
+     * @var SCU_T::CRYPTOVSRC
      * Offset: 0xB4  Crypto Security Policy Violation Source
      * ---------------------------------------------------------------------------------------------------
      * |Bits    |Field     |Descriptions
@@ -1365,7 +1365,7 @@ typedef struct
      * |        |          |0x6 = USH.
      * |        |          |0xB = PDMA1.
      * |        |          |Others is undefined.
-     * @var SCU_T::CRPTVA
+     * @var SCU_T::CRYPTOVA
      * Offset: 0xB8  Crypto Violation Address
      * ---------------------------------------------------------------------------------------------------
      * |Bits    |Field     |Descriptions
@@ -1465,9 +1465,9 @@ typedef struct
      * |[17]    |CRC       |Set CRC to Non-privileged State
      * |        |          |0 = CRC is a privileged module (default).
      * |        |          |1 = CRC is a non-privileged module.
-     * |[18]    |CRPT      |Set CRPT to Non-privileged State
-     * |        |          |0 = CRPT is a privileged module (default).
-     * |        |          |1 = CRPT is a non-privileged module.
+     * |[18]    |CRYPTO      |Set CRYPTO to Non-privileged State
+     * |        |          |0 = CRYPTO is a privileged module (default).
+     * |        |          |1 = CRYPTO is a non-privileged module.
      * |[21]    |KS        |Set KS to Non-privileged State
      * |        |          |0 = KS is a privileged module (default).
      * |        |          |1 = KS is a non-privileged module.
@@ -1720,7 +1720,7 @@ typedef struct
      * |[17]    |SYSIEN    |SYS Privileged Violation Interrupt Enable Bit
      * |        |          |0 = Interrupt triggered from privileged violation of system manager Disabled.
      * |        |          |1 = Interrupt triggered from privileged violation of system manager Enabled.
-     * |[18]    |CRPTIEN   |CRPT Privileged Violation Interrupt Enable Bit
+     * |[18]    |CRYPTOIEN   |CRYPTO Privileged Violation Interrupt Enable Bit
      * |        |          |0 = Interrupt triggered from privileged violation of crypto Disabled.
      * |        |          |1 = Interrupt triggered from privileged violation of crypto Enabled.
      * |[19]    |KSIEN     |KS Privileged Violation Interrupt Enale Bit
@@ -1791,9 +1791,9 @@ typedef struct
      * |        |          |0 = No SYS violation interrupt event.
      * |        |          |1 = There is SYS violation interrupt event.
      * |        |          |Note: Write 1 to clear the interrupt flag.
-     * |[18]    |CRPTIF    |CRPT Privileged Violation Interrupt Status
-     * |        |          |0 = No CRPT violation interrupt event.
-     * |        |          |1 = There is CRPT violation interrupt event.
+     * |[18]    |CRYPTOIF    |CRYPTO Privileged Violation Interrupt Status
+     * |        |          |0 = No CRYPTO violation interrupt event.
+     * |        |          |1 = There is CRYPTO violation interrupt event.
      * |        |          |Note: Write 1 to clear the interrupt flag.
      * |[19]    |KSIF      |KS Privileged Violation Interrupt Status
      * |        |          |0 = No KS violation interrupt event.
@@ -1928,8 +1928,8 @@ typedef struct
     __I  uint32_t SCUVA;                 /*!< [0x00a8] SCU Violation Address                                            */
     __I  uint32_t SYSVSRC;               /*!< [0x00ac] System(GMISC) Security Policy Violation Source                   */
     __I  uint32_t SYSVA;                 /*!< [0x00b0] System(GMISC) Violation Address                                  */
-    __I  uint32_t CRPTVSRC;              /*!< [0x00b4] Crypto Security Policy Violation Source                          */
-    __I  uint32_t CRPTVA;                /*!< [0x00b8] Crypto Violation Address                                         */
+    __I  uint32_t CRYPTOVSRC;              /*!< [0x00b4] Crypto Security Policy Violation Source                          */
+    __I  uint32_t CRYPTOVA;                /*!< [0x00b8] Crypto Violation Address                                         */
     __I  uint32_t KSVSRC;                /*!< [0x00bc] KS Security Policy Violation Source                              */
     __I  uint32_t KSVA;                  /*!< [0x00c0] KS Violation Address                                             */
     __I  uint32_t SRAM2VSRC;             /*!< [0x00c4] SRAM2 Security Policy Violation Source                           */
@@ -1980,8 +1980,8 @@ typedef struct
 #define SCU_PNSSET1_CRC_Pos              (17)                                              /*!< SCU_T::PNSSET1: CRC Position           */
 #define SCU_PNSSET1_CRC_Msk              (0x1ul << SCU_PNSSET1_CRC_Pos)                    /*!< SCU_T::PNSSET1: CRC Mask               */
 
-#define SCU_PNSSET1_CRPT_Pos             (18)                                              /*!< SCU_T::PNSSET1: CRPT Position          */
-#define SCU_PNSSET1_CRPT_Msk             (0x1ul << SCU_PNSSET1_CRPT_Pos)                   /*!< SCU_T::PNSSET1: CRPT Mask              */
+#define SCU_PNSSET1_CRYPTO_Pos             (18)                                              /*!< SCU_T::PNSSET1: CRYPTO Position          */
+#define SCU_PNSSET1_CRYPTO_Msk             (0x1ul << SCU_PNSSET1_CRYPTO_Pos)                   /*!< SCU_T::PNSSET1: CRYPTO Mask              */
 
 #define SCU_PNSSET2_EWDT_Pos             (2)                                               /*!< SCU_T::PNSSET2: EWDT Position          */
 #define SCU_PNSSET2_EWDT_Msk             (0x1ul << SCU_PNSSET2_EWDT_Pos)                   /*!< SCU_T::PNSSET2: EWDT Mask              */
@@ -2172,8 +2172,8 @@ typedef struct
 #define SCU_SVIOIEN_SYSIEN_Pos           (17)                                              /*!< SCU_T::SVIOIEN: SYSIEN Position        */
 #define SCU_SVIOIEN_SYSIEN_Msk           (0x1ul << SCU_SVIOIEN_SYSIEN_Pos)                 /*!< SCU_T::SVIOIEN: SYSIEN Mask            */
 
-#define SCU_SVIOIEN_CRPTIEN_Pos          (18)                                              /*!< SCU_T::SVIOIEN: CRPTIEN Position       */
-#define SCU_SVIOIEN_CRPTIEN_Msk          (0x1ul << SCU_SVIOIEN_CRPTIEN_Pos)                /*!< SCU_T::SVIOIEN: CRPTIEN Mask           */
+#define SCU_SVIOIEN_CRYPTOIEN_Pos          (18)                                              /*!< SCU_T::SVIOIEN: CRYPTOIEN Position       */
+#define SCU_SVIOIEN_CRYPTOIEN_Msk          (0x1ul << SCU_SVIOIEN_CRYPTOIEN_Pos)                /*!< SCU_T::SVIOIEN: CRYPTOIEN Mask           */
 
 #define SCU_SVIOIEN_KSIEN_Pos            (19)                                              /*!< SCU_T::SVIOIEN: KSIEN Position         */
 #define SCU_SVIOIEN_KSIEN_Msk            (0x1ul << SCU_SVIOIEN_KSIEN_Pos)                  /*!< SCU_T::SVIOIEN: KSIEN Mask             */
@@ -2223,8 +2223,8 @@ typedef struct
 #define SCU_SVINTSTS_SYSIF_Pos           (17)                                              /*!< SCU_T::SVINTSTS: SYSIF Position        */
 #define SCU_SVINTSTS_SYSIF_Msk           (0x1ul << SCU_SVINTSTS_SYSIF_Pos)                 /*!< SCU_T::SVINTSTS: SYSIF Mask            */
 
-#define SCU_SVINTSTS_CRPTIF_Pos          (18)                                              /*!< SCU_T::SVINTSTS: CRPTIF Position       */
-#define SCU_SVINTSTS_CRPTIF_Msk          (0x1ul << SCU_SVINTSTS_CRPTIF_Pos)                /*!< SCU_T::SVINTSTS: CRPTIF Mask           */
+#define SCU_SVINTSTS_CRYPTOIF_Pos          (18)                                              /*!< SCU_T::SVINTSTS: CRYPTOIF Position       */
+#define SCU_SVINTSTS_CRYPTOIF_Msk          (0x1ul << SCU_SVINTSTS_CRYPTOIF_Pos)                /*!< SCU_T::SVINTSTS: CRYPTOIF Mask           */
 
 #define SCU_SVINTSTS_KSIF_Pos            (19)                                              /*!< SCU_T::SVINTSTS: KSIF Position         */
 #define SCU_SVINTSTS_KSIF_Msk            (0x1ul << SCU_SVINTSTS_KSIF_Pos)                  /*!< SCU_T::SVINTSTS: KSIF Mask             */
@@ -2319,11 +2319,11 @@ typedef struct
 #define SCU_SYSVA_VIOADDR_Pos            (0)                                               /*!< SCU_T::SYSVA: VIOADDR Position         */
 #define SCU_SYSVA_VIOADDR_Msk            (0xfffffffful << SCU_SYSVA_VIOADDR_Pos)           /*!< SCU_T::SYSVA: VIOADDR Mask             */
 
-#define SCU_CRPTVSRC_MASTER_Pos          (0)                                               /*!< SCU_T::CRPTVSRC: MASTER Position       */
-#define SCU_CRPTVSRC_MASTER_Msk          (0xful << SCU_CRPTVSRC_MASTER_Pos)                /*!< SCU_T::CRPTVSRC: MASTER Mask           */
+#define SCU_CRYPTOVSRC_MASTER_Pos          (0)                                               /*!< SCU_T::CRYPTOVSRC: MASTER Position       */
+#define SCU_CRYPTOVSRC_MASTER_Msk          (0xful << SCU_CRYPTOVSRC_MASTER_Pos)                /*!< SCU_T::CRYPTOVSRC: MASTER Mask           */
 
-#define SCU_CRPTVA_VIOADDR_Pos           (0)                                               /*!< SCU_T::CRPTVA: VIOADDR Position        */
-#define SCU_CRPTVA_VIOADDR_Msk           (0xfffffffful << SCU_CRPTVA_VIOADDR_Pos)          /*!< SCU_T::CRPTVA: VIOADDR Mask            */
+#define SCU_CRYPTOVA_VIOADDR_Pos           (0)                                               /*!< SCU_T::CRYPTOVA: VIOADDR Position        */
+#define SCU_CRYPTOVA_VIOADDR_Msk           (0xfffffffful << SCU_CRYPTOVA_VIOADDR_Pos)          /*!< SCU_T::CRYPTOVA: VIOADDR Mask            */
 
 #define SCU_KSVSRC_MASTER_Pos            (0)                                               /*!< SCU_T::KSVSRC: MASTER Position         */
 #define SCU_KSVSRC_MASTER_Msk            (0xful << SCU_KSVSRC_MASTER_Pos)                  /*!< SCU_T::KSVSRC: MASTER Mask             */
@@ -2373,8 +2373,8 @@ typedef struct
 #define SCU_PNPSET1_CRC_Pos              (17)                                              /*!< SCU_T::PNPSET1: CRC Position           */
 #define SCU_PNPSET1_CRC_Msk              (0x1ul << SCU_PNPSET1_CRC_Pos)                    /*!< SCU_T::PNPSET1: CRC Mask               */
 
-#define SCU_PNPSET1_CRPT_Pos             (18)                                              /*!< SCU_T::PNPSET1: CRPT Position          */
-#define SCU_PNPSET1_CRPT_Msk             (0x1ul << SCU_PNPSET1_CRPT_Pos)                   /*!< SCU_T::PNPSET1: CRPT Mask              */
+#define SCU_PNPSET1_CRYPTO_Pos             (18)                                              /*!< SCU_T::PNPSET1: CRYPTO Position          */
+#define SCU_PNPSET1_CRYPTO_Msk             (0x1ul << SCU_PNPSET1_CRYPTO_Pos)                   /*!< SCU_T::PNPSET1: CRYPTO Mask              */
 
 #define SCU_PNPSET1_KS_Pos               (21)                                              /*!< SCU_T::PNPSET1: KS Position            */
 #define SCU_PNPSET1_KS_Msk               (0x1ul << SCU_PNPSET1_KS_Pos)                     /*!< SCU_T::PNPSET1: KS Mask                */
@@ -2583,8 +2583,8 @@ typedef struct
 #define SCU_PVIOIEN_SYSIEN_Pos           (17)                                              /*!< SCU_T::PVIOIEN: SYSIEN Position        */
 #define SCU_PVIOIEN_SYSIEN_Msk           (0x1ul << SCU_PVIOIEN_SYSIEN_Pos)                 /*!< SCU_T::PVIOIEN: SYSIEN Mask            */
 
-#define SCU_PVIOIEN_CRPTIEN_Pos          (18)                                              /*!< SCU_T::PVIOIEN: CRPTIEN Position       */
-#define SCU_PVIOIEN_CRPTIEN_Msk          (0x1ul << SCU_PVIOIEN_CRPTIEN_Pos)                /*!< SCU_T::PVIOIEN: CRPTIEN Mask           */
+#define SCU_PVIOIEN_CRYPTOIEN_Pos          (18)                                              /*!< SCU_T::PVIOIEN: CRYPTOIEN Position       */
+#define SCU_PVIOIEN_CRYPTOIEN_Msk          (0x1ul << SCU_PVIOIEN_CRYPTOIEN_Pos)                /*!< SCU_T::PVIOIEN: CRYPTOIEN Mask           */
 
 #define SCU_PVIOIEN_KSIEN_Pos            (19)                                              /*!< SCU_T::PVIOIEN: KSIEN Position         */
 #define SCU_PVIOIEN_KSIEN_Msk            (0x1ul << SCU_PVIOIEN_KSIEN_Pos)                  /*!< SCU_T::PVIOIEN: KSIEN Mask             */
@@ -2634,8 +2634,8 @@ typedef struct
 #define SCU_PVINTSTS_SYSIF_Pos           (17)                                              /*!< SCU_T::PVINTSTS: SYSIF Position        */
 #define SCU_PVINTSTS_SYSIF_Msk           (0x1ul << SCU_PVINTSTS_SYSIF_Pos)                 /*!< SCU_T::PVINTSTS: SYSIF Mask            */
 
-#define SCU_PVINTSTS_CRPTIF_Pos          (18)                                              /*!< SCU_T::PVINTSTS: CRPTIF Position       */
-#define SCU_PVINTSTS_CRPTIF_Msk          (0x1ul << SCU_PVINTSTS_CRPTIF_Pos)                /*!< SCU_T::PVINTSTS: CRPTIF Mask           */
+#define SCU_PVINTSTS_CRYPTOIF_Pos          (18)                                              /*!< SCU_T::PVINTSTS: CRYPTOIF Position       */
+#define SCU_PVINTSTS_CRYPTOIF_Msk          (0x1ul << SCU_PVINTSTS_CRYPTOIF_Pos)                /*!< SCU_T::PVINTSTS: CRYPTOIF Mask           */
 
 #define SCU_PVINTSTS_KSIF_Pos            (19)                                              /*!< SCU_T::PVINTSTS: KSIF Position         */
 #define SCU_PVINTSTS_KSIF_Msk            (0x1ul << SCU_PVINTSTS_KSIF_Pos)                  /*!< SCU_T::PVINTSTS: KSIF Mask             */

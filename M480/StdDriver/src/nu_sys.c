@@ -126,7 +126,7 @@ void SYS_ResetCPU(void)
   *             - \ref CRC_RST
   *             - \ref CCAP_RST
   *             - \ref HSUSBD_RST
-  *             - \ref CRPT_RST
+  *             - \ref CRYPTO_RST
   *             - \ref SPIM_RST
   *             - \ref USBH_RST
   *             - \ref SDH1_RST

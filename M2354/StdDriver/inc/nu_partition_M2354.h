@@ -96,7 +96,7 @@
 /*
 // Module 0..31
 //   <o.17>  CRC       <0=> Secure <1=> Non-Secure
-//   <o.18>  CRPT   <0=> Secure <1=> Non-Secure
+//   <o.18>  CRYPTO   <0=> Secure <1=> Non-Secure
 */
 #define SCU_INIT_PNSSET1_VAL      0x00000
 /*

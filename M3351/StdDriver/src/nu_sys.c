@@ -125,7 +125,7 @@ void SYS_ResetCPU(void)
   *             - \ref CRC_RST
   *             - \ref CANFD0_RST
   *             - \ref CANFD1_RST
-  *             - \ref CRPT_RST
+  *             - \ref CRYPTO_RST
   *             - \ref GPIO_RST
   *             - \ref TMR0_RST
   *             - \ref TMR1_RST

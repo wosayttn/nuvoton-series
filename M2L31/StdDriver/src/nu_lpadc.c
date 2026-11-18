@@ -109,7 +109,6 @@ void LPADC_Open(LPADC_T *lpadc,
   */
 void LPADC_Close(LPADC_T *lpadc)
 {
-    SYS_UnlockReg();
     LPSCC->IPRST0 |= (LPSCC_IPRST0_LPADC0RST_Msk);
     LPSCC->IPRST0 &= ~(LPSCC_IPRST0_LPADC0RST_Msk);
 

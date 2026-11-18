@@ -858,7 +858,7 @@ typedef struct
  * |        |          |0 = CRC calculation controller normal operation.
  * |        |          |1 = CRC calculation controller reset.
  * |        |          |Note: This bit is write protected. Refer to the SYS_REGLCTL register.
- * |[12]    |CRPTRST   |CRYPTO Controller Reset (Write Protect)
+ * |[12]    |CRYPTORST   |CRYPTO Controller Reset (Write Protect)
  * |        |          |Setting this bit to 1 will generate a reset signal to the CRYPTO controller
  * |        |          |User needs to set this bit to 0 to release from the reset state.
  * |        |          |0 = CRYPTO controller normal operation.
@@ -3771,8 +3771,8 @@ typedef struct
 #define SYS_IPRST0_CRCRST_Pos            (7)                                               /*!< SYS_T::IPRST0: CRCRST Position         */
 #define SYS_IPRST0_CRCRST_Msk            (0x1ul << SYS_IPRST0_CRCRST_Pos)                  /*!< SYS_T::IPRST0: CRCRST Mask             */
 
-#define SYS_IPRST0_CRPTRST_Pos           (12)                                              /*!< SYS_T::IPRST0: CRPTRST Position        */
-#define SYS_IPRST0_CRPTRST_Msk           (0x1ul << SYS_IPRST0_CRPTRST_Pos)                 /*!< SYS_T::IPRST0: CRPTRST Mask            */
+#define SYS_IPRST0_CRYPTORST_Pos           (12)                                              /*!< SYS_T::IPRST0: CRYPTORST Position        */
+#define SYS_IPRST0_CRYPTORST_Msk           (0x1ul << SYS_IPRST0_CRYPTORST_Pos)                 /*!< SYS_T::IPRST0: CRYPTORST Mask            */
 
 #define SYS_IPRST0_CANFD0RST_Pos         (20)                                              /*!< SYS_T::IPRST0: CANFD0RST Position      */
 #define SYS_IPRST0_CANFD0RST_Msk         (0x1ul << SYS_IPRST0_CANFD0RST_Pos)               /*!< SYS_T::IPRST0: CANFD0RST Mask          */

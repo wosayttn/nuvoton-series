@@ -258,7 +258,7 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define PRNG_ENABLE_INT(crpt)       ((crpt)->INTEN |= CRPT_INTEN_PRNGIEN_Msk)
+#define PRNG_ENABLE_INT(crpt)       ((crpt)->INTEN |= CRYPTO_INTEN_PRNGIEN_Msk)
 
 /**
   * @brief This macro disables PRNG interrupt.
@@ -266,7 +266,7 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define PRNG_DISABLE_INT(crpt)      ((crpt)->INTEN &= ~CRPT_INTEN_PRNGIEN_Msk)
+#define PRNG_DISABLE_INT(crpt)      ((crpt)->INTEN &= ~CRYPTO_INTEN_PRNGIEN_Msk)
 
 /**
   * @brief This macro gets PRNG interrupt flag.
@@ -274,7 +274,7 @@ typedef struct
   * @return PRNG interrupt flag.
   * \hideinitializer
   */
-#define PRNG_GET_INT_FLAG(crpt)     ((crpt)->INTSTS & CRPT_INTSTS_PRNGIF_Msk)
+#define PRNG_GET_INT_FLAG(crpt)     ((crpt)->INTSTS & CRYPTO_INTSTS_PRNGIF_Msk)
 
 /**
   * @brief This macro clears PRNG interrupt flag.
@@ -282,7 +282,7 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define PRNG_CLR_INT_FLAG(crpt)     ((crpt)->INTSTS = CRPT_INTSTS_PRNGIF_Msk)
+#define PRNG_CLR_INT_FLAG(crpt)     ((crpt)->INTSTS = CRYPTO_INTSTS_PRNGIF_Msk)
 
 /**
   * @brief This macro enables AES interrupt.
@@ -290,7 +290,7 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define AES_ENABLE_INT(crpt)        ((crpt)->INTEN |= (CRPT_INTEN_AESIEN_Msk|CRPT_INTEN_AESEIEN_Msk))
+#define AES_ENABLE_INT(crpt)        ((crpt)->INTEN |= (CRYPTO_INTEN_AESIEN_Msk|CRYPTO_INTEN_AESEIEN_Msk))
 
 /**
   * @brief This macro disables AES interrupt.
@@ -298,7 +298,7 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define AES_DISABLE_INT(crpt)       ((crpt)->INTEN &= ~(CRPT_INTEN_AESIEN_Msk|CRPT_INTEN_AESEIEN_Msk))
+#define AES_DISABLE_INT(crpt)       ((crpt)->INTEN &= ~(CRYPTO_INTEN_AESIEN_Msk|CRYPTO_INTEN_AESEIEN_Msk))
 
 /**
   * @brief This macro gets AES interrupt flag.
@@ -306,7 +306,7 @@ typedef struct
   * @return AES interrupt flag.
   * \hideinitializer
   */
-#define AES_GET_INT_FLAG(crpt)      ((crpt)->INTSTS & (CRPT_INTSTS_AESIF_Msk|CRPT_INTSTS_AESEIF_Msk))
+#define AES_GET_INT_FLAG(crpt)      ((crpt)->INTSTS & (CRYPTO_INTSTS_AESIF_Msk|CRYPTO_INTSTS_AESEIF_Msk))
 
 /**
   * @brief This macro clears AES interrupt flag.
@@ -314,7 +314,7 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define AES_CLR_INT_FLAG(crpt)      ((crpt)->INTSTS = (CRPT_INTSTS_AESIF_Msk|CRPT_INTSTS_AESEIF_Msk))
+#define AES_CLR_INT_FLAG(crpt)      ((crpt)->INTSTS = (CRYPTO_INTSTS_AESIF_Msk|CRYPTO_INTSTS_AESEIF_Msk))
 
 /**
   * @brief This macro enables AES key protection.
@@ -322,7 +322,7 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define AES_ENABLE_KEY_PROTECT(crpt)  ((crpt)->AES_CTL |= CRPT_AES_CTL_KEYPRT_Msk)
+#define AES_ENABLE_KEY_PROTECT(crpt)  ((crpt)->AES_CTL |= CRYPTO_AES_CTL_KEYPRT_Msk)
 
 /**
   * @brief This macro disables AES key protection.
@@ -330,15 +330,15 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define AES_DISABLE_KEY_PROTECT(crpt) ((crpt)->AES_CTL = ((crpt)->AES_CTL & ~CRPT_AES_CTL_KEYPRT_Msk) | (0x16UL<<CRPT_AES_CTL_KEYUNPRT_Pos)); \
-                                      ((crpt)->AES_CTL &= ~CRPT_AES_CTL_KEYPRT_Msk)
+#define AES_DISABLE_KEY_PROTECT(crpt) ((crpt)->AES_CTL = ((crpt)->AES_CTL & ~CRYPTO_AES_CTL_KEYPRT_Msk) | (0x16UL<<CRYPTO_AES_CTL_KEYUNPRT_Pos)); \
+                                      ((crpt)->AES_CTL &= ~CRYPTO_AES_CTL_KEYPRT_Msk)
 /**
   * @brief This macro enables SHA interrupt.
   * @param crpt     Specified crypto module
   * @return None
   * \hideinitializer
   */
-#define SHA_ENABLE_INT(crpt)        ((crpt)->INTEN |= (CRPT_INTEN_HMACIEN_Msk|CRPT_INTEN_HMACEIEN_Msk))
+#define SHA_ENABLE_INT(crpt)        ((crpt)->INTEN |= (CRYPTO_INTEN_HMACIEN_Msk|CRYPTO_INTEN_HMACEIEN_Msk))
 
 /**
   * @brief This macro disables SHA interrupt.
@@ -346,7 +346,7 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define SHA_DISABLE_INT(crpt)       ((crpt)->INTEN &= ~(CRPT_INTEN_HMACIEN_Msk|CRPT_INTEN_HMACEIEN_Msk))
+#define SHA_DISABLE_INT(crpt)       ((crpt)->INTEN &= ~(CRYPTO_INTEN_HMACIEN_Msk|CRYPTO_INTEN_HMACEIEN_Msk))
 
 /**
   * @brief This macro gets SHA interrupt flag.
@@ -354,7 +354,7 @@ typedef struct
   * @return SHA interrupt flag.
   * \hideinitializer
   */
-#define SHA_GET_INT_FLAG(crpt)      ((crpt)->INTSTS & (CRPT_INTSTS_HMACIF_Msk|CRPT_INTSTS_HMACEIF_Msk))
+#define SHA_GET_INT_FLAG(crpt)      ((crpt)->INTSTS & (CRYPTO_INTSTS_HMACIF_Msk|CRYPTO_INTSTS_HMACEIF_Msk))
 
 /**
   * @brief This macro clears SHA interrupt flag.
@@ -362,7 +362,7 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define SHA_CLR_INT_FLAG(crpt)      ((crpt)->INTSTS = (CRPT_INTSTS_HMACIF_Msk|CRPT_INTSTS_HMACEIF_Msk))
+#define SHA_CLR_INT_FLAG(crpt)      ((crpt)->INTSTS = (CRYPTO_INTSTS_HMACIF_Msk|CRYPTO_INTSTS_HMACEIF_Msk))
 
 /**
   * @brief This macro enables ECC interrupt.
@@ -370,7 +370,7 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define ECC_ENABLE_INT(crpt)        ((crpt)->INTEN |= (CRPT_INTEN_ECCIEN_Msk|CRPT_INTEN_ECCEIEN_Msk))
+#define ECC_ENABLE_INT(crpt)        ((crpt)->INTEN |= (CRYPTO_INTEN_ECCIEN_Msk|CRYPTO_INTEN_ECCEIEN_Msk))
 
 /**
   * @brief This macro disables ECC interrupt.
@@ -378,7 +378,7 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define ECC_DISABLE_INT(crpt)       ((crpt)->INTEN &= ~(CRPT_INTEN_ECCIEN_Msk|CRPT_INTEN_ECCEIEN_Msk))
+#define ECC_DISABLE_INT(crpt)       ((crpt)->INTEN &= ~(CRYPTO_INTEN_ECCIEN_Msk|CRYPTO_INTEN_ECCEIEN_Msk))
 
 /**
   * @brief This macro gets ECC interrupt flag.
@@ -386,7 +386,7 @@ typedef struct
   * @return ECC interrupt flag.
   * \hideinitializer
   */
-#define ECC_GET_INT_FLAG(crpt)      ((crpt)->INTSTS & (CRPT_INTSTS_ECCIF_Msk|CRPT_INTSTS_ECCEIF_Msk))
+#define ECC_GET_INT_FLAG(crpt)      ((crpt)->INTSTS & (CRYPTO_INTSTS_ECCIF_Msk|CRYPTO_INTSTS_ECCEIF_Msk))
 
 /**
   * @brief This macro clears ECC interrupt flag.
@@ -394,7 +394,7 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define ECC_CLR_INT_FLAG(crpt)      ((crpt)->INTSTS = (CRPT_INTSTS_ECCIF_Msk|CRPT_INTSTS_ECCEIF_Msk))
+#define ECC_CLR_INT_FLAG(crpt)      ((crpt)->INTSTS = (CRYPTO_INTSTS_ECCIF_Msk|CRYPTO_INTSTS_ECCEIF_Msk))
 
 /**
   * @brief This macro enables RSA interrupt.
@@ -402,7 +402,7 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define RSA_ENABLE_INT(crpt)        ((crpt)->INTEN |= (CRPT_INTEN_RSAIEN_Msk|CRPT_INTEN_RSAEIEN_Msk))
+#define RSA_ENABLE_INT(crpt)        ((crpt)->INTEN |= (CRYPTO_INTEN_RSAIEN_Msk|CRYPTO_INTEN_RSAEIEN_Msk))
 
 /**
   * @brief This macro disables RSA interrupt.
@@ -410,7 +410,7 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define RSA_DISABLE_INT(crpt)       ((crpt)->INTEN &= ~(CRPT_INTEN_RSAIEN_Msk|CRPT_INTEN_RSAEIEN_Msk))
+#define RSA_DISABLE_INT(crpt)       ((crpt)->INTEN &= ~(CRYPTO_INTEN_RSAIEN_Msk|CRYPTO_INTEN_RSAEIEN_Msk))
 
 /**
   * @brief This macro gets RSA interrupt flag.
@@ -418,7 +418,7 @@ typedef struct
   * @return ECC interrupt flag.
   * \hideinitializer
   */
-#define RSA_GET_INT_FLAG(crpt)      ((crpt)->INTSTS & (CRPT_INTSTS_RSAIF_Msk|CRPT_INTSTS_RSAEIF_Msk))
+#define RSA_GET_INT_FLAG(crpt)      ((crpt)->INTSTS & (CRYPTO_INTSTS_RSAIF_Msk|CRYPTO_INTSTS_RSAEIF_Msk))
 
 /**
   * @brief This macro clears RSA interrupt flag.
@@ -426,7 +426,7 @@ typedef struct
   * @return None
   * \hideinitializer
   */
-#define RSA_CLR_INT_FLAG(crpt)      ((crpt)->INTSTS = (CRPT_INTSTS_RSAIF_Msk|CRPT_INTSTS_RSAEIF_Msk))
+#define RSA_CLR_INT_FLAG(crpt)      ((crpt)->INTSTS = (CRYPTO_INTSTS_RSAIF_Msk|CRYPTO_INTSTS_RSAEIF_Msk))
 
 
 /**@}*/ /* end of group CRYPTO_EXPORTED_MACROS */
@@ -441,47 +441,47 @@ typedef struct
 /*  Functions                                                                                      */
 /*---------------------------------------------------------------------------------------------------------*/
 
-void PRNG_Open(CRPT_T *crpt, uint32_t u32KeySize, uint32_t u32SeedReload, uint32_t u32Seed);
-int32_t PRNG_Start(CRPT_T *crpt);
-void PRNG_Read(CRPT_T *crpt, uint32_t u32RandKey[]);
-void AES_Open(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32EncDec, uint32_t u32OpMode, uint32_t u32KeySize, uint32_t u32SwapType);
-void AES_Start(CRPT_T *crpt, int32_t u32Channel, uint32_t u32DMAMode);
-void AES_SetKey(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32Keys[], uint32_t u32KeySize);
-void AES_SetKey_KS(CRPT_T *crpt, KS_MEM_Type mem, int32_t i32KeyIdx);
-void AES_SetInitVect(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32IV[]);
-void AES_SetDMATransfer(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr, uint32_t u32DstAddr, uint32_t u32TransCnt);
-void SHA_Open(CRPT_T *crpt, uint32_t u32OpMode, uint32_t u32SwapType, uint32_t hmac_key_len);
-void SHA_Start(CRPT_T *crpt, uint32_t u32DMAMode);
-void SHA_SetDMATransfer(CRPT_T *crpt, uint32_t u32SrcAddr, uint32_t u32TransCnt);
-void SHA_Read(CRPT_T *crpt, uint32_t u32Digest[]);
-void ECC_DriverISR(CRPT_T *crpt);
-int  ECC_IsPrivateKeyValid(CRPT_T *crpt, E_ECC_CURVE ecc_curve, const char private_k[]);
-int32_t  ECC_GenerateSecretZ(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *private_k, char public_k1[], char public_k2[], char secret_z[]);
-int32_t  ECC_GeneratePublicKey(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *private_k, char public_k1[], char public_k2[]);
-int32_t  ECC_GenerateSignature(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message, char *d, char *k, char *R, char *S);
-int32_t  ECC_VerifySignature(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message, char *public_k1, char *public_k2, char *R, char *S);
+void PRNG_Open(CRYPTO_T *crpt, uint32_t u32KeySize, uint32_t u32SeedReload, uint32_t u32Seed);
+int32_t PRNG_Start(CRYPTO_T *crpt);
+void PRNG_Read(CRYPTO_T *crpt, uint32_t u32RandKey[]);
+void AES_Open(CRYPTO_T *crpt, uint32_t u32Channel, uint32_t u32EncDec, uint32_t u32OpMode, uint32_t u32KeySize, uint32_t u32SwapType);
+void AES_Start(CRYPTO_T *crpt, int32_t u32Channel, uint32_t u32DMAMode);
+void AES_SetKey(CRYPTO_T *crpt, uint32_t u32Channel, uint32_t au32Keys[], uint32_t u32KeySize);
+void AES_SetKey_KS(CRYPTO_T *crpt, KS_MEM_Type mem, int32_t i32KeyIdx);
+void AES_SetInitVect(CRYPTO_T *crpt, uint32_t u32Channel, uint32_t au32IV[]);
+void AES_SetDMATransfer(CRYPTO_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr, uint32_t u32DstAddr, uint32_t u32TransCnt);
+void SHA_Open(CRYPTO_T *crpt, uint32_t u32OpMode, uint32_t u32SwapType, uint32_t hmac_key_len);
+void SHA_Start(CRYPTO_T *crpt, uint32_t u32DMAMode);
+void SHA_SetDMATransfer(CRYPTO_T *crpt, uint32_t u32SrcAddr, uint32_t u32TransCnt);
+void SHA_Read(CRYPTO_T *crpt, uint32_t u32Digest[]);
+void ECC_DriverISR(CRYPTO_T *crpt);
+int  ECC_IsPrivateKeyValid(CRYPTO_T *crpt, E_ECC_CURVE ecc_curve, const char private_k[]);
+int32_t  ECC_GenerateSecretZ(CRYPTO_T *crpt, E_ECC_CURVE ecc_curve, char *private_k, char public_k1[], char public_k2[], char secret_z[]);
+int32_t  ECC_GeneratePublicKey(CRYPTO_T *crpt, E_ECC_CURVE ecc_curve, char *private_k, char public_k1[], char public_k2[]);
+int32_t  ECC_GenerateSignature(CRYPTO_T *crpt, E_ECC_CURVE ecc_curve, char *message, char *d, char *k, char *R, char *S);
+int32_t  ECC_VerifySignature(CRYPTO_T *crpt, E_ECC_CURVE ecc_curve, char *message, char *public_k1, char *public_k2, char *R, char *S);
 
 
-int32_t RSA_Open(CRPT_T *crpt, uint32_t u32OpMode, uint32_t u32KeySize, void *psRSA_Buf, uint32_t u32BufSize, uint32_t u32UseKS);
-int32_t RSA_SetKey(CRPT_T *crpt, char *Key);
-int32_t RSA_SetDMATransfer(CRPT_T *crpt, char *Src, char *n, char *P, char *Q);
-void RSA_Start(CRPT_T *crpt);
-int32_t RSA_Read(const CRPT_T *crpt, char * Output);
-int32_t RSA_SetKey_KS(CRPT_T *crpt, uint32_t u32KeyNum, uint32_t u32KSMemType, uint32_t u32BlindKeyNum);
-int32_t RSA_SetDMATransfer_KS(CRPT_T *crpt, char *Src, char *n, uint32_t u32PNum,
+int32_t RSA_Open(CRYPTO_T *crpt, uint32_t u32OpMode, uint32_t u32KeySize, void *psRSA_Buf, uint32_t u32BufSize, uint32_t u32UseKS);
+int32_t RSA_SetKey(CRYPTO_T *crpt, char *Key);
+int32_t RSA_SetDMATransfer(CRYPTO_T *crpt, char *Src, char *n, char *P, char *Q);
+void RSA_Start(CRYPTO_T *crpt);
+int32_t RSA_Read(const CRYPTO_T *crpt, char * Output);
+int32_t RSA_SetKey_KS(CRYPTO_T *crpt, uint32_t u32KeyNum, uint32_t u32KSMemType, uint32_t u32BlindKeyNum);
+int32_t RSA_SetDMATransfer_KS(CRYPTO_T *crpt, char *Src, char *n, uint32_t u32PNum,
                               uint32_t u32QNum, uint32_t u32CpNum, uint32_t u32CqNum, uint32_t u32DpNum,
                               uint32_t u32DqNum, uint32_t u32RpNum, uint32_t u32RqNum);
-int32_t  ECC_GeneratePublicKey_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, KS_MEM_Type mem, int32_t i32KeyIdx, char public_k1[], char public_k2[], uint32_t u32ExtraOp);
-int32_t  ECC_GenerateSignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message, KS_MEM_Type mem_d, int32_t i32KeyIdx_d, KS_MEM_Type mem_k, int32_t i32KeyIdx_k, char *R, char *S);
-int32_t  ECC_VerifySignature_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, char *message, KS_MEM_Type mem_pk1, int32_t i32KeyIdx_pk1, KS_MEM_Type mem_pk2, int32_t i32KeyIdx_pk2, char *R, char *S);
-int32_t  ECC_GenerateSecretZ_KS(CRPT_T *crpt, E_ECC_CURVE ecc_curve, KS_MEM_Type mem, int32_t i32KeyIdx, char public_k1[], char public_k2[]);
+int32_t  ECC_GeneratePublicKey_KS(CRYPTO_T *crpt, E_ECC_CURVE ecc_curve, KS_MEM_Type mem, int32_t i32KeyIdx, char public_k1[], char public_k2[], uint32_t u32ExtraOp);
+int32_t  ECC_GenerateSignature_KS(CRYPTO_T *crpt, E_ECC_CURVE ecc_curve, char *message, KS_MEM_Type mem_d, int32_t i32KeyIdx_d, KS_MEM_Type mem_k, int32_t i32KeyIdx_k, char *R, char *S);
+int32_t  ECC_VerifySignature_KS(CRYPTO_T *crpt, E_ECC_CURVE ecc_curve, char *message, KS_MEM_Type mem_pk1, int32_t i32KeyIdx_pk1, KS_MEM_Type mem_pk2, int32_t i32KeyIdx_pk2, char *R, char *S);
+int32_t  ECC_GenerateSecretZ_KS(CRYPTO_T *crpt, E_ECC_CURVE ecc_curve, KS_MEM_Type mem, int32_t i32KeyIdx, char public_k1[], char public_k2[]);
 
-void CRPT_Reg2Hex(int32_t count, uint32_t volatile reg[], char output[]);
-void CRPT_Hex2Reg(char input[], uint32_t volatile reg[]);
-int32_t ECC_GetCurve(CRPT_T *crpt, E_ECC_CURVE ecc_curve, ECC_CURVE *curve);
+void CRYPTO_Reg2Hex(int32_t count, uint32_t volatile reg[], char output[]);
+void CRYPTO_Hex2Reg(char input[], uint32_t volatile reg[]);
+int32_t ECC_GetCurve(CRYPTO_T *crpt, E_ECC_CURVE ecc_curve, ECC_CURVE *curve);
 
-int32_t SM2_Sign(CRPT_T* crpt, E_ECC_CURVE ecc_curve, char* e, char* d, char* k, char* R, char* S);
-int32_t SM2_Verify(CRPT_T* crpt, E_ECC_CURVE ecc_curve, char* e, char* public_k1, char* public_k2, char* R, char* S);
+int32_t SM2_Sign(CRYPTO_T* crpt, E_ECC_CURVE ecc_curve, char* e, char* d, char* k, char* R, char* S);
+int32_t SM2_Verify(CRYPTO_T* crpt, E_ECC_CURVE ecc_curve, char* e, char* public_k1, char* public_k2, char* R, char* S);
 int32_t SM3(const uint32_t* pu32Addr, uint32_t u32Size, uint32_t digest[]);
 
 /**@}*/ /* end of group CRYPTO_EXPORTED_FUNCTIONS */

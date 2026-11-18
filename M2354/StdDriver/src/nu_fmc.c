@@ -699,10 +699,14 @@ uint32_t FMC_Read(uint32_t u32Addr)
   * @note       Global error code g_FMC_i32ErrCode
   *             -1  Read time-out
   */
-int32_t FMC_Read64(uint32_t u32addr, uint32_t * u32data0, uint32_t * u32data1)
+int32_t FMC_Read64(uint32_t u32addr, uint64_t *pu64data)
 {
     int32_t ret = 0;
     int32_t i32TimeOutCnt;
+    uint32_t *u32data0, *u32data1;
+
+    u32data0 = (uint32_t *)pu64data;
+    u32data1 = (u32data0 + 1);
 
     g_FMC_i32ErrCode = 0;
 
@@ -919,6 +923,22 @@ int32_t FMC_Write8Bytes(uint32_t u32addr, uint32_t u32data0, uint32_t u32data1)
         ret = -1;
     }
     return ret;
+}
+
+/**
+  * @brief      Program 64-bit data into specified address of flash
+  *
+  * @param[in]  u32addr    Address of the flash to program. It must be double-word aligned.
+  * @param[in]  u64data    64-bit data to program.
+  *
+  * @return     0   Success
+  *             -1  Program failed or time-out
+  */
+int32_t FMC_Write64(uint32_t u32addr, uint64_t u64data)
+{
+    uint32_t u32data0 = (uint32_t)(u64data & 0xFFFFFFFF);
+    uint32_t u32data1 = (uint32_t)(u64data >> 32);
+    return FMC_Write8Bytes(u32addr, u32data0, u32data1);
 }
 
 /**

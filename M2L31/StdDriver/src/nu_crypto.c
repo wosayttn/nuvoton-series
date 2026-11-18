@@ -14,9 +14,9 @@
 #define ENABLE_DEBUG    0
 
 #if ENABLE_DEBUG
-#define CRPT_DBGMSG   printf
+#define CRYPTO_DBGMSG   printf
 #else
-#define CRPT_DBGMSG(...)   do { } while (0)       /* disable debug */
+#define CRYPTO_DBGMSG(...)   do { } while (0)       /* disable debug */
 #endif
 
 #if defined(__ICCARM__)
@@ -43,7 +43,7 @@
 
 /**
   * @brief  Open PRNG function
-  * @param[in]  crpt         The pointer of CRPT module
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @param[in]  u32KeySize   it is PRNG key size, including:
   *         - \ref PRNG_KEY_SIZE_128
   *         - \ref PRNG_KEY_SIZE_163
@@ -58,30 +58,30 @@
   * @param[in]  u32Seed  The new seed. Only valid when u32SeedReload is PRNG_SEED_RELOAD.
   * @return None
   */
-void PRNG_Open(CRPT_T *crpt, uint32_t u32KeySize, uint32_t u32SeedReload, uint32_t u32Seed)
+void PRNG_Open(CRYPTO_T *crpt, uint32_t u32KeySize, uint32_t u32SeedReload, uint32_t u32Seed)
 {
     if(u32SeedReload)
     {
         crpt->PRNG_SEED = u32Seed;
     }
 
-    crpt->PRNG_CTL = (u32KeySize << CRPT_PRNG_CTL_KEYSZ_Pos) |
-                     (u32SeedReload << CRPT_PRNG_CTL_SEEDRLD_Pos) | PRNG_CTL_SEEDSRC_SEEDREG;
+    crpt->PRNG_CTL = (u32KeySize << CRYPTO_PRNG_CTL_KEYSZ_Pos) |
+                     (u32SeedReload << CRYPTO_PRNG_CTL_SEEDRLD_Pos) | PRNG_CTL_SEEDSRC_SEEDREG;
 }
 
 /**
   * @brief  Start to generate one PRNG key.
-  * @param[in]  crpt         The pointer of CRPT module
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @retval  0 Generate PRNG key success.
   * @retval -1 Generate PRNG key time-out.
   */
-int32_t PRNG_Start(CRPT_T *crpt)
+int32_t PRNG_Start(CRYPTO_T *crpt)
 {
 	  int32_t i32TimeOutCnt = SystemCoreClock; 
-    crpt->PRNG_CTL |= CRPT_PRNG_CTL_START_Msk;
+    crpt->PRNG_CTL |= CRYPTO_PRNG_CTL_START_Msk;
 
     /* Waiting for PRNG Busy */
-    while(crpt->PRNG_CTL & CRPT_PRNG_CTL_BUSY_Msk)
+    while(crpt->PRNG_CTL & CRYPTO_PRNG_CTL_BUSY_Msk)
     {
         if( i32TimeOutCnt-- <= 0)
         {
@@ -93,16 +93,16 @@ int32_t PRNG_Start(CRPT_T *crpt)
 
 /**
   * @brief  Read the PRNG key.
-  * @param[in]   crpt         The pointer of CRPT module
+  * @param[in]   crpt         The pointer of CRYPTO module
   * @param[out]  u32RandKey  The key buffer to store newly generated PRNG key.
   * @return None
   */
-void PRNG_Read(CRPT_T *crpt, uint32_t u32RandKey[])
+void PRNG_Read(CRYPTO_T *crpt, uint32_t u32RandKey[])
 {
     uint32_t  i, wcnt;
     uint32_t au32WcntTbl[7] = {4, 6, 6, 7, 8, 8, 8};
 
-    wcnt = ((crpt->PRNG_CTL & CRPT_PRNG_CTL_KEYSZ_Msk) >> CRPT_PRNG_CTL_KEYSZ_Pos);
+    wcnt = ((crpt->PRNG_CTL & CRYPTO_PRNG_CTL_KEYSZ_Msk) >> CRYPTO_PRNG_CTL_KEYSZ_Pos);
     if( wcnt > 6 ) return;
     else wcnt = au32WcntTbl[wcnt];
 
@@ -111,13 +111,13 @@ void PRNG_Read(CRPT_T *crpt, uint32_t u32RandKey[])
         u32RandKey[i] = crpt->PRNG_KEY[i];
     }
 
-    crpt->PRNG_CTL &= ~CRPT_PRNG_CTL_SEEDRLD_Msk;
+    crpt->PRNG_CTL &= ~CRYPTO_PRNG_CTL_SEEDRLD_Msk;
 }
 
 
 /**
   * @brief  Open AES encrypt/decrypt function.
-  * @param[in]  crpt         The pointer of CRPT module
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @param[in]  u32Channel   AES channel. Must be 0~3.
   * @param[in]  u32EncDec    1: AES encode;  0: AES decode
   * @param[in]  u32OpMode    AES operation mode, including:
@@ -140,21 +140,21 @@ void PRNG_Read(CRPT_T *crpt, uint32_t u32RandKey[])
   *         - \ref AES_IN_OUT_SWAP
   * @return None
   */
-void AES_Open(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32EncDec,
+void AES_Open(CRYPTO_T *crpt, uint32_t u32Channel, uint32_t u32EncDec,
               uint32_t u32OpMode, uint32_t u32KeySize, uint32_t u32SwapType)
 {
     (void)u32Channel;
 
-    crpt->AES_CTL = (u32EncDec << CRPT_AES_CTL_ENCRPT_Pos) |
-                    (u32OpMode << CRPT_AES_CTL_OPMODE_Pos) |
-                    (u32KeySize << CRPT_AES_CTL_KEYSZ_Pos) |
-                    (u32SwapType << CRPT_AES_CTL_OUTSWAP_Pos);
+    crpt->AES_CTL = (u32EncDec << CRYPTO_AES_CTL_ENCRYPTO_Pos) |
+                    (u32OpMode << CRYPTO_AES_CTL_OPMODE_Pos) |
+                    (u32KeySize << CRYPTO_AES_CTL_KEYSZ_Pos) |
+                    (u32SwapType << CRYPTO_AES_CTL_OUTSWAP_Pos);
 
 }
 
 /**
   * @brief  Start AES encrypt/decrypt
-  * @param[in]  crpt        The pointer of CRPT module
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32Channel  AES channel. Must be 0~3.
   * @param[in]  u32DMAMode  AES DMA control, including:
   *         - \ref CRYPTO_DMA_ONE_SHOT   One shot AES encrypt/decrypt.
@@ -162,16 +162,16 @@ void AES_Open(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32EncDec,
   *         - \ref CRYPTO_DMA_LAST       Last AES encrypt/decrypt of a series of AES_Start.
   * @return None
   */
-void AES_Start(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32DMAMode)
+void AES_Start(CRYPTO_T *crpt, uint32_t u32Channel, uint32_t u32DMAMode)
 {
     (void)u32Channel;
 
-    crpt->AES_CTL |= CRPT_AES_CTL_START_Msk | (u32DMAMode << CRPT_AES_CTL_DMALAST_Pos);
+    crpt->AES_CTL |= CRYPTO_AES_CTL_START_Msk | (u32DMAMode << CRYPTO_AES_CTL_DMALAST_Pos);
 }
 
 /**
   * @brief  Set AES keys
-  * @param[in]  crpt        The pointer of CRPT module
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32Channel  AES channel. Must be 0~3.
   * @param[in]  au32Keys    An word array contains AES keys.
   * @param[in]  u32KeySize is AES key size, including:
@@ -180,7 +180,7 @@ void AES_Start(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32DMAMode)
   *         - \ref AES_KEY_SIZE_256
   * @return None
   */
-void AES_SetKey(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32Keys[], uint32_t u32KeySize)
+void AES_SetKey(CRYPTO_T *crpt, uint32_t u32Channel, uint32_t au32Keys[], uint32_t u32KeySize)
 {
     uint32_t  i, wcnt, key_reg_addr;
 
@@ -198,12 +198,12 @@ void AES_SetKey(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32Keys[], uint32_t
 
 /**
   * @brief  Set AES initial vectors
-  * @param[in]  crpt        The pointer of CRPT module
+  * @param[in]  crpt        The pointer of CRYPTO module
   * @param[in]  u32Channel  AES channel. Must be 0~3.
   * @param[in]  au32IV      A four entry word array contains AES initial vectors.
   * @return None
   */
-void AES_SetInitVect(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32IV[])
+void AES_SetInitVect(CRYPTO_T *crpt, uint32_t u32Channel, uint32_t au32IV[])
 {
     uint32_t  i, key_reg_addr;
 
@@ -220,14 +220,14 @@ void AES_SetInitVect(CRPT_T *crpt, uint32_t u32Channel, uint32_t au32IV[])
 
 /**
   * @brief  Set AES DMA transfer configuration.
-  * @param[in]  crpt         The pointer of CRPT module
+  * @param[in]  crpt         The pointer of CRYPTO module
   * @param[in]  u32Channel   AES channel. Must be 0~3.
   * @param[in]  u32SrcAddr   AES DMA source address
   * @param[in]  u32DstAddr   AES DMA destination address
   * @param[in]  u32TransCnt  AES DMA transfer byte count
   * @return None
   */
-void AES_SetDMATransfer(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr,
+void AES_SetDMATransfer(CRYPTO_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr,
                         uint32_t u32DstAddr, uint32_t u32TransCnt)
 {
     (void) u32Channel;

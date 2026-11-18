@@ -52,9 +52,9 @@ typedef enum IRQn
     EPWM0_P1_IRQn                 = 26,       /*!< EPWM0P1 Interrupt                                */
     EPWM0_P2_IRQn                 = 27,       /*!< EPWM0P2 Interrupt                                */
     BRAKE1_IRQn                   = 28,       /*!< BRAKE1 Interrupt                                 */
-    EPWM1_P0_IRQn                 = 29,       /*!< EPWM1P0 Interrupt                                */
-    EPWM1_P1_IRQn                 = 30,       /*!< EPWM1P1 Interrupt                                */
-    EPWM1_P2_IRQn                 = 31,       /*!< EPWM1P2 Interrupt                                */
+    EPWM1P0_IRQn                 = 29,       /*!< EPWM1P0 Interrupt                                */
+    EPWM1P1_IRQn                 = 30,       /*!< EPWM1P1 Interrupt                                */
+    EPWM1P2_IRQn                 = 31,       /*!< EPWM1P2 Interrupt                                */
     TMR0_IRQn                     = 32,       /*!< Timer 0 Interrupt                                */
     TMR1_IRQn                     = 33,       /*!< Timer 1 Interrupt                                */
     TMR2_IRQn                     = 34,       /*!< Timer 2 Interrupt                                */
@@ -84,7 +84,7 @@ typedef enum IRQn
     SPI3_IRQn                     = 62,       /*!< SPI3 Interrupt                                   */
     SDH0_IRQn                     = 64,       /*!< SDH0 Interrupt                                   */
     I2S0_IRQn                     = 68,       /*!< I2S0 Interrupt                                   */
-    CRPT_IRQn                     = 71,       /*!< CRPT Interrupt                                   */
+    CRYPTO_IRQn                     = 71,       /*!< CRYPTO Interrupt                                   */
     GPG_IRQn                      = 72,       /*!< GPIO Port G Interrupt                            */
     EINT6_IRQn                    = 73,       /*!< External Input 6 Interrupt                       */
     UART4_IRQn                    = 74,       /*!< UART4 Interrupt                                  */

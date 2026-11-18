@@ -371,7 +371,7 @@ extern "C"
 #define CCAP_MODULE      ((0UL<<30)|(0UL<<28)         |(0x3UL<<25)       |(16UL<<20)        |(2UL<<18)         |(0xFFUL<<10)      |(0UL<<5)         |(8UL<<0))  /*!< CCAP Module \hideinitializer */
 #define SEN_MODULE       ((0UL<<30)|(MODULE_NoMsk<<28)|(MODULE_NoMsk<<25)|(MODULE_NoMsk<<20)|(MODULE_NoMsk<<18)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5)|(9UL<<0))  /*!< SEN Module \hideinitializer */
 #define HSUSBD_MODULE    ((0UL<<30)|(MODULE_NoMsk<<28)|(MODULE_NoMsk<<25)|(MODULE_NoMsk<<20)|(MODULE_NoMsk<<18)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5)|(10UL<<0)) /*!< HSUSBD Module \hideinitializer */
-#define CRPT_MODULE      ((0UL<<30)|(MODULE_NoMsk<<28)|(MODULE_NoMsk<<25)|(MODULE_NoMsk<<20)|(MODULE_NoMsk<<18)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5)|(12UL<<0)) /*!< CRPT Module \hideinitializer */
+#define CRYPTO_MODULE      ((0UL<<30)|(MODULE_NoMsk<<28)|(MODULE_NoMsk<<25)|(MODULE_NoMsk<<20)|(MODULE_NoMsk<<18)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5)|(12UL<<0)) /*!< CRPT Module \hideinitializer */
 #define SPIM_MODULE      ((0UL<<30)|(MODULE_NoMsk<<28)|(MODULE_NoMsk<<25)|(MODULE_NoMsk<<20)|(MODULE_NoMsk<<18)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5)|(14UL<<0)) /*!< SPIM Module \hideinitializer */
 #define FMCIDLE_MODULE   ((0UL<<30)|(MODULE_NoMsk<<28)|(MODULE_NoMsk<<25)|(MODULE_NoMsk<<20)|(MODULE_NoMsk<<18)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5)|(15UL<<0)) /*!< FMCIDLE Module \hideinitializer */
 #define SDH1_MODULE      ((0UL<<30)|(0UL<<28)         |(0x3UL<<25)       |(22UL<<20)        |(2UL<<18)         |(0xFFUL<<10)      |(24UL<<5)        |(17UL<<0)) /*!< SDH1 Module \hideinitializer */

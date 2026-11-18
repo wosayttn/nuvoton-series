@@ -196,6 +196,7 @@ uint32_t SDH_Write(SDH_T *sdh, const uint8_t *pu8BufAddr, uint32_t u32StartSec, 
 uint32_t SDH_CardDetection(SDH_T *sdh);
 void SDH_Open_Disk(SDH_T *sdh, uint32_t u32CardDetSrc);
 void SDH_Close_Disk(SDH_T *sdh);
+void SDH_Set_clock(SDH_T *sdh, uint32_t u32SDClockKhz);
 
 /**@}*/ /* end of group SDH_EXPORTED_FUNCTIONS */
 

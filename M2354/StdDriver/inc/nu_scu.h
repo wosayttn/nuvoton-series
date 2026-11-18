@@ -43,7 +43,7 @@ typedef enum NSATTR
 
     /******  PNNSET1 **********************************************************************************/
     CRC_Attr    = 32 + 17,
-    CRPT_Attr   = 32 + 18,
+    CRYPTO_Attr   = 32 + 18,
 
     /******  PNNSET2 **********************************************************************************/
     EWDT_Attr   = 64 + 2,
@@ -178,7 +178,7 @@ typedef enum NSATTR
  *              - \ref SCU_SVIOIEN_FLASHIEN_Msk
  *              - \ref SCU_SVIOIEN_SCUIEN_Msk
  *              - \ref SCU_SVIOIEN_SYSIEN_Msk
- *              - \ref SCU_SVIOIEN_CRPTIEN_Msk
+ *              - \ref SCU_SVIOIEN_CRYPTOIEN_Msk
  *
  * @return      None
  *
@@ -207,7 +207,7 @@ typedef enum NSATTR
  *              - \ref SCU_SVIOIEN_FLASHIEN_Msk
  *              - \ref SCU_SVIOIEN_SCUIEN_Msk
  *              - \ref SCU_SVIOIEN_SYSIEN_Msk
- *              - \ref SCU_SVIOIEN_CRPTIEN_Msk
+ *              - \ref SCU_SVIOIEN_CRYPTOIEN_Msk
  *
  * @return      None
  *
@@ -250,7 +250,7 @@ typedef enum NSATTR
   *             - \ref SCU_SVINTSTS_FLASHIF_Msk
   *             - \ref SCU_SVINTSTS_SCUIF_Msk
   *             - \ref SCU_SVINTSTS_SYSIF_Msk
-  *             - \ref SCU_SVINTSTS_CRPTIF_Msk
+  *             - \ref SCU_SVINTSTS_CRYPTOIF_Msk
   *
   * @return     None
   *

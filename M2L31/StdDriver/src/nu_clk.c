@@ -779,7 +779,7 @@ void CLK_DisableXtalRC(uint32_t u32ClkMask)
   *             - \ref CANRAM1_MODULE
   *             - \ref CLKO_MODULE
   *             - \ref CRC_MODULE
-  *             - \ref CRPT_MODULE
+  *             - \ref CRYPTO_MODULE
   *             - \ref DAC_MODULE
   *             - \ref EADC0_MODULE
   *             - \ref EBI_MODULE
@@ -877,7 +877,7 @@ void CLK_EnableModuleClock(uint32_t u32ModuleIdx)
   *             - \ref CANRAM1_MODULE
   *             - \ref CLKO_MODULE
   *             - \ref CRC_MODULE
-  *             - \ref CRPT_MODULE
+  *             - \ref CRYPTO_MODULE
   *             - \ref DAC_MODULE
   *             - \ref EADC0_MODULE
   *             - \ref EBI_MODULE

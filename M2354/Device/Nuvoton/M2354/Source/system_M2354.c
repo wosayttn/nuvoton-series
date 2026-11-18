@@ -218,9 +218,9 @@ __attribute__((weak))
 #endif
 void SCU_IRQHandler(void)
 {
-    char const *master[] = {"CPU", 0, 0, "PDMA0", "SDH0", "CRPT", "USBH", 0, 0, 0, 0, "PDMA1"};
+    char const *master[] = {"CPU", 0, 0, "PDMA0", "SDH0", "CRYPTO", "USBH", 0, 0, 0, 0, "PDMA1"};
     char const *ipname[] = {"APB0", "APB1", 0, 0, "GPIO", "EBI", "USBH", "CRC", "SDH0", 0, "PDMA0", "PDMA1"
-                            , "SRAM0", "SRAM1", "FMC", "FLASH", "SCU", "SYS", "CRPT", "KS", "SIORAM"
+                            , "SRAM0", "SRAM1", "FMC", "FLASH", "SCU", "SYS", "CRYPTO", "KS", "SIORAM"
                            };
     const uint8_t info[] = {0x34, 0x3C, 0, 0, 0x44, 0x4C, 0x54, 0x5C, 0x64, 0, 0x74, 0x7C, 0x84, 0x8C, 0x94, 0x9C, 0xA4, 0xAC, 0xB4, 0xBC, 0xC4};
     uint32_t u32Reg, u32Addr;
@@ -430,7 +430,7 @@ void SystemInit(void)
         while(!SYS->REGLCTL);
 
         /* Enable Crypto power switch */
-        SYS->PSWCTL = SYS_PSWCTL_CRPTPWREN_Msk;
+        SYS->PSWCTL = SYS_PSWCTL_CRYPTOPWREN_Msk;
 
         /* Enable all GPIO, SRAM and Trace clock */
         CLK->AHBCLK |= (0xfffUL << 20U) | (1UL << 14U);

@@ -37,7 +37,7 @@ extern "C"
 #define EBI_RST         ((0UL<<24) | SYS_IPRST0_EBIRST_Pos)         /*!< Reset EBI \hideinitializer     */
 #define USBH_RST        ((0UL<<24) | SYS_IPRST0_USBHRST_Pos)        /*!< Reset USBH \hideinitializer    */
 #define CRC_RST         ((0UL<<24) | SYS_IPRST0_CRCRST_Pos)         /*!< Reset CRC \hideinitializer     */
-#define CRPT_RST        ((0UL<<24) | SYS_IPRST0_CRPTRST_Pos)        /*!< Reset CRPT \hideinitializer    */
+#define CRYPTO_RST        ((0UL<<24) | SYS_IPRST0_CRYPTORST_Pos)        /*!< Reset CRYPTO \hideinitializer    */
 #define CANFD0_RST      ((0UL<<24) | SYS_IPRST0_CANFD0RST_Pos)      /*!< Reset CANFD0 \hideinitializer  */
 #define CANFD1_RST      ((0UL<<24) | SYS_IPRST0_CANFD1RST_Pos)      /*!< Reset CANFD1 \hideinitializer  */
 

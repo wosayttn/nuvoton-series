@@ -131,7 +131,7 @@ typedef struct
      * |[7]     |CRCCKEN   |CRC Generator Controller Clock Enable Bit
      * |        |          |0 = CRC peripheral clock Disabled.
      * |        |          |1 = CRC peripheral clock Enabled.
-     * |[12]    |CRPTCKEN  |Cryptographic Accelerator Clock Enable Bit
+     * |[12]    |CRYPTOCKEN  |Cryptographic Accelerator Clock Enable Bit
      * |        |          |0 = Cryptographic Accelerator clock Disabled.
      * |        |          |1 = Cryptographic Accelerator clock Enabled.
      * |[13]    |KSCKEN    |Key Store Clock Enable Bit
@@ -1204,8 +1204,8 @@ typedef struct
 #define CLK_AHBCLK_CRCCKEN_Pos           (7)                                               /*!< CLK_T::AHBCLK: CRCCKEN Position        */
 #define CLK_AHBCLK_CRCCKEN_Msk           (0x1ul << CLK_AHBCLK_CRCCKEN_Pos)                 /*!< CLK_T::AHBCLK: CRCCKEN Mask            */
 
-#define CLK_AHBCLK_CRPTCKEN_Pos          (12)                                              /*!< CLK_T::AHBCLK: CRPTCKEN Position       */
-#define CLK_AHBCLK_CRPTCKEN_Msk          (0x1ul << CLK_AHBCLK_CRPTCKEN_Pos)                /*!< CLK_T::AHBCLK: CRPTCKEN Mask           */
+#define CLK_AHBCLK_CRYPTOCKEN_Pos          (12)                                              /*!< CLK_T::AHBCLK: CRYPTOCKEN Position       */
+#define CLK_AHBCLK_CRYPTOCKEN_Msk          (0x1ul << CLK_AHBCLK_CRYPTOCKEN_Pos)                /*!< CLK_T::AHBCLK: CRYPTOCKEN Mask           */
 
 #define CLK_AHBCLK_KSCKEN_Pos            (13)                                              /*!< CLK_T::AHBCLK: KSCKEN Position         */
 #define CLK_AHBCLK_KSCKEN_Msk            (0x1ul << CLK_AHBCLK_KSCKEN_Pos)                  /*!< CLK_T::AHBCLK: KSCKEN Mask             */

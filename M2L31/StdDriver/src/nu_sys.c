@@ -128,7 +128,7 @@ void SYS_ResetCPU(void)
   *             - \ref CHIP_RST
   *             - \ref CPU_RST
   *             - \ref CRC_RST
-  *             - \ref CRPT_RST
+  *             - \ref CRYPTO_RST
   *             - \ref DAC_RST
   *             - \ref EADC0_RST
   *             - \ref EBI_RST

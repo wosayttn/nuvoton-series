@@ -37,7 +37,7 @@ extern "C"
 #define CRC_RST         ((uint32_t)(0UL<<24) | (uint32_t)SYS_IPRST0_CRCRST_Pos)       /*!< Reset CRC \hideinitializer */
 #define CANFD0_RST      ((uint32_t)(0UL<<24) | (uint32_t)SYS_IPRST0_CANFD0RST_Pos)     /*!< Reset CANFD0 \hideinitializer */
 #define CANFD1_RST      ((uint32_t)(0UL<<24) | (uint32_t)SYS_IPRST0_CANFD1RST_Pos)     /*!< Reset CANFD1 \hideinitializer */
-#define CRPT_RST        ((uint32_t)(0UL<<24) | (uint32_t)SYS_IPRST0_CRPTRST_Pos)       /*!< Reset CRPT \hideinitializer */
+#define CRYPTO_RST        ((uint32_t)(0UL<<24) | (uint32_t)SYS_IPRST0_CRPTRST_Pos)       /*!< Reset CRPT \hideinitializer */
 
 #define GPIO_RST        ((uint32_t)(4UL<<24) | (uint32_t)SYS_IPRST1_GPIORST_Pos)     /*!< Reset GPIO \hideinitializer */
 #define TMR0_RST        ((uint32_t)(4UL<<24) | (uint32_t)SYS_IPRST1_TMR0RST_Pos)     /*!< Reset TMR0 \hideinitializer */

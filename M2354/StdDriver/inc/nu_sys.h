@@ -35,7 +35,7 @@ extern "C"
 #define USBH_RST    ((0x0UL<<24)|(uint32_t)SYS_IPRST0_USBHRST_Pos)      /*!< USBH reset is one of the SYS_ResetModule parameter */
 #define SDH0_RST    ((0x0UL<<24)|(uint32_t)SYS_IPRST0_SDH0RST_Pos)      /*!< SDH0 reset is one of the SYS_ResetModule parameter */
 #define CRC_RST     ((0x0UL<<24)|(uint32_t)SYS_IPRST0_CRCRST_Pos)       /*!< CRC reset is one of the SYS_ResetModule parameter */
-#define CRPT_RST    ((0x0UL<<24)|(uint32_t)SYS_IPRST0_CRPTRST_Pos)      /*!< CRPT reset is one of the SYS_ResetModule parameter */
+#define CRYPTO_RST    ((0x0UL<<24)|(uint32_t)SYS_IPRST0_CRYPTORST_Pos)      /*!< CRYPTO reset is one of the SYS_ResetModule parameter */
 #define KS_RST      ((0x0UL<<24)|(uint32_t)SYS_IPRST0_KSRST_Pos)        /*!< KS reset is one of the SYS_ResetModule parameter */
 #define PDMA1_RST   ((0x0UL<<24)|(uint32_t)SYS_IPRST0_PDMA1RST_Pos)     /*!< PDMA1 reset is one of the SYS_ResetModule parameter */
 

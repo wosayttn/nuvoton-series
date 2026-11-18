@@ -387,7 +387,7 @@ extern "C"
 #define EBI_MODULE      ((0UL<<29)|(MODULE_NoMsk<<26)|(MODULE_NoMsk<<23)|(MODULE_NoMsk<<18)|(MODULE_NoMsk<<16)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5) |(3UL<<0))	/*!< EBI Module */
 #define ST_MODULE       ((0UL<<29)|(0UL<<26)         |(3UL<<23)         |(3UL<<18)         |(MODULE_NoMsk<<16)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5) |(4UL<<0))	/*!< ST Module */
 #define CRC_MODULE      ((0UL<<29)|(MODULE_NoMsk<<26)|(MODULE_NoMsk<<23)|(MODULE_NoMsk<<18)|(MODULE_NoMsk<<16)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5) |(7UL<<0))	/*!< CRC Module */
-#define CRPT_MODULE     ((0UL<<29)|(MODULE_NoMsk<<26)|(MODULE_NoMsk<<23)|(MODULE_NoMsk<<18)|(MODULE_NoMsk<<16)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5) |(12UL<<0))	/*!< CRPT Module */
+#define CRYPTO_MODULE     ((0UL<<29)|(MODULE_NoMsk<<26)|(MODULE_NoMsk<<23)|(MODULE_NoMsk<<18)|(MODULE_NoMsk<<16)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5) |(12UL<<0))	/*!< CRYPTO Module */
 #define KS_MODULE       ((0UL<<29)|(MODULE_NoMsk<<26)|(MODULE_NoMsk<<23)|(MODULE_NoMsk<<18)|(MODULE_NoMsk<<16)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5) |(13UL<<0))	/*!< KS Module */
 #define USBH_MODULE     ((0UL<<29)|(0UL<<26)         |(1UL<<23)         |(8UL<<18)         |(0UL<<16)         |(4UL<<10)         |(4UL<<5)          |(16UL<<0))	/*!< USBH Module */
 #define GPA_MODULE      ((0UL<<29)|(MODULE_NoMsk<<26)|(MODULE_NoMsk<<23)|(MODULE_NoMsk<<18)|(MODULE_NoMsk<<16)|(MODULE_NoMsk<<10)|(MODULE_NoMsk<<5) |(24UL<<0))	/*!< GPA Module */
