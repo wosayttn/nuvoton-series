@@ -143,11 +143,11 @@ extern "C"
   * @details    Disable automatic slave selection function and set USCI_SPI_SS pin to low state. Only available in Master mode.
   * \hideinitializer
   */
-#define USPI_SET_SS_LOW(uspi)                                              \
-    do                                                                     \
-    {                                                                      \
-        (uspi)->LINECTL |= USPI_LINECTL_CTLOINV_Msk;                         \
-        (uspi)->PROTCTL &= ~(USPI_PROTCTL_AUTOSS_Msk | USPI_PROTCTL_SS_Msk); \
+#define USPI_SET_SS_LOW(uspi)                                                               \
+    do                                                                                      \
+    {                                                                                       \
+        (uspi)->LINECTL |= USPI_LINECTL_CTLOINV_Msk;                                        \
+        (uspi)->PROTCTL = ((uspi)->PROTCTL & ~(USPI_PROTCTL_AUTOSS_Msk)) | USPI_PROTCTL_SS_Msk; \
     } while (0)
 
 /**
