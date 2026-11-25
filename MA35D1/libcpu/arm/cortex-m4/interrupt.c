@@ -88,7 +88,7 @@ void rt_hw_interrupt_init(void)
     }
 
     /* Initial all interrupt handler */
-    for (i = 0; i < SYS_MAX_INT_SOURCE; i++)
+    for (i = 0; i < (SYS_MAX_INT_SOURCE - NVIC_INT_OFFSET); i++)
     {
         rt_hw_interrupt_install(i, RT_NULL, RT_NULL, (char *)"dummy");
         rt_hw_interrupt_mask(i);
@@ -104,7 +104,7 @@ rt_isr_handler_t rt_hw_interrupt_install(int vector, rt_isr_handler_t handler, v
 {
     rt_isr_handler_t    old_handler = RT_NULL;
 
-    if (vector > SYS_MAX_INT_SOURCE)
+    if ((vector < 0) || ((vector + NVIC_INT_OFFSET) >= SYS_MAX_INT_SOURCE))
         return RT_NULL;
 
     /* Set default priority IRQ_LEVEL_7 */

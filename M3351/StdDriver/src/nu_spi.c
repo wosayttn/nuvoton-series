@@ -47,7 +47,7 @@ static void SPI_SetPCLKSrc(SPI_T *spi)
  *
  * @return Actual frequency of SPI peripheral clock source.
  */
-static uint32_t SPI_GetPCLKFreq(SPI_T *spi)
+static uint32_t SPI_GetPCLKFreq(const SPI_T *spi)
 {
     uint32_t u32RetValue = 0;
 
@@ -72,7 +72,7 @@ static uint32_t SPI_GetPCLKFreq(SPI_T *spi)
  * @param spi       The pointer of the specified SPI module.
  * @return uint32_t Clock Frequency
  */
-static uint32_t SPI_GetModuleClkSrcFreq(SPI_T *spi)
+static uint32_t SPI_GetModuleClkSrcFreq(const SPI_T *spi)
 {
     uint32_t u32SPIClkSrcSel = 0UL;
     uint32_t u32RetValue = 0UL;
