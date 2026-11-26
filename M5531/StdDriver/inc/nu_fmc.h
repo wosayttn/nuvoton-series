@@ -429,8 +429,10 @@ __STATIC_INLINE uint32_t FMC_ReadBandGap(void)
 /*---------------------------------------------------------------------------------------------------------*/
 extern uint32_t FMC_Read(uint32_t u32Addr);
 extern int32_t  FMC_Read_64(uint32_t u32Addr, uint32_t *pu32Data0, uint32_t *pu32Data1);
+extern int32_t  FMC_Read64(uint32_t u32Addr, uint64_t *pu64Data);
 extern int32_t  FMC_Write(uint32_t u32Addr, uint32_t u32Data);
 extern int32_t  FMC_Write8Bytes(uint32_t u32Addr, uint32_t u32Data0, uint32_t u32Data1);
+extern int32_t  FMC_Write64(uint32_t u32Addr, uint64_t u64Data);
 extern int32_t  FMC_WriteMultiple(uint32_t u32Addr, uint32_t pu32Buf[], uint32_t u32ByteLen);
 extern int32_t  FMC_Erase(uint32_t u32PageAddr);
 extern int32_t  FMC_ReadConfig(uint32_t u32Config[], uint32_t u32Count);

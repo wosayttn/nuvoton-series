@@ -139,54 +139,199 @@ extern "C"
 /*  Module Reset Standard Aliases definitions.                                                             */
 /*---------------------------------------------------------------------------------------------------------*/
 #ifndef UART0_RST
-#define UART0_RST           SYS_UART0RST
-#define UART1_RST           SYS_UART1RST
-#define UART2_RST           SYS_UART2RST
-#define UART3_RST           SYS_UART3RST
-#define UART4_RST           SYS_UART4RST
-#define UART5_RST           SYS_UART5RST
-#define UART6_RST           SYS_UART6RST
-#define UART7_RST           SYS_UART7RST
-#define UART8_RST           SYS_UART8RST
-#define UART9_RST           SYS_UART9RST
-#define TMR0_RST            SYS_TMR0RST
-#define TMR1_RST            SYS_TMR1RST
-#define TMR2_RST            SYS_TMR2RST
-#define TMR3_RST            SYS_TMR3RST
-#define TTMR0_RST           SYS_TTMR0RST
-#define TTMR1_RST           SYS_TTMR1RST
-#define LPTMR0_RST          SYS_LPTMR0RST
-#define LPTMR1_RST          SYS_LPTMR1RST
-#define LPUART0_RST         SYS_LPUART0RST
-#define SPI0_RST            SYS_SPI0RST
-#define SPI1_RST            SYS_SPI1RST
-#define SPI2_RST            SYS_SPI2RST
-#define SPI3_RST            SYS_SPI3RST
-#define QSPI0_RST           SYS_QSPI0RST
-#define QSPI1_RST           SYS_QSPI1RST
-#define I2C0_RST            SYS_I2C0RST
-#define I2C1_RST            SYS_I2C1RST
-#define I2C2_RST            SYS_I2C2RST
-#define I2C3_RST            SYS_I2C3RST
-#define PDMA0_RST           SYS_PDMA0RST
-#define PDMA1_RST           SYS_PDMA1RST
-#define CANFD0_RST          SYS_CANFD0RST
-#define CANFD1_RST          SYS_CANFD1RST
-#define USBD_RST            SYS_USBD0RST
-#define USBH_RST            SYS_USBH0RST
-#define HSUSBD_RST          SYS_HSUSBD0RST
-#define HSUSBH_RST          SYS_HSUSBH0RST
-#define EADC0_RST           SYS_EADC0RST
-#define EPWM0_RST           SYS_EPWM0RST
-#define EPWM1_RST           SYS_EPWM1RST
-#define BPWM0_RST           SYS_BPWM0RST
-#define BPWM1_RST           SYS_BPWM1RST
-#define RTC_RST             SYS_RTC0RST
-#define WDT_RST             SYS_WWDT0RST
-#define WWDT0_RST           SYS_WWDT0RST
-#define WWDT1_RST           SYS_WWDT1RST
-#define CRC_RST             SYS_CRC0RST
-#define TRNG0_RST           SYS_TRNG0RST
+    #define UART0_RST           SYS_UART0RST
+#endif
+
+#ifndef UART1_RST
+    #define UART1_RST           SYS_UART1RST
+#endif
+
+#ifndef UART2_RST
+    #define UART2_RST           SYS_UART2RST
+#endif
+
+#ifndef UART3_RST
+    #define UART3_RST           SYS_UART3RST
+#endif
+
+#ifndef UART4_RST
+    #define UART4_RST           SYS_UART4RST
+#endif
+
+#ifndef UART5_RST
+    #define UART5_RST           SYS_UART5RST
+#endif
+
+#ifndef UART6_RST
+    #define UART6_RST           SYS_UART6RST
+#endif
+
+#ifndef UART7_RST
+    #define UART7_RST           SYS_UART7RST
+#endif
+
+#ifndef UART8_RST
+    #define UART8_RST           SYS_UART8RST
+#endif
+
+#ifndef UART9_RST
+    #define UART9_RST           SYS_UART9RST
+#endif
+
+#ifndef TMR0_RST
+    #define TMR0_RST            SYS_TMR0RST
+#endif
+
+#ifndef TMR1_RST
+    #define TMR1_RST            SYS_TMR1RST
+#endif
+
+#ifndef TMR2_RST
+    #define TMR2_RST            SYS_TMR2RST
+#endif
+
+#ifndef TMR3_RST
+    #define TMR3_RST            SYS_TMR3RST
+#endif
+
+#ifndef TTMR0_RST
+    #define TTMR0_RST           SYS_TTMR0RST
+#endif
+
+#ifndef TTMR1_RST
+    #define TTMR1_RST           SYS_TTMR1RST
+#endif
+
+#ifndef LPTMR0_RST
+    #define LPTMR0_RST          SYS_LPTMR0RST
+#endif
+
+#ifndef LPTMR1_RST
+    #define LPTMR1_RST          SYS_LPTMR1RST
+#endif
+
+#ifndef LPUART0_RST
+    #define LPUART0_RST         SYS_LPUART0RST
+#endif
+
+#ifndef SPI0_RST
+    #define SPI0_RST            SYS_SPI0RST
+#endif
+
+#ifndef SPI1_RST
+    #define SPI1_RST            SYS_SPI1RST
+#endif
+
+#ifndef SPI2_RST
+    #define SPI2_RST            SYS_SPI2RST
+#endif
+
+#ifndef SPI3_RST
+    #define SPI3_RST            SYS_SPI3RST
+#endif
+
+#ifndef QSPI0_RST
+    #define QSPI0_RST           SYS_QSPI0RST
+#endif
+
+#ifndef QSPI1_RST
+    #define QSPI1_RST           SYS_QSPI1RST
+#endif
+
+#ifndef I2C0_RST
+    #define I2C0_RST            SYS_I2C0RST
+#endif
+
+#ifndef I2C1_RST
+    #define I2C1_RST            SYS_I2C1RST
+#endif
+
+#ifndef I2C2_RST
+    #define I2C2_RST            SYS_I2C2RST
+#endif
+
+#ifndef I2C3_RST
+    #define I2C3_RST            SYS_I2C3RST
+#endif
+
+#ifndef PDMA0_RST
+    #define PDMA0_RST           SYS_PDMA0RST
+#endif
+
+#ifndef PDMA1_RST
+    #define PDMA1_RST           SYS_PDMA1RST
+#endif
+
+#ifndef CANFD0_RST
+    #define CANFD0_RST          SYS_CANFD0RST
+#endif
+
+#ifndef CANFD1_RST
+    #define CANFD1_RST          SYS_CANFD1RST
+#endif
+
+#ifndef USBD_RST
+    #define USBD_RST            SYS_USBD0RST
+#endif
+
+#ifndef USBH_RST
+    #define USBH_RST            SYS_USBH0RST
+#endif
+
+#ifndef HSUSBD_RST
+    #define HSUSBD_RST          SYS_HSUSBD0RST
+#endif
+
+#ifndef HSUSBH_RST
+    #define HSUSBH_RST          SYS_HSUSBH0RST
+#endif
+
+#ifndef EADC0_RST
+    #define EADC0_RST           SYS_EADC0RST
+#endif
+
+#ifndef EPWM0_RST
+    #define EPWM0_RST           SYS_EPWM0RST
+#endif
+
+#ifndef EPWM1_RST
+    #define EPWM1_RST           SYS_EPWM1RST
+#endif
+
+#ifndef BPWM0_RST
+    #define BPWM0_RST           SYS_BPWM0RST
+#endif
+
+#ifndef BPWM1_RST
+    #define BPWM1_RST           SYS_BPWM1RST
+#endif
+
+#ifndef RTC_RST
+    #define RTC_RST             SYS_RTC0RST
+#endif
+
+#ifndef WDT_RST
+    #define WDT_RST             SYS_WWDT0RST
+#endif
+
+#ifndef WWDT0_RST
+    #define WWDT0_RST           SYS_WWDT0RST
+#endif
+
+#ifndef WWDT1_RST
+    #define WWDT1_RST           SYS_WWDT1RST
+#endif
+
+#ifndef CRC_RST
+    #define CRC_RST             SYS_CRC0RST
+#endif
+
+#ifndef TRNG0_RST
+    #define TRNG0_RST           SYS_TRNG0RST
+#endif
+
+#ifndef TRNG_RST
+    #define TRNG_RST            SYS_TRNG0RST
 #endif
 
 /*---------------------------------------------------------------------------------------------------------*/

@@ -868,6 +868,7 @@ extern "C"
 #define TRNG0_MODULE    (MODULE_CLKCTL_ENC(54ULL)|MODULE_CLKEN_Pos_ENC((uint64_t)CLK_TRNGCTL_TRNG0CKEN_Pos)|\
                          MODULE_CLKSEL_ENC(   NA)|MODULE_CLKSEL_Msk_ENC(     NA)|MODULE_CLKSEL_Pos_ENC(NA)|\
                          MODULE_CLKDIV_ENC(   NA)|MODULE_CLKDIV_Msk_ENC(     NA)|MODULE_CLKDIV_Pos_ENC(NA))                                        /*!< TRNG0 Module */
+#define TRNG_MODULE     TRNG0_MODULE
 
 #define TTMR0_MODULE    (MODULE_CLKCTL_ENC(55ULL)|MODULE_CLKEN_Pos_ENC((uint64_t)CLK_TTMRCTL_TTMR0CKEN_Pos)|\
                          MODULE_CLKSEL_ENC(23ULL)|MODULE_CLKSEL_Msk_ENC( 0x7ULL)|MODULE_CLKSEL_Pos_ENC((uint64_t)CLK_TTMRSEL_TTMR0SEL_Pos)|\
@@ -1038,6 +1039,10 @@ __NONSECURE_ENTRY_WEAK uint32_t CLK_GetACLKFreq(void);
 __NONSECURE_ENTRY_WEAK uint32_t CLK_GetHCLK0Freq(void);
 __NONSECURE_ENTRY_WEAK uint32_t CLK_GetHCLK1Freq(void);
 __NONSECURE_ENTRY_WEAK uint32_t CLK_GetHCLK2Freq(void);
+__STATIC_INLINE uint32_t CLK_GetHCLKFreq(void)
+{
+    return CLK_GetHCLK0Freq();
+}
 __NONSECURE_ENTRY_WEAK uint32_t CLK_GetPCLK0Freq(void);
 __NONSECURE_ENTRY_WEAK uint32_t CLK_GetPCLK1Freq(void);
 __NONSECURE_ENTRY_WEAK uint32_t CLK_GetPCLK2Freq(void);

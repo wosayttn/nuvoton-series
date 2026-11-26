@@ -114,6 +114,43 @@ int32_t FMC_Read_64(uint32_t u32Addr, uint32_t *pu32Data0, uint32_t *pu32Data1)
     return i32RetCode;
 }
 
+/**
+  * @brief Execute FMC_ISPCMD_READ_64 command to read a 64-bit double-word from flash.
+  * @param[in]  u32Addr  Address of the flash location to be read.
+  *             It must be a double-word aligned address.
+  * @param[out] pu64Data Place holder of 64-bit data read from flash address u32Addr.
+  * @return   FMC_OK              Success
+  * @return   FMC_ERR_TIMEOUT     Read time-out
+  * @return   FMC_ERR_READ_FAILED Read Failed
+  */
+int32_t FMC_Read64(uint32_t u32Addr, uint64_t *pu64Data)
+{
+    uint32_t u32Data0 = 0UL;
+    uint32_t u32Data1 = 0UL;
+    int32_t i32RetCode;
+
+    i32RetCode = FMC_Read_64(u32Addr, &u32Data0, &u32Data1);
+    if (i32RetCode == FMC_OK)
+    {
+        *pu64Data = ((uint64_t)u32Data1 << 32) | (uint64_t)u32Data0;
+    }
+
+    return i32RetCode;
+}
+
+/**
+  * @brief Execute ISP FMC_ISPCMD_PROGRAM_64 to program a 64-bit double-word to flash.
+  * @param[in]  u32Addr Address of the flash location to be programmed.
+  *             It must be a double-word aligned address.
+  * @param[in]  u64Data The 64-bit data to be programmed to flash address u32Addr.
+  * @return   FMC_OK   Success
+  * @return   -1       Failed
+  */
+int32_t FMC_Write64(uint32_t u32Addr, uint64_t u64Data)
+{
+    return FMC_Write8Bytes(u32Addr, (uint32_t)(u64Data & 0xFFFFFFFFUL), (uint32_t)(u64Data >> 32));
+}
+
 
 /**
   * @brief Execute ISP FMC_ISPCMD_PROGRAM to program a word to flash.
