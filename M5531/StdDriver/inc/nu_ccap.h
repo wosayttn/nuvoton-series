@@ -176,7 +176,7 @@ extern "C"
  *
  * @details   Clear Camera Capture Interface interrupt flag
  */
-#define CCAP_CLR_INT_FLAG(ccap, u32IntMask) (ccap->INT |= (u32IntMask))
+#define CCAP_CLR_INT_FLAG(ccap, u32IntMask) ((ccap)->INTSTS = (u32IntMask))
 
 /**
  * @brief     Get CCAP Interrupt Flag
@@ -216,9 +216,9 @@ extern "C"
  */
 #define CCAP_GET_WAKEUP_FUNC(ccap)  ((ccap->MDTRG_WK >> CCAP_MDTRG_WK_WKEN_Pos) & CCAP_MDTRG_WK_WKEN_Msk)
 
-#define CCAP_SET_CTL(ccap, u32IntMask) (ccap->CTL |= u32IntMask)
+#define CCAP_SET_CTL(ccap, u32IntMask) ((ccap)->CTL |= (u32IntMask))
 
-#define CCAP_CLR_CTL(ccap, u32IntMask) (ccap->CTL &= ~u32IntMask)
+#define CCAP_CLR_CTL(ccap, u32IntMask) ((ccap)->CTL &= ~(u32IntMask))
 
 /**
  * @brief     Enable CCAP Motion Detection Window

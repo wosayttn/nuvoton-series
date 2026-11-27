@@ -334,6 +334,114 @@ extern "C"
     #define TRNG_RST            SYS_TRNG0RST
 #endif
 
+#ifndef CCAP0_RST
+    #define CCAP0_RST           SYS_CCAP0RST
+#endif
+
+#ifndef CCAP_RST
+    #define CCAP_RST            SYS_CCAP0RST
+#endif
+
+#ifndef CRYPTO_RST
+    #define CRYPTO_RST          SYS_CRYPTO0RST
+#endif
+
+#ifndef CRYPTO0_RST
+    #define CRYPTO0_RST         SYS_CRYPTO0RST
+#endif
+
+#ifndef DAC_RST
+    #define DAC_RST             SYS_DAC01RST
+#endif
+
+#ifndef DAC0_RST
+    #define DAC0_RST            SYS_DAC01RST
+#endif
+
+#ifndef DAC1_RST
+    #define DAC1_RST            SYS_DAC01RST
+#endif
+
+#ifndef EBI_RST
+    #define EBI_RST             SYS_EBI0RST
+#endif
+
+#ifndef EBI0_RST
+    #define EBI0_RST            SYS_EBI0RST
+#endif
+
+#ifndef ECAP0_RST
+    #define ECAP0_RST           SYS_ECAP0RST
+#endif
+
+#ifndef ECAP1_RST
+    #define ECAP1_RST           SYS_ECAP1RST
+#endif
+
+#ifndef ECAP2_RST
+    #define ECAP2_RST           SYS_ECAP2RST
+#endif
+
+#ifndef ECAP3_RST
+    #define ECAP3_RST           SYS_ECAP3RST
+#endif
+
+#ifndef EMAC0_RST
+    #define EMAC0_RST           SYS_EMAC0RST
+#endif
+
+#ifndef EQEI0_RST
+    #define EQEI0_RST           SYS_EQEI0RST
+#endif
+
+#ifndef EQEI1_RST
+    #define EQEI1_RST           SYS_EQEI1RST
+#endif
+
+#ifndef EQEI2_RST
+    #define EQEI2_RST           SYS_EQEI2RST
+#endif
+
+#ifndef EQEI3_RST
+    #define EQEI3_RST           SYS_EQEI3RST
+#endif
+
+#ifndef HSOTG_RST
+    #define HSOTG_RST           SYS_HSOTG0RST
+#endif
+
+#ifndef I2S0_RST
+    #define I2S0_RST            SYS_I2S0RST
+#endif
+
+#ifndef I2S1_RST
+    #define I2S1_RST            SYS_I2S1RST
+#endif
+
+#ifndef SC0_RST
+    #define SC0_RST             SYS_SC0RST
+#endif
+
+#ifndef SC1_RST
+    #define SC1_RST             SYS_SC1RST
+#endif
+
+#ifndef SC2_RST
+    #define SC2_RST             SYS_SC2RST
+#endif
+
+#ifndef SDH0_RST
+    #define SDH0_RST            SYS_SDH0RST
+#endif
+
+#ifndef SDH1_RST
+    #define SDH1_RST            SYS_SDH1RST
+#endif
+
+#ifndef USCI0_RST
+    #define USCI0_RST           SYS_USCI0RST
+#endif
+
 /*---------------------------------------------------------------------------------------------------------*/
 /*  Brown Out Detector Threshold Voltage Selection constant definitions.                                   */
 /*---------------------------------------------------------------------------------------------------------*/
