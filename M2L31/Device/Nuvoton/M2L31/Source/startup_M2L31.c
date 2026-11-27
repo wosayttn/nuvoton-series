@@ -352,6 +352,14 @@ __NO_RETURN void Reset_Handler(void)
     }
 #endif
 
+    /* Unlock protected registers once during startup */
+    do
+    {
+        SYS->REGLCTL = 0x59UL;
+        SYS->REGLCTL = 0x16UL;
+        SYS->REGLCTL = 0x88UL;
+    } while (SYS->REGLCTL == 0UL);
+
     Reset_Handler_PreInit();
 
     __PROGRAM_START();      // Enter PreMain (C library entry point)
